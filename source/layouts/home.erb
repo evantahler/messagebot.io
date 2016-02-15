@@ -3,18 +3,33 @@
 <html lang="en">
 
     <head>
-        <%= partial "includes/main/head" %>
+      <%= partial "includes/head" %>
     </head>
 
-    <body id="page-top" data-spy="scroll" data-target=".navbar-custom">    
+    <body>
+      <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+          <div class="cover-container">
 
-        <%= partial "includes/main/nav" %>
+            <%= partial "includes/nav" %>
 
-        <%= yield %>
+            <div class="inner cover">
 
-        <br />
+              <%= yield %>
 
-        <%= partial "includes/common/analytics" %>
+            </div>
+            <div class="mastfoot">
+              <div class="inner">
+
+                <%= partial "includes/footer" %>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%= partial "includes/common/analytics" %>
 
     </body>
 
