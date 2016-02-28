@@ -11,7 +11,7 @@ We use [Middleman](https://middlemanapp.com/) to build and compile this site, an
 - install ruby (comes with OSX)
 - install bundler: `gem install bundler`
 - use bundler to install the needed gems `bundle install`
-- run the middleman servers locally `bundle exec middleman`
+- run the middleman servers locally `EXECJS_RUNTIME=Node bundle exec middleman`
 
 ## Deploy the code
 
