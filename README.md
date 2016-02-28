@@ -18,8 +18,3 @@ We use [Middleman](https://middlemanapp.com/) to build and compile this site, an
 Open a pull requset to the `master` branch with your changes in the `site` folder.  
 
 From there, we'll build the `gh-pages` branch out of master (see `deploy.sh` in this directory), and deploy the site.  GitHub pages will automatically build the site for us upon push.
-
-## Thanks
-
-- The theme for the home section of the site comes from: http://startbootstrap.com/grayscale
-- The theme for the docs section of the site comes from: https://github.com/tripit/slate
