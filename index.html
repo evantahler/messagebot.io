@@ -30,6 +30,7 @@
 
 <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
 <link href="stylesheets/simplex.min.css" rel="stylesheet">
+<link href="stylesheets/custom.css" rel="stylesheet">
 
     </head>
 
@@ -39,57 +40,26 @@
 
 <p>&nbsp;</p>
 
-        <div class="row">
+        <div class="row vertical-center">
 
-  <div class="jumbotron">
     <div class="row">
-      <div class="col-md-2">
-        <img src="images/logo/logo.png" width="100%" />
+      <div class="jumbotron">
+          <div class="row">
+              <div class="col-md-3">
+                  <img src="images/logo/logo.png" width="100%"/>
+              </div>
+              <div class="col-md-9">
+                  <h1>MessageBot</h1>
+                  <p>A modern customer relationship and analytics platform</p>
+                  <p class="text-warning">Coming Soon</p>
+                  <p>
+                      <a href="http://eepurl.com/bTrGYP" class="btn btn-success btn-lg">Join out Mailing List</a>
+                  </p>
+              </div>
+          </div>
       </div>
-      <div class="col-md-10">
-        <h1>MessageBot</h1>
-        <p>A modern customer relationship and analytics platform</p>
-        <p class="text-warning">Coming Soon</p>
-        <p><a href="http://eepurl.com/bTrGYP" class="btn btn-primary btn-lg">Join out Mailing List</a></p>
-      </div>
+
     </div>
-  </div>
-
-</div>
-
-<div class="row">
-
-  <div class="col-md-12">
-    <div class="panel panel-info">
-      <div class="panel-heading">
-        <h3 class="panel-title">Why MessageBot?</h3>
-      </div>
-      <div class="panel-body">
-        <p>
-          <li>Manage all communication with your users</li>
-            <ul>
-              <li>On Site</li>
-              <li>Email</li>
-              <li>Push</li>
-              <li>In-App</li>
-            </ul>
-          <li>Track all actions that your users take</li>
-            <ul>
-              <li>Page Views</li>
-              <li>Events</li>
-              <li>Clicks</li>
-              <li>Opens</li>
-              <li>Purchases</li>
-              <li>Interests</li>
-            </ul>
-          <li>Act on your users actions (or lack thereof) automatically</li>
-          <li>Communicate via campaigns or triggers across any channel</li>
-          <li>Finally, get a wholistic view of your user’s behavior, all in one place with one tool</li>
-          <li>Oh, and its open source!</li>
-        </p>
-      </div>
-    </div>
-  </div>
 
 </div>
 
@@ -97,6 +67,11 @@
 <div class="footer">
   <script src="javascripts/jquery.min.js"></script>
   <script src="javascripts/bootstrap.min.js"></script>
+  <script src="javascripts/backstretch.min.js"></script>
+
+  <script>
+     $.backstretch(["images/sky.jpg"], {duration: 3000, fade: 750});
+  </script>
 </div>
 
       </div>
