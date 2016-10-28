@@ -1,20 +1,14 @@
-# MessageBot.io (the website)
+# My actionhero Project
 
-## Do not publish to the `gh-pages` branch directly.  Make any changes in a PR to master.
+*visit www.actionherojs.com for more information*
 
-This project contains the build files for `messagebot.io` (which are served by github-pages)
+## To install:
+(assuming you have [node](http://nodejs.org/) and NPM installed)
 
-We use [Middleman](https://middlemanapp.com/) to build and compile this site, and host it for free on [Github Pages](http://pages.github.com/). Pages can be written in markdown or HTML, and Middleman will build the site.
+`npm install`
 
-## Run the site locally:
+## To Run:
+`npm start`
 
-- install ruby (comes with OSX)
-- install bundler: `gem install bundler`
-- use bundler to install the needed gems `bundle install`
-- run the middleman servers locally `EXECJS_RUNTIME=Node bundle exec middleman`
-
-## Deploy the code
-
-Open a pull requset to the `master` branch with your changes in the `site` folder.  
-
-From there, we'll build the `gh-pages` branch out of master (see `deploy.sh` in this directory), and deploy the site.  GitHub pages will automatically build the site for us upon push.
+## To Test:
+`npm test`

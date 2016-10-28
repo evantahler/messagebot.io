@@ -1,0 +1,24 @@
+{
+  "author"      : "evan@messagebot.io",
+  "name"        : "www.messagebot.io",
+  "description" : "www.messagebot.io",
+  "version"     : "0.0.1",
+  "engines"     : {
+    "node": ">=4.0.0"
+  },
+  "dependencies" : {
+    "actionhero" : "15.1.3",
+    "ws"         : "latest",
+    "fakeredis"  : "latest",
+    "ioredis"    : "latest"
+  },
+  "devDependencies" : {
+    "mocha"  : "latest",
+    "should" : "latest"
+  },
+  "scripts" : {
+    "start"        : "actionhero start",
+    "actionhero"   : "actionhero",
+    "test"         : "NODE_ENV=test mocha"
+  }
+}
