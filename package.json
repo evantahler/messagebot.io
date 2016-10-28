@@ -4,7 +4,7 @@
   "description" : "www.messagebot.io",
   "version"     : "0.0.1",
   "engines"     : {
-    "node": ">=4.0.0"
+    "node": ">=6.0.0"
   },
   "dependencies" : {
     "actionhero" : "15.1.3",
