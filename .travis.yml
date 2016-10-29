@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+  - "6"
+
+env:
+  - secure: "UzxiJ9uVe5ff9SYoKDyYedwBYmkOnw4fFxaegdvTz2evuF20aGQfnI/tIhxBvTwNdtdaSdQlbkcuM/TBHDGg+5eYZv5MGjLLszQgsC4oYes474JRVh3GbL+2UeWRwMNpzQYqWfyLLpbv86f9BGOJH5q5gcmTUm5sa/A0kcUWzsUmCEVYD3fQ8wp+aA6wjpuOU6NuvHTMeuNi9b/BO+3LPT7u4pZPJuufWO0R18v3ZJczcfXKG92VxCyU6s/o/7xrbEgmR9EsJcY9i6A5mLtsHcdBknvo4ICVJnmzcieEgjDrk56FwZ1YDC6Wt84SMJej5R9sCPrcsy1s2JWhEXflgunZu04Cpl1cUkGFYy0LvAzEj84EOzaU5DcFu/qCDoJ+u2fEh/U9OMAqzxRCzz2Qt7gj1VQ+tzsVJZ3D6PYGktFGHryO2FdlyVR5Prl4dmXt/dfXlmvPd0Ac1WCtcPLbo5GdTqa8t6tD7DMRMRgGG9lOnsfGmh3NIL+6RM33KH0PnXbC7g64rkA0kPRq8iNubbIn38GLCmVztNhY0vSb3Rd6h5enORq+Y13YxNtx3XjnxVrzsG+mVq1/ngnpKaqYN0saYcPanzctjXoyFZag5N+yLC0jgtFGBbR2HlLF59Z0NQ3JEaQO6aQZtbpr6/a+jvOvlpVq8cXP1TLkhjsJ4co="
+
+after_script:
+  # Install Flynn
+  - L=/usr/local/bin/flynn && curl -sSL -A "`uname -sp`" https://dl.flynn.io/cli | zcat >$L && chmod +x $L
+  # Ensure we have the full git clone
+  - git pull
+  - git remote add flynn https://user:$FLYNN_KEY@git.messagebot.io/www.git || true
+  - git push flynn master
+
+script: npm run test
