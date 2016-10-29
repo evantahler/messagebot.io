@@ -9,7 +9,7 @@ env:
 after_success:
   - |
       FLYNN_APP=""
-      if [ "$TRAVIS_BRANCH" = "master" ]; then FLYNN_APP="www-staging"; fi
+      if [ "$TRAVIS_BRANCH" = "master" ]; then FLYNN_APP="www"; fi
 
       if [ "$FLYNN_APP" = "" ]; then echo "skipping branch $TRAVIS_BRANCH" && exit 0; fi
 
