@@ -8,14 +8,14 @@ env:
 
 after_success:
   - |
-    FLYNN_APP=""
-    if [ "$TRAVIS_BRANCH" = "master" ] then FLYNN_APP="www-staging" fi
-    if [ "$TRAVIS_BRANCH" = "production" ] then FLYNN_APP="www" fi
+      FLYNN_APP=""
+      if [ "$TRAVIS_BRANCH" = "master" ]; then FLYNN_APP="www-staging"; fi
+      if [ "$TRAVIS_BRANCH" = "production" ]; then FLYNN_APP="www"; fi
 
-    if [ "$FLYNN_APP" = "" ] exit 0 fi
+      if [ "$FLYNN_APP" = "" ]; exit 0; fi
 
-    git pull
-    remote add flynn https://user:$FLYNN_KEY@git.messagebot.io/$FLYNN_APP.git
-    push flynn master
+      git pull
+      remote add flynn https://user:$FLYNN_KEY@git.messagebot.io/$FLYNN_APP.git
+      push flynn master
 
 script: npm run test
