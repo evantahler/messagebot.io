@@ -12,7 +12,7 @@ after_success:
       if [ "$TRAVIS_BRANCH" = "master" ]; then FLYNN_APP="www-staging"; fi
       if [ "$TRAVIS_BRANCH" = "production" ]; then FLYNN_APP="www"; fi
 
-      if [ "$FLYNN_APP" = "" ]; exit 0; fi
+      if [ "$FLYNN_APP" = "" ]; then echo "skipping branch $TRAVIS_BRANCH" && exit 0; fi
 
       git pull
       remote add flynn https://user:$FLYNN_KEY@git.messagebot.io/$FLYNN_APP.git
