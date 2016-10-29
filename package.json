@@ -7,7 +7,7 @@
     "node": ">=6.0.0"
   },
   "dependencies" : {
-    "actionhero" : "15.1.4",
+    "actionhero" : "evantahler/actionhero#master",
     "ws"         : "latest",
     "fakeredis"  : "latest",
     "ioredis"    : "latest"
