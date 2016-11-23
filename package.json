@@ -1,24 +1,36 @@
 {
-  "author"      : "evan@messagebot.io",
-  "name"        : "www.messagebot.io",
-  "description" : "www.messagebot.io",
-  "version"     : "0.0.1",
-  "engines"     : {
+  "author": "evan@messagebot.io",
+  "name": "www.messagebot.io",
+  "description": "www.messagebot.io",
+  "version": "0.0.1",
+  "engines": {
     "node": ">=6.0.0"
   },
-  "dependencies" : {
-    "actionhero" : ">=15.1.5",
-    "ws"         : "latest",
-    "fakeredis"  : "latest",
-    "ioredis"    : "latest"
+  "dependencies": {
+    "actionhero": "^16.0.0",
+    "ws": "latest",
+    "fakeredis": "latest",
+    "ioredis": "latest"
   },
-  "devDependencies" : {
-    "mocha"  : "latest",
-    "should" : "latest"
+  "devDependencies": {
+    "mocha": "latest",
+    "should": "latest",
+    "standard": "^8.5.0"
   },
-  "scripts" : {
-    "start"        : "actionhero start",
-    "actionhero"   : "actionhero",
-    "test"         : "NODE_ENV=test mocha"
+  "standard": {
+    "ignore": [ "public/javascript/actionheroClient.js" ],
+    "globals": [
+      "describe",
+      "before",
+      "beforeEach",
+      "after",
+      "afterEach",
+      "it"
+    ]
+  },
+  "scripts": {
+    "start": "actionhero start",
+    "actionhero": "actionhero",
+    "test": "standard && NODE_ENV=test mocha"
   }
 }

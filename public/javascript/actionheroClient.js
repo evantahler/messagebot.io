@@ -1,17 +1,17 @@
-(function UMDish(name, context, definition, plugins) {
-  context[name] = definition.call(context);
+(function UMDish (name, context, definition, plugins) {
+  context[name] = definition.call(context)
   for (var i = 0; i < plugins.length; i++) {
     plugins[i](context[name])
   }
-  if (typeof module !== "undefined" && module.exports) {
-    module.exports = context[name];
-  } else if (typeof define === "function" && define.amd) {
-    define(function reference() { return context[name]; });
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = context[name]
+  } else if (typeof define === 'function' && define.amd) {
+    define(function reference () { return context[name] })
   }
-})("Primus", this || {}, function wrapper() {
-  var define, module, exports
-    , Primus = (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-'use strict';
+})('Primus', this || {}, function wrapper () {
+  var define, module, exports,
+    Primus = (function e (t, n, r) { function s (o, u) { if (!n[o]) { if (!t[o]) { var a = typeof require == 'function' && require; if (!u && a) return a(o, !0); if (i) return i(o, !0); var f = new Error("Cannot find module '" + o + "'"); throw f.code = 'MODULE_NOT_FOUND', f } var l = n[o] = {exports: {}}; t[o][0].call(l.exports, function (e) { var n = t[o][1][e]; return s(n ? n : e) }, l, l.exports, e, t, n, r) } return n[o].exports } var i = typeof require == 'function' && require; for (var o = 0; o < r.length; o++)s(r[o]); return s })({1: [function (_dereq_, module, exports) {
+      'use strict'
 
 /**
  * Create a function that will cleanup the instance.
@@ -21,13 +21,13 @@
  * @returns {Function} Destroy function
  * @api public
  */
-module.exports = function demolish(keys, options) {
-  var split = /[, ]+/;
+      module.exports = function demolish (keys, options) {
+        var split = /[, ]+/
 
-  options = options ||  {};
-  keys = keys || [];
+        options = options || {}
+        keys = keys || []
 
-  if ('string' === typeof keys) keys = keys.split(split);
+        if (typeof keys === 'string') keys = keys.split(split)
 
   /**
    * Run addition cleanup hooks.
@@ -36,22 +36,22 @@ module.exports = function demolish(keys, options) {
    * @param {Mixed} selfie Reference to the instance we're cleaning up.
    * @api private
    */
-  function run(key, selfie) {
-    if (!options[key]) return;
-    if ('string' === typeof options[key]) options[key] = options[key].split(split);
-    if ('function' === typeof options[key]) return options[key].call(selfie);
+        function run (key, selfie) {
+          if (!options[key]) return
+          if (typeof options[key] === 'string') options[key] = options[key].split(split)
+          if (typeof options[key] === 'function') return options[key].call(selfie)
 
-    for (var i = 0, type, what; i < options[key].length; i++) {
-      what = options[key][i];
-      type = typeof what;
+          for (var i = 0, type, what; i < options[key].length; i++) {
+            what = options[key][i]
+            type = typeof what
 
-      if ('function' === type) {
-        what.call(selfie);
-      } else if ('string' === type && 'function' === typeof selfie[what]) {
-        selfie[what]();
-      }
-    }
-  }
+            if (type === 'function') {
+              what.call(selfie)
+            } else if (type === 'string' && typeof selfie[what] === 'function') {
+              selfie[what]()
+            }
+          }
+        }
 
   /**
    * Destroy the instance completely and clean up all the existing references.
@@ -59,32 +59,31 @@ module.exports = function demolish(keys, options) {
    * @returns {Boolean}
    * @api public
    */
-  return function destroy() {
-    var selfie = this
-      , i = 0
-      , prop;
+        return function destroy () {
+          var selfie = this,
+            i = 0,
+            prop
 
-    if (selfie[keys[0]] === null) return false;
-    run('before', selfie);
+          if (selfie[keys[0]] === null) return false
+          run('before', selfie)
 
-    for (; i < keys.length; i++) {
-      prop = keys[i];
+          for (; i < keys.length; i++) {
+            prop = keys[i]
 
-      if (selfie[prop]) {
-        if ('function' === typeof selfie[prop].destroy) selfie[prop].destroy();
-        selfie[prop] = null;
+            if (selfie[prop]) {
+              if (typeof selfie[prop].destroy === 'function') selfie[prop].destroy()
+              selfie[prop] = null
+            }
+          }
+
+          if (selfie.emit) selfie.emit('destroy')
+          run('after', selfie)
+
+          return true
+        }
       }
-    }
-
-    if (selfie.emit) selfie.emit('destroy');
-    run('after', selfie);
-
-    return true;
-  };
-};
-
-},{}],2:[function(_dereq_,module,exports){
-'use strict';
+    }, {}], 2: [function (_dereq_, module, exports) {
+      'use strict'
 
 /**
  * Returns a function that when invoked executes all the listeners of the
@@ -93,26 +92,26 @@ module.exports = function demolish(keys, options) {
  * @returns {Function} The function that emits all the things.
  * @api public
  */
-module.exports = function emits() {
-  var self = this
-    , parser;
+      module.exports = function emits () {
+        var self = this,
+          parser
 
-  for (var i = 0, l = arguments.length, args = new Array(l); i < l; i++) {
-    args[i] = arguments[i];
-  }
+        for (var i = 0, l = arguments.length, args = new Array(l); i < l; i++) {
+          args[i] = arguments[i]
+        }
 
   //
   // If the last argument is a function, assume that it's a parser.
   //
-  if ('function' !== typeof args[args.length - 1]) return function emitter() {
-    for (var i = 0, l = arguments.length, arg = new Array(l); i < l; i++) {
-      arg[i] = arguments[i];
-    }
+        if (typeof args[args.length - 1] !== 'function') { return function emitter () {
+          for (var i = 0, l = arguments.length, arg = new Array(l); i < l; i++) {
+            arg[i] = arguments[i]
+          }
 
-    return self.emit.apply(self, args.concat(arg));
-  };
+          return self.emit.apply(self, args.concat(arg))
+        } }
 
-  parser = args.pop();
+        parser = args.pop()
 
   /**
    * The actual function that emits the given event. It returns a boolean
@@ -121,10 +120,10 @@ module.exports = function emits() {
    * @returns {Boolean}
    * @api public
    */
-  return function emitter() {
-    for (var i = 0, l = arguments.length, arg = new Array(l + 1); i < l; i++) {
-      arg[i + 1] = arguments[i];
-    }
+        return function emitter () {
+          for (var i = 0, l = arguments.length, arg = new Array(l + 1); i < l; i++) {
+            arg[i + 1] = arguments[i]
+          }
 
     /**
      * Async completion method for the parser.
@@ -133,26 +132,25 @@ module.exports = function emits() {
      * @param {Mixed} returned Emit instructions.
      * @api private
      */
-    arg[0] = function next(err, returned) {
-      if (err) return self.emit('error', err);
+          arg[0] = function next (err, returned) {
+            if (err) return self.emit('error', err)
 
-      arg = returned === undefined
+            arg = returned === undefined
         ? arg.slice(1) : returned === null
-          ? [] : returned;
+          ? [] : returned
 
-      self.emit.apply(self, args.concat(arg));
-    };
+            self.emit.apply(self, args.concat(arg))
+          }
 
-    parser.apply(self, arg);
-    return true;
-  };
-};
+          parser.apply(self, arg)
+          return true
+        }
+      }
+    }, {}], 3: [function (_dereq_, module, exports) {
+      'use strict'
 
-},{}],3:[function(_dereq_,module,exports){
-'use strict';
-
-var has = Object.prototype.hasOwnProperty
-  , prefix = '~';
+      var has = Object.prototype.hasOwnProperty,
+        prefix = '~'
 
 /**
  * Constructor to create a storage for our `EE` objects.
@@ -161,7 +159,7 @@ var has = Object.prototype.hasOwnProperty
  * @constructor
  * @api private
  */
-function Events() {}
+      function Events () {}
 
 //
 // We try to not inherit from `Object.prototype`. In some engines creating an
@@ -170,15 +168,15 @@ function Events() {}
 // character to make sure that the built-in object properties are not
 // overridden or used as an attack vector.
 //
-if (Object.create) {
-  Events.prototype = Object.create(null);
+      if (Object.create) {
+        Events.prototype = Object.create(null)
 
   //
   // This hack is needed because the `__proto__` property is still inherited in
   // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
   //
-  if (!new Events().__proto__) prefix = false;
-}
+        if (!new Events().__proto__) prefix = false
+      }
 
 /**
  * Representation of a single event listener.
@@ -189,11 +187,11 @@ if (Object.create) {
  * @constructor
  * @api private
  */
-function EE(fn, context, once) {
-  this.fn = fn;
-  this.context = context;
-  this.once = once || false;
-}
+      function EE (fn, context, once) {
+        this.fn = fn
+        this.context = context
+        this.once = once || false
+      }
 
 /**
  * Minimal `EventEmitter` interface that is molded against the Node.js
@@ -202,10 +200,10 @@ function EE(fn, context, once) {
  * @constructor
  * @api public
  */
-function EventEmitter() {
-  this._events = new Events();
-  this._eventsCount = 0;
-}
+      function EventEmitter () {
+        this._events = new Events()
+        this._eventsCount = 0
+      }
 
 /**
  * Return an array listing the events for which the emitter has registered
@@ -214,23 +212,23 @@ function EventEmitter() {
  * @returns {Array}
  * @api public
  */
-EventEmitter.prototype.eventNames = function eventNames() {
-  var names = []
-    , events
-    , name;
+      EventEmitter.prototype.eventNames = function eventNames () {
+        var names = [],
+          events,
+          name
 
-  if (this._eventsCount === 0) return names;
+        if (this._eventsCount === 0) return names
 
-  for (name in (events = this._events)) {
-    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
-  }
+        for (name in (events = this._events)) {
+          if (has.call(events, name)) names.push(prefix ? name.slice(1) : name)
+        }
 
-  if (Object.getOwnPropertySymbols) {
-    return names.concat(Object.getOwnPropertySymbols(events));
-  }
+        if (Object.getOwnPropertySymbols) {
+          return names.concat(Object.getOwnPropertySymbols(events))
+        }
 
-  return names;
-};
+        return names
+      }
 
 /**
  * Return the listeners registered for a given event.
@@ -240,20 +238,20 @@ EventEmitter.prototype.eventNames = function eventNames() {
  * @returns {Array|Boolean}
  * @api public
  */
-EventEmitter.prototype.listeners = function listeners(event, exists) {
-  var evt = prefix ? prefix + event : event
-    , available = this._events[evt];
+      EventEmitter.prototype.listeners = function listeners (event, exists) {
+        var evt = prefix ? prefix + event : event,
+          available = this._events[evt]
 
-  if (exists) return !!available;
-  if (!available) return [];
-  if (available.fn) return [available.fn];
+        if (exists) return !!available
+        if (!available) return []
+        if (available.fn) return [available.fn]
 
-  for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
-    ee[i] = available[i].fn;
-  }
+        for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
+          ee[i] = available[i].fn
+        }
 
-  return ee;
-};
+        return ee
+      }
 
 /**
  * Calls each of the listeners registered for a given event.
@@ -262,57 +260,57 @@ EventEmitter.prototype.listeners = function listeners(event, exists) {
  * @returns {Boolean} `true` if the event had listeners, else `false`.
  * @api public
  */
-EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
-  var evt = prefix ? prefix + event : event;
+      EventEmitter.prototype.emit = function emit (event, a1, a2, a3, a4, a5) {
+        var evt = prefix ? prefix + event : event
 
-  if (!this._events[evt]) return false;
+        if (!this._events[evt]) return false
 
-  var listeners = this._events[evt]
-    , len = arguments.length
-    , args
-    , i;
+        var listeners = this._events[evt],
+          len = arguments.length,
+          args,
+          i
 
-  if (listeners.fn) {
-    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+        if (listeners.fn) {
+          if (listeners.once) this.removeListener(event, listeners.fn, undefined, true)
 
-    switch (len) {
-      case 1: return listeners.fn.call(listeners.context), true;
-      case 2: return listeners.fn.call(listeners.context, a1), true;
-      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
-      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
-      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
-      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
-    }
-
-    for (i = 1, args = new Array(len -1); i < len; i++) {
-      args[i - 1] = arguments[i];
-    }
-
-    listeners.fn.apply(listeners.context, args);
-  } else {
-    var length = listeners.length
-      , j;
-
-    for (i = 0; i < length; i++) {
-      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
-
-      switch (len) {
-        case 1: listeners[i].fn.call(listeners[i].context); break;
-        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
-        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
-        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;
-        default:
-          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
-            args[j - 1] = arguments[j];
+          switch (len) {
+            case 1: return listeners.fn.call(listeners.context), true
+            case 2: return listeners.fn.call(listeners.context, a1), true
+            case 3: return listeners.fn.call(listeners.context, a1, a2), true
+            case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true
+            case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true
+            case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true
           }
 
-          listeners[i].fn.apply(listeners[i].context, args);
-      }
-    }
-  }
+          for (i = 1, args = new Array(len - 1); i < len; i++) {
+            args[i - 1] = arguments[i]
+          }
 
-  return true;
-};
+          listeners.fn.apply(listeners.context, args)
+        } else {
+          var length = listeners.length,
+            j
+
+          for (i = 0; i < length; i++) {
+            if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true)
+
+            switch (len) {
+              case 1: listeners[i].fn.call(listeners[i].context); break
+              case 2: listeners[i].fn.call(listeners[i].context, a1); break
+              case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break
+              case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break
+              default:
+                if (!args) { for (j = 1, args = new Array(len - 1); j < len; j++) {
+                  args[j - 1] = arguments[j]
+                } }
+
+                listeners[i].fn.apply(listeners[i].context, args)
+            }
+          }
+        }
+
+        return true
+      }
 
 /**
  * Add a listener for a given event.
@@ -323,16 +321,16 @@ EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
  * @returns {EventEmitter} `this`.
  * @api public
  */
-EventEmitter.prototype.on = function on(event, fn, context) {
-  var listener = new EE(fn, context || this)
-    , evt = prefix ? prefix + event : event;
+      EventEmitter.prototype.on = function on (event, fn, context) {
+        var listener = new EE(fn, context || this),
+          evt = prefix ? prefix + event : event
 
-  if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++;
-  else if (!this._events[evt].fn) this._events[evt].push(listener);
-  else this._events[evt] = [this._events[evt], listener];
+        if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++
+        else if (!this._events[evt].fn) this._events[evt].push(listener)
+        else this._events[evt] = [this._events[evt], listener]
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Add a one-time listener for a given event.
@@ -343,16 +341,16 @@ EventEmitter.prototype.on = function on(event, fn, context) {
  * @returns {EventEmitter} `this`.
  * @api public
  */
-EventEmitter.prototype.once = function once(event, fn, context) {
-  var listener = new EE(fn, context || this, true)
-    , evt = prefix ? prefix + event : event;
+      EventEmitter.prototype.once = function once (event, fn, context) {
+        var listener = new EE(fn, context || this, true),
+          evt = prefix ? prefix + event : event
 
-  if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++;
-  else if (!this._events[evt].fn) this._events[evt].push(listener);
-  else this._events[evt] = [this._events[evt], listener];
+        if (!this._events[evt]) this._events[evt] = listener, this._eventsCount++
+        else if (!this._events[evt].fn) this._events[evt].push(listener)
+        else this._events[evt] = [this._events[evt], listener]
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Remove the listeners of a given event.
@@ -364,48 +362,48 @@ EventEmitter.prototype.once = function once(event, fn, context) {
  * @returns {EventEmitter} `this`.
  * @api public
  */
-EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
-  var evt = prefix ? prefix + event : event;
+      EventEmitter.prototype.removeListener = function removeListener (event, fn, context, once) {
+        var evt = prefix ? prefix + event : event
 
-  if (!this._events[evt]) return this;
-  if (!fn) {
-    if (--this._eventsCount === 0) this._events = new Events();
-    else delete this._events[evt];
-    return this;
-  }
+        if (!this._events[evt]) return this
+        if (!fn) {
+          if (--this._eventsCount === 0) this._events = new Events()
+          else delete this._events[evt]
+          return this
+        }
 
-  var listeners = this._events[evt];
+        var listeners = this._events[evt]
 
-  if (listeners.fn) {
-    if (
+        if (listeners.fn) {
+          if (
          listeners.fn === fn
       && (!once || listeners.once)
       && (!context || listeners.context === context)
     ) {
-      if (--this._eventsCount === 0) this._events = new Events();
-      else delete this._events[evt];
-    }
-  } else {
-    for (var i = 0, events = [], length = listeners.length; i < length; i++) {
-      if (
+            if (--this._eventsCount === 0) this._events = new Events()
+            else delete this._events[evt]
+          }
+        } else {
+          for (var i = 0, events = [], length = listeners.length; i < length; i++) {
+            if (
            listeners[i].fn !== fn
         || (once && !listeners[i].once)
         || (context && listeners[i].context !== context)
       ) {
-        events.push(listeners[i]);
-      }
-    }
+              events.push(listeners[i])
+            }
+          }
 
     //
     // Reset the array, or remove it completely if we have no more listeners.
     //
-    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
-    else if (--this._eventsCount === 0) this._events = new Events();
-    else delete this._events[evt];
-  }
+          if (events.length) this._events[evt] = events.length === 1 ? events[0] : events
+          else if (--this._eventsCount === 0) this._events = new Events()
+          else delete this._events[evt]
+        }
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Remove all listeners, or those of the specified event.
@@ -414,110 +412,108 @@ EventEmitter.prototype.removeListener = function removeListener(event, fn, conte
  * @returns {EventEmitter} `this`.
  * @api public
  */
-EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
-  var evt;
+      EventEmitter.prototype.removeAllListeners = function removeAllListeners (event) {
+        var evt
 
-  if (event) {
-    evt = prefix ? prefix + event : event;
-    if (this._events[evt]) {
-      if (--this._eventsCount === 0) this._events = new Events();
-      else delete this._events[evt];
-    }
-  } else {
-    this._events = new Events();
-    this._eventsCount = 0;
-  }
+        if (event) {
+          evt = prefix ? prefix + event : event
+          if (this._events[evt]) {
+            if (--this._eventsCount === 0) this._events = new Events()
+            else delete this._events[evt]
+          }
+        } else {
+          this._events = new Events()
+          this._eventsCount = 0
+        }
 
-  return this;
-};
+        return this
+      }
 
 //
 // Alias methods names because people roll like that.
 //
-EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+      EventEmitter.prototype.off = EventEmitter.prototype.removeListener
+      EventEmitter.prototype.addListener = EventEmitter.prototype.on
 
 //
 // This function doesn't apply anymore.
 //
-EventEmitter.prototype.setMaxListeners = function setMaxListeners() {
-  return this;
-};
+      EventEmitter.prototype.setMaxListeners = function setMaxListeners () {
+        return this
+      }
 
 //
 // Expose the prefix.
 //
-EventEmitter.prefixed = prefix;
+      EventEmitter.prefixed = prefix
 
 //
 // Allow `EventEmitter` to be imported as module namespace.
 //
-EventEmitter.EventEmitter = EventEmitter;
+      EventEmitter.EventEmitter = EventEmitter
 
 //
 // Expose the module.
 //
-if ('undefined' !== typeof module) {
-  module.exports = EventEmitter;
-}
-
-},{}],4:[function(_dereq_,module,exports){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
+      if (typeof module !== 'undefined') {
+        module.exports = EventEmitter
       }
-    });
-  };
-} else {
+    }, {}], 4: [function (_dereq_, module, exports) {
+      if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+        module.exports = function inherits (ctor, superCtor) {
+          ctor.super_ = superCtor
+          ctor.prototype = Object.create(superCtor.prototype, {
+            constructor: {
+              value: ctor,
+              enumerable: false,
+              writable: true,
+              configurable: true
+            }
+          })
+        }
+      } else {
   // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
+        module.exports = function inherits (ctor, superCtor) {
+          ctor.super_ = superCtor
+          var TempCtor = function () {}
+          TempCtor.prototype = superCtor.prototype
+          ctor.prototype = new TempCtor()
+          ctor.prototype.constructor = ctor
+        }
+      }
+    }, {}], 5: [function (_dereq_, module, exports) {
+      'use strict'
 
-},{}],5:[function(_dereq_,module,exports){
-'use strict';
+      var regex = new RegExp('^((?:\\d+)?\\.?\\d+) *(' + [
+        'milliseconds?',
+        'msecs?',
+        'ms',
+        'seconds?',
+        'secs?',
+        's',
+        'minutes?',
+        'mins?',
+        'm',
+        'hours?',
+        'hrs?',
+        'h',
+        'days?',
+        'd',
+        'weeks?',
+        'wks?',
+        'w',
+        'years?',
+        'yrs?',
+        'y'
+      ].join('|') + ')?$', 'i')
 
-var regex = new RegExp('^((?:\\d+)?\\.?\\d+) *('+ [
-  'milliseconds?',
-  'msecs?',
-  'ms',
-  'seconds?',
-  'secs?',
-  's',
-  'minutes?',
-  'mins?',
-  'm',
-  'hours?',
-  'hrs?',
-  'h',
-  'days?',
-  'd',
-  'weeks?',
-  'wks?',
-  'w',
-  'years?',
-  'yrs?',
-  'y'
-].join('|') +')?$', 'i');
-
-var second = 1000
-  , minute = second * 60
-  , hour = minute * 60
-  , day = hour * 24
-  , week = day * 7
-  , year = day * 365;
+      var second = 1000,
+        minute = second * 60,
+        hour = minute * 60,
+        day = hour * 24,
+        week = day * 7,
+        year = day * 365
 
 /**
  * Parse a time string and return the number value of it.
@@ -526,72 +522,71 @@ var second = 1000
  * @returns {Number}
  * @api private
  */
-module.exports = function millisecond(ms) {
-  var type = typeof ms
-    , amount
-    , match;
+      module.exports = function millisecond (ms) {
+        var type = typeof ms,
+          amount,
+          match
 
-  if ('number' === type) return ms;
-  else if ('string' !== type || '0' === ms || !ms) return 0;
-  else if (+ms) return +ms;
+        if (type === 'number') return ms
+        else if (type !== 'string' || ms === '0' || !ms) return 0
+        else if (+ms) return +ms
 
   //
   // We are vulnerable to the regular expression denial of service (ReDoS).
   // In order to mitigate this we don't parse the input string if it is too long.
   // See https://nodesecurity.io/advisories/46.
   //
-  if (ms.length > 10000 || !(match = regex.exec(ms))) return 0;
+        if (ms.length > 10000 || !(match = regex.exec(ms))) return 0
 
-  amount = parseFloat(match[1]);
+        amount = parseFloat(match[1])
 
-  switch (match[2].toLowerCase()) {
-    case 'years':
-    case 'year':
-    case 'yrs':
-    case 'yr':
-    case 'y':
-      return amount * year;
+        switch (match[2].toLowerCase()) {
+          case 'years':
+          case 'year':
+          case 'yrs':
+          case 'yr':
+          case 'y':
+            return amount * year
 
-    case 'weeks':
-    case 'week':
-    case 'wks':
-    case 'wk':
-    case 'w':
-      return amount * week;
+          case 'weeks':
+          case 'week':
+          case 'wks':
+          case 'wk':
+          case 'w':
+            return amount * week
 
-    case 'days':
-    case 'day':
-    case 'd':
-      return amount * day;
+          case 'days':
+          case 'day':
+          case 'd':
+            return amount * day
 
-    case 'hours':
-    case 'hour':
-    case 'hrs':
-    case 'hr':
-    case 'h':
-      return amount * hour;
+          case 'hours':
+          case 'hour':
+          case 'hrs':
+          case 'hr':
+          case 'h':
+            return amount * hour
 
-    case 'minutes':
-    case 'minute':
-    case 'mins':
-    case 'min':
-    case 'm':
-      return amount * minute;
+          case 'minutes':
+          case 'minute':
+          case 'mins':
+          case 'min':
+          case 'm':
+            return amount * minute
 
-    case 'seconds':
-    case 'second':
-    case 'secs':
-    case 'sec':
-    case 's':
-      return amount * second;
+          case 'seconds':
+          case 'second':
+          case 'secs':
+          case 'sec':
+          case 's':
+            return amount * second
 
-    default:
-      return amount;
-  }
-};
-
-},{}],6:[function(_dereq_,module,exports){
-'use strict';
+          default:
+            return amount
+        }
+      }
+    }, {}], 6: [function (_dereq_, module, exports) {
+      'use strict'
 
 /**
  * Wrap callbacks to prevent double execution.
@@ -600,24 +595,24 @@ module.exports = function millisecond(ms) {
  * @returns {Function} A wrapped callback which prevents execution.
  * @api public
  */
-module.exports = function one(fn) {
-  var called = 0
-    , value;
+      module.exports = function one (fn) {
+        var called = 0,
+          value
 
   /**
    * The function that prevents double execution.
    *
    * @api private
    */
-  function onetime() {
-    if (called) return value;
+        function onetime () {
+          if (called) return value
 
-    called = 1;
-    value = fn.apply(this, arguments);
-    fn = null;
+          called = 1
+          value = fn.apply(this, arguments)
+          fn = null
 
-    return value;
-  }
+          return value
+        }
 
   //
   // To make debugging more easy we want to use the name of the supplied
@@ -625,14 +620,13 @@ module.exports = function one(fn) {
   // listeners you don't see a load of `onetime` functions but actually the
   // names of the functions that this module will call.
   //
-  onetime.displayName = fn.displayName || fn.name || onetime.displayName || onetime.name;
-  return onetime;
-};
+        onetime.displayName = fn.displayName || fn.name || onetime.displayName || onetime.name
+        return onetime
+      }
+    }, {}], 7: [function (_dereq_, module, exports) {
+      'use strict'
 
-},{}],7:[function(_dereq_,module,exports){
-'use strict';
-
-var has = Object.prototype.hasOwnProperty;
+      var has = Object.prototype.hasOwnProperty
 
 /**
  * Simple query string parser.
@@ -641,23 +635,23 @@ var has = Object.prototype.hasOwnProperty;
  * @returns {Object}
  * @api public
  */
-function querystring(query) {
-  var parser = /([^=?&]+)=?([^&]*)/g
-    , result = {}
-    , part;
+      function querystring (query) {
+        var parser = /([^=?&]+)=?([^&]*)/g,
+           result = {},
+           part
 
   //
   // Little nifty parsing hack, leverage the fact that RegExp.exec increments
   // the lastIndex property so we can continue executing this loop until we've
   // parsed all results.
   //
-  for (;
+        for (;
     part = parser.exec(query);
     result[decodeURIComponent(part[1])] = decodeURIComponent(part[2])
   );
 
-  return result;
-}
+        return result
+      }
 
 /**
  * Transform a query string to an object.
@@ -667,39 +661,38 @@ function querystring(query) {
  * @returns {String}
  * @api public
  */
-function querystringify(obj, prefix) {
-  prefix = prefix || '';
+      function querystringify (obj, prefix) {
+        prefix = prefix || ''
 
-  var pairs = [];
+        var pairs = []
 
   //
   // Optionally prefix with a '?' if needed
   //
-  if ('string' !== typeof prefix) prefix = '?';
+        if (typeof prefix !== 'string') prefix = '?'
 
-  for (var key in obj) {
-    if (has.call(obj, key)) {
-      pairs.push(encodeURIComponent(key) +'='+ encodeURIComponent(obj[key]));
-    }
-  }
+        for (var key in obj) {
+           if (has.call(obj, key)) {
+            pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+          }
+         }
 
-  return pairs.length ? prefix + pairs.join('&') : '';
-}
+        return pairs.length ? prefix + pairs.join('&') : ''
+      }
 
 //
 // Expose the module.
 //
-exports.stringify = querystringify;
-exports.parse = querystring;
+      exports.stringify = querystringify
+      exports.parse = querystring
+    }, {}], 8: [function (_dereq_, module, exports) {
+      'use strict'
 
-},{}],8:[function(_dereq_,module,exports){
-'use strict';
-
-var EventEmitter = _dereq_('eventemitter3')
-  , millisecond = _dereq_('millisecond')
-  , destroy = _dereq_('demolish')
-  , Tick = _dereq_('tick-tock')
-  , one = _dereq_('one-time');
+      var EventEmitter = _dereq_('eventemitter3'),
+         millisecond = _dereq_('millisecond'),
+         destroy = _dereq_('demolish'),
+         Tick = _dereq_('tick-tock'),
+         one = _dereq_('one-time')
 
 /**
  * Returns sane defaults about a given value.
@@ -710,11 +703,11 @@ var EventEmitter = _dereq_('eventemitter3')
  * @returns {Number} Some default value.
  * @api private
  */
-function defaults(name, selfie, opts) {
-  return millisecond(
+      function defaults (name, selfie, opts) {
+         return millisecond(
     name in opts ? opts[name] : (name in selfie ? selfie[name] : Recovery[name])
-  );
-}
+  )
+       }
 
 /**
  * Attempt to recover your connection with reconnection attempt.
@@ -723,32 +716,32 @@ function defaults(name, selfie, opts) {
  * @param {Object} options Configuration
  * @api public
  */
-function Recovery(options) {
-  var recovery = this;
+      function Recovery (options) {
+         var recovery = this
 
-  if (!(recovery instanceof Recovery)) return new Recovery(options);
+         if (!(recovery instanceof Recovery)) return new Recovery(options)
 
-  options = options || {};
+         options = options || {}
 
-  recovery.attempt = null;        // Stores the current reconnect attempt.
-  recovery._fn = null;            // Stores the callback.
+         recovery.attempt = null        // Stores the current reconnect attempt.
+         recovery._fn = null            // Stores the callback.
 
-  recovery['reconnect timeout'] = defaults('reconnect timeout', recovery, options);
-  recovery.retries = defaults('retries', recovery, options);
-  recovery.factor = defaults('factor', recovery, options);
-  recovery.max = defaults('max', recovery, options);
-  recovery.min = defaults('min', recovery, options);
-  recovery.timers = new Tick(recovery);
-}
+         recovery['reconnect timeout'] = defaults('reconnect timeout', recovery, options)
+         recovery.retries = defaults('retries', recovery, options)
+         recovery.factor = defaults('factor', recovery, options)
+         recovery.max = defaults('max', recovery, options)
+         recovery.min = defaults('min', recovery, options)
+         recovery.timers = new Tick(recovery)
+       }
 
-Recovery.prototype = new EventEmitter();
-Recovery.prototype.constructor = Recovery;
+      Recovery.prototype = new EventEmitter()
+      Recovery.prototype.constructor = Recovery
 
-Recovery['reconnect timeout'] = '30 seconds';  // Maximum time to wait for an answer.
-Recovery.max = Infinity;                       // Maximum delay.
-Recovery.min = '500 ms';                       // Minimum delay.
-Recovery.retries = 10;                         // Maximum amount of retries.
-Recovery.factor = 2;                           // Exponential back off factor.
+      Recovery['reconnect timeout'] = '30 seconds'  // Maximum time to wait for an answer.
+      Recovery.max = Infinity                       // Maximum delay.
+      Recovery.min = '500 ms'                       // Minimum delay.
+      Recovery.retries = 10                         // Maximum amount of retries.
+      Recovery.factor = 2                           // Exponential back off factor.
 
 /**
  * Start a new reconnect procedure.
@@ -756,17 +749,17 @@ Recovery.factor = 2;                           // Exponential back off factor.
  * @returns {Recovery}
  * @api public
  */
-Recovery.prototype.reconnect = function reconnect() {
-  var recovery = this;
+      Recovery.prototype.reconnect = function reconnect () {
+         var recovery = this
 
-  return recovery.backoff(function backedoff(err, opts) {
-    opts.duration = (+new Date()) - opts.start;
+         return recovery.backoff(function backedoff (err, opts) {
+          opts.duration = (+new Date()) - opts.start
 
-    if (err) return recovery.emit('reconnect failed', err, opts);
+          if (err) return recovery.emit('reconnect failed', err, opts)
 
-    recovery.emit('reconnected', opts);
-  }, recovery.attempt);
-};
+          recovery.emit('reconnected', opts)
+        }, recovery.attempt)
+       }
 
 /**
  * Exponential back off algorithm for retry operations. It uses a randomized
@@ -777,43 +770,43 @@ Recovery.prototype.reconnect = function reconnect() {
  * @returns {Recovery}
  * @api private
  */
-Recovery.prototype.backoff = function backoff(fn, opts) {
-  var recovery = this;
+      Recovery.prototype.backoff = function backoff (fn, opts) {
+         var recovery = this
 
-  opts = opts || recovery.attempt || {};
+         opts = opts || recovery.attempt || {}
 
   //
   // Bailout when we already have a back off process running. We shouldn't call
   // the callback then.
   //
-  if (opts.backoff) return recovery;
+         if (opts.backoff) return recovery
 
-  opts['reconnect timeout'] = defaults('reconnect timeout', recovery, opts);
-  opts.retries = defaults('retries', recovery, opts);
-  opts.factor = defaults('factor', recovery, opts);
-  opts.max = defaults('max', recovery, opts);
-  opts.min = defaults('min', recovery, opts);
+         opts['reconnect timeout'] = defaults('reconnect timeout', recovery, opts)
+         opts.retries = defaults('retries', recovery, opts)
+         opts.factor = defaults('factor', recovery, opts)
+         opts.max = defaults('max', recovery, opts)
+         opts.min = defaults('min', recovery, opts)
 
-  opts.start = +opts.start || +new Date();
-  opts.duration = +opts.duration || 0;
-  opts.attempt = +opts.attempt || 0;
+         opts.start = +opts.start || +new Date()
+         opts.duration = +opts.duration || 0
+         opts.attempt = +opts.attempt || 0
 
   //
   // Bailout if we are about to make too much attempts.
   //
-  if (opts.attempt === opts.retries) {
-    fn.call(recovery, new Error('Unable to recover'), opts);
-    return recovery;
-  }
+         if (opts.attempt === opts.retries) {
+          fn.call(recovery, new Error('Unable to recover'), opts)
+          return recovery
+        }
 
   //
   // Prevent duplicate back off attempts using the same options object and
   // increment our attempt as we're about to have another go at this thing.
   //
-  opts.backoff = true;
-  opts.attempt++;
+         opts.backoff = true
+         opts.attempt++
 
-  recovery.attempt = opts;
+         recovery.attempt = opts
 
   //
   // Calculate the timeout, but make it randomly so we don't retry connections
@@ -822,48 +815,48 @@ Recovery.prototype.backoff = function backoff(fn, opts) {
   //
   // http://dthain.blogspot.nl/2009/02/exponential-backoff-in-distributed.html
   //
-  opts.scheduled = opts.attempt !== 1
+         opts.scheduled = opts.attempt !== 1
     ? Math.min(Math.round(
         (Math.random() + 1) * opts.min * Math.pow(opts.factor, opts.attempt - 1)
       ), opts.max)
-    : opts.min;
+    : opts.min
 
-  recovery.timers.setTimeout('reconnect', function delay() {
-    opts.duration = (+new Date()) - opts.start;
-    opts.backoff = false;
-    recovery.timers.clear('reconnect, timeout');
+         recovery.timers.setTimeout('reconnect', function delay () {
+          opts.duration = (+new Date()) - opts.start
+          opts.backoff = false
+          recovery.timers.clear('reconnect, timeout')
 
     //
     // Create a `one` function which can only be called once. So we can use the
     // same function for different types of invocations to create a much better
     // and usable API.
     //
-    var connect = recovery._fn = one(function connect(err) {
-      recovery.reset();
+          var connect = recovery._fn = one(function connect (err) {
+        recovery.reset()
 
-      if (err) return recovery.backoff(fn, opts);
+        if (err) return recovery.backoff(fn, opts)
 
-      fn.call(recovery, undefined, opts);
-    });
+        fn.call(recovery, undefined, opts)
+      })
 
-    recovery.emit('reconnect', opts, connect);
-    recovery.timers.setTimeout('timeout', function timeout() {
-      var err = new Error('Failed to reconnect in a timely manner');
-      opts.duration = (+new Date()) - opts.start;
+          recovery.emit('reconnect', opts, connect)
+          recovery.timers.setTimeout('timeout', function timeout () {
+        var err = new Error('Failed to reconnect in a timely manner')
+        opts.duration = (+new Date()) - opts.start
 
-      recovery.emit('reconnect timeout', err, opts);
-      connect(err);
-    }, opts['reconnect timeout']);
-  }, opts.scheduled);
+        recovery.emit('reconnect timeout', err, opts)
+        connect(err)
+      }, opts['reconnect timeout'])
+        }, opts.scheduled)
 
   //
   // Emit a `reconnecting` event with current reconnect options. This allows
   // them to update the UI and provide their users with feedback.
   //
-  recovery.emit('reconnect scheduled', opts);
+         recovery.emit('reconnect scheduled', opts)
 
-  return recovery;
-};
+         return recovery
+       }
 
 /**
  * Check if the reconnection process is currently reconnecting.
@@ -871,9 +864,9 @@ Recovery.prototype.backoff = function backoff(fn, opts) {
  * @returns {Boolean}
  * @api public
  */
-Recovery.prototype.reconnecting = function reconnecting() {
-  return !!this.attempt;
-};
+      Recovery.prototype.reconnecting = function reconnecting () {
+         return !!this.attempt
+       }
 
 /**
  * Tell our reconnection procedure that we're passed.
@@ -882,10 +875,10 @@ Recovery.prototype.reconnecting = function reconnecting() {
  * @returns {Recovery}
  * @api public
  */
-Recovery.prototype.reconnected = function reconnected(err) {
-  if (this._fn) this._fn(err);
-  return this;
-};
+      Recovery.prototype.reconnected = function reconnected (err) {
+         if (this._fn) this._fn(err)
+         return this
+       }
 
 /**
  * Reset the reconnection attempt so it can be re-used again.
@@ -893,12 +886,12 @@ Recovery.prototype.reconnected = function reconnected(err) {
  * @returns {Recovery}
  * @api public
  */
-Recovery.prototype.reset = function reset() {
-  this._fn = this.attempt = null;
-  this.timers.clear('reconnect, timeout');
+      Recovery.prototype.reset = function reset () {
+         this._fn = this.attempt = null
+         this.timers.clear('reconnect, timeout')
 
-  return this;
-};
+         return this
+       }
 
 /**
  * Clean up the instance.
@@ -907,15 +900,14 @@ Recovery.prototype.reset = function reset() {
  * @returns {Boolean}
  * @api public
  */
-Recovery.prototype.destroy = destroy('timers attempt _fn');
+      Recovery.prototype.destroy = destroy('timers attempt _fn')
 
 //
 // Expose the module.
 //
-module.exports = Recovery;
-
-},{"demolish":1,"eventemitter3":9,"millisecond":5,"one-time":6,"tick-tock":11}],9:[function(_dereq_,module,exports){
-'use strict';
+      module.exports = Recovery
+    }, {'demolish': 1, 'eventemitter3': 9, 'millisecond': 5, 'one-time': 6, 'tick-tock': 11}], 9: [function (_dereq_, module, exports) {
+       'use strict'
 
 //
 // We store our EE objects in a plain object whose properties are event names.
@@ -925,7 +917,7 @@ module.exports = Recovery;
 // We also assume that `Object.create(null)` is available when the event name
 // is an ES6 Symbol.
 //
-var prefix = typeof Object.create !== 'function' ? '~' : false;
+       var prefix = typeof Object.create !== 'function' ? '~' : false
 
 /**
  * Representation of a single EventEmitter function.
@@ -935,11 +927,11 @@ var prefix = typeof Object.create !== 'function' ? '~' : false;
  * @param {Boolean} once Only emit once
  * @api private
  */
-function EE(fn, context, once) {
-  this.fn = fn;
-  this.context = context;
-  this.once = once || false;
-}
+       function EE (fn, context, once) {
+        this.fn = fn
+        this.context = context
+        this.once = once || false
+      }
 
 /**
  * Minimal EventEmitter interface that is molded against the Node.js
@@ -948,7 +940,7 @@ function EE(fn, context, once) {
  * @constructor
  * @api public
  */
-function EventEmitter() { /* Nothing to set */ }
+       function EventEmitter () { /* Nothing to set */ }
 
 /**
  * Holds the assigned EventEmitters by name.
@@ -956,7 +948,7 @@ function EventEmitter() { /* Nothing to set */ }
  * @type {Object}
  * @private
  */
-EventEmitter.prototype._events = undefined;
+       EventEmitter.prototype._events = undefined
 
 /**
  * Return a list of assigned event listeners.
@@ -966,20 +958,20 @@ EventEmitter.prototype._events = undefined;
  * @returns {Array|Boolean}
  * @api public
  */
-EventEmitter.prototype.listeners = function listeners(event, exists) {
-  var evt = prefix ? prefix + event : event
-    , available = this._events && this._events[evt];
+       EventEmitter.prototype.listeners = function listeners (event, exists) {
+        var evt = prefix ? prefix + event : event,
+      available = this._events && this._events[evt]
 
-  if (exists) return !!available;
-  if (!available) return [];
-  if (available.fn) return [available.fn];
+        if (exists) return !!available
+        if (!available) return []
+        if (available.fn) return [available.fn]
 
-  for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
-    ee[i] = available[i].fn;
-  }
+        for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
+      ee[i] = available[i].fn
+    }
 
-  return ee;
-};
+        return ee
+      }
 
 /**
  * Emit an event to all registered event listeners.
@@ -988,56 +980,56 @@ EventEmitter.prototype.listeners = function listeners(event, exists) {
  * @returns {Boolean} Indication if we've emitted an event.
  * @api public
  */
-EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
-  var evt = prefix ? prefix + event : event;
+       EventEmitter.prototype.emit = function emit (event, a1, a2, a3, a4, a5) {
+        var evt = prefix ? prefix + event : event
 
-  if (!this._events || !this._events[evt]) return false;
+        if (!this._events || !this._events[evt]) return false
 
-  var listeners = this._events[evt]
-    , len = arguments.length
-    , args
-    , i;
+        var listeners = this._events[evt],
+      len = arguments.length,
+      args,
+      i
 
-  if ('function' === typeof listeners.fn) {
-    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
-
-    switch (len) {
-      case 1: return listeners.fn.call(listeners.context), true;
-      case 2: return listeners.fn.call(listeners.context, a1), true;
-      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
-      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
-      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
-      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
-    }
-
-    for (i = 1, args = new Array(len -1); i < len; i++) {
-      args[i - 1] = arguments[i];
-    }
-
-    listeners.fn.apply(listeners.context, args);
-  } else {
-    var length = listeners.length
-      , j;
-
-    for (i = 0; i < length; i++) {
-      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+        if (typeof listeners.fn === 'function') {
+      if (listeners.once) this.removeListener(event, listeners.fn, undefined, true)
 
       switch (len) {
-        case 1: listeners[i].fn.call(listeners[i].context); break;
-        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
-        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
-        default:
-          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
-            args[j - 1] = arguments[j];
-          }
+        case 1: return listeners.fn.call(listeners.context), true
+        case 2: return listeners.fn.call(listeners.context, a1), true
+        case 3: return listeners.fn.call(listeners.context, a1, a2), true
+        case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true
+        case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true
+        case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true
+      }
 
-          listeners[i].fn.apply(listeners[i].context, args);
+      for (i = 1, args = new Array(len - 1); i < len; i++) {
+        args[i - 1] = arguments[i]
+      }
+
+      listeners.fn.apply(listeners.context, args)
+    } else {
+      var length = listeners.length,
+        j
+
+      for (i = 0; i < length; i++) {
+        if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true)
+
+        switch (len) {
+          case 1: listeners[i].fn.call(listeners[i].context); break
+          case 2: listeners[i].fn.call(listeners[i].context, a1); break
+          case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break
+          default:
+            if (!args) { for (j = 1, args = new Array(len - 1); j < len; j++) {
+              args[j - 1] = arguments[j]
+            } }
+
+            listeners[i].fn.apply(listeners[i].context, args)
+        }
       }
     }
-  }
 
-  return true;
-};
+        return true
+      }
 
 /**
  * Register a new EventListener for the given event.
@@ -1047,21 +1039,21 @@ EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
  * @param {Mixed} context The context of the function.
  * @api public
  */
-EventEmitter.prototype.on = function on(event, fn, context) {
-  var listener = new EE(fn, context || this)
-    , evt = prefix ? prefix + event : event;
+       EventEmitter.prototype.on = function on (event, fn, context) {
+        var listener = new EE(fn, context || this),
+      evt = prefix ? prefix + event : event
 
-  if (!this._events) this._events = prefix ? {} : Object.create(null);
-  if (!this._events[evt]) this._events[evt] = listener;
-  else {
-    if (!this._events[evt].fn) this._events[evt].push(listener);
-    else this._events[evt] = [
-      this._events[evt], listener
-    ];
-  }
+        if (!this._events) this._events = prefix ? {} : Object.create(null)
+        if (!this._events[evt]) this._events[evt] = listener
+        else {
+      if (!this._events[evt].fn) this._events[evt].push(listener)
+      else { this._events[evt] = [
+        this._events[evt], listener
+      ] }
+    }
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Add an EventListener that's only called once.
@@ -1071,21 +1063,21 @@ EventEmitter.prototype.on = function on(event, fn, context) {
  * @param {Mixed} context The context of the function.
  * @api public
  */
-EventEmitter.prototype.once = function once(event, fn, context) {
-  var listener = new EE(fn, context || this, true)
-    , evt = prefix ? prefix + event : event;
+       EventEmitter.prototype.once = function once (event, fn, context) {
+        var listener = new EE(fn, context || this, true),
+      evt = prefix ? prefix + event : event
 
-  if (!this._events) this._events = prefix ? {} : Object.create(null);
-  if (!this._events[evt]) this._events[evt] = listener;
-  else {
-    if (!this._events[evt].fn) this._events[evt].push(listener);
-    else this._events[evt] = [
-      this._events[evt], listener
-    ];
-  }
+        if (!this._events) this._events = prefix ? {} : Object.create(null)
+        if (!this._events[evt]) this._events[evt] = listener
+        else {
+      if (!this._events[evt].fn) this._events[evt].push(listener)
+      else { this._events[evt] = [
+        this._events[evt], listener
+      ] }
+    }
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Remove event listeners.
@@ -1096,47 +1088,47 @@ EventEmitter.prototype.once = function once(event, fn, context) {
  * @param {Boolean} once Only remove once listeners.
  * @api public
  */
-EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
-  var evt = prefix ? prefix + event : event;
+       EventEmitter.prototype.removeListener = function removeListener (event, fn, context, once) {
+        var evt = prefix ? prefix + event : event
 
-  if (!this._events || !this._events[evt]) return this;
+        if (!this._events || !this._events[evt]) return this
 
-  var listeners = this._events[evt]
-    , events = [];
+        var listeners = this._events[evt],
+      events = []
 
-  if (fn) {
-    if (listeners.fn) {
-      if (
+        if (fn) {
+      if (listeners.fn) {
+        if (
            listeners.fn !== fn
         || (once && !listeners.once)
         || (context && listeners.context !== context)
       ) {
-        events.push(listeners);
-      }
-    } else {
-      for (var i = 0, length = listeners.length; i < length; i++) {
-        if (
+          events.push(listeners)
+        }
+      } else {
+        for (var i = 0, length = listeners.length; i < length; i++) {
+          if (
              listeners[i].fn !== fn
           || (once && !listeners[i].once)
           || (context && listeners[i].context !== context)
         ) {
-          events.push(listeners[i]);
+            events.push(listeners[i])
+          }
         }
       }
     }
-  }
 
   //
   // Reset the array, or remove it completely if we have no more listeners.
   //
-  if (events.length) {
-    this._events[evt] = events.length === 1 ? events[0] : events;
-  } else {
-    delete this._events[evt];
-  }
+        if (events.length) {
+      this._events[evt] = events.length === 1 ? events[0] : events
+    } else {
+      delete this._events[evt]
+    }
 
-  return this;
-};
+        return this
+      }
 
 /**
  * Remove all listeners or only the listeners for the specified event.
@@ -1144,42 +1136,41 @@ EventEmitter.prototype.removeListener = function removeListener(event, fn, conte
  * @param {String} event The event want to remove all listeners for.
  * @api public
  */
-EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
-  if (!this._events) return this;
+       EventEmitter.prototype.removeAllListeners = function removeAllListeners (event) {
+        if (!this._events) return this
 
-  if (event) delete this._events[prefix ? prefix + event : event];
-  else this._events = prefix ? {} : Object.create(null);
+        if (event) delete this._events[prefix ? prefix + event : event]
+        else this._events = prefix ? {} : Object.create(null)
 
-  return this;
-};
+        return this
+      }
 
 //
 // Alias methods names because people roll like that.
 //
-EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
-EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+       EventEmitter.prototype.off = EventEmitter.prototype.removeListener
+       EventEmitter.prototype.addListener = EventEmitter.prototype.on
 
 //
 // This function doesn't apply anymore.
 //
-EventEmitter.prototype.setMaxListeners = function setMaxListeners() {
-  return this;
-};
+       EventEmitter.prototype.setMaxListeners = function setMaxListeners () {
+        return this
+      }
 
 //
 // Expose the prefix.
 //
-EventEmitter.prefixed = prefix;
+       EventEmitter.prefixed = prefix
 
 //
 // Expose the module.
 //
-if ('undefined' !== typeof module) {
-  module.exports = EventEmitter;
-}
-
-},{}],10:[function(_dereq_,module,exports){
-'use strict';
+       if (typeof module !== 'undefined') {
+        module.exports = EventEmitter
+      }
+     }, {}], 10: [function (_dereq_, module, exports) {
+      'use strict'
 
 /**
  * Check if we're required to add a port number.
@@ -1190,39 +1181,38 @@ if ('undefined' !== typeof module) {
  * @returns {Boolean} Is it a default port for the given protocol
  * @api private
  */
-module.exports = function required(port, protocol) {
-  protocol = protocol.split(':')[0];
-  port = +port;
+      module.exports = function required (port, protocol) {
+    protocol = protocol.split(':')[0]
+    port = +port
 
-  if (!port) return false;
+    if (!port) return false
 
-  switch (protocol) {
-    case 'http':
-    case 'ws':
-    return port !== 80;
+    switch (protocol) {
+      case 'http':
+      case 'ws':
+        return port !== 80
 
-    case 'https':
-    case 'wss':
-    return port !== 443;
+      case 'https':
+      case 'wss':
+        return port !== 443
 
-    case 'ftp':
-    return port !== 21;
+      case 'ftp':
+        return port !== 21
 
-    case 'gopher':
-    return port !== 70;
+      case 'gopher':
+        return port !== 70
 
-    case 'file':
-    return false;
+      case 'file':
+        return false
+    }
+
+    return port !== 0
   }
+    }, {}], 11: [function (_dereq_, module, exports) {
+  'use strict'
 
-  return port !== 0;
-};
-
-},{}],11:[function(_dereq_,module,exports){
-'use strict';
-
-var has = Object.prototype.hasOwnProperty
-  , ms = _dereq_('millisecond');
+  var has = Object.prototype.hasOwnProperty,
+    ms = _dereq_('millisecond')
 
 /**
  * Timer instance.
@@ -1234,13 +1224,13 @@ var has = Object.prototype.hasOwnProperty
  * @param {Function} fn The functions that need to be executed.
  * @api private
  */
-function Timer(timer, clear, duration, fn) {
-  this.start = +(new Date());
-  this.duration = duration;
-  this.clear = clear;
-  this.timer = timer;
-  this.fns = [fn];
-}
+  function Timer (timer, clear, duration, fn) {
+    this.start = +(new Date())
+    this.duration = duration
+    this.clear = clear
+    this.timer = timer
+    this.fns = [fn]
+  }
 
 /**
  * Calculate the time left for a given timer.
@@ -1248,9 +1238,9 @@ function Timer(timer, clear, duration, fn) {
  * @returns {Number} Time in milliseconds.
  * @api public
  */
-Timer.prototype.remaining = function remaining() {
-  return this.duration - this.taken();
-};
+  Timer.prototype.remaining = function remaining () {
+    return this.duration - this.taken()
+  }
 
 /**
  * Calculate the amount of time it has taken since we've set the timer.
@@ -1258,9 +1248,9 @@ Timer.prototype.remaining = function remaining() {
  * @returns {Number}
  * @api public
  */
-Timer.prototype.taken = function taken() {
-  return +(new Date()) - this.start;
-};
+  Timer.prototype.taken = function taken () {
+    return +(new Date()) - this.start
+  }
 
 /**
  * Custom wrappers for the various of clear{whatever} functions. We cannot
@@ -1271,9 +1261,9 @@ Timer.prototype.taken = function taken() {
  * @type {Function}
  * @api private
  */
-function unsetTimeout(id) { clearTimeout(id); }
-function unsetInterval(id) { clearInterval(id); }
-function unsetImmediate(id) { clearImmediate(id); }
+  function unsetTimeout (id) { clearTimeout(id) }
+  function unsetInterval (id) { clearInterval(id) }
+  function unsetImmediate (id) { clearImmediate(id) }
 
 /**
  * Simple timer management.
@@ -1282,12 +1272,12 @@ function unsetImmediate(id) { clearImmediate(id); }
  * @param {Mixed} context Context of the callbacks that we execute.
  * @api public
  */
-function Tick(context) {
-  if (!(this instanceof Tick)) return new Tick(context);
+  function Tick (context) {
+    if (!(this instanceof Tick)) return new Tick(context)
 
-  this.timers = {};
-  this.context = context || this;
-}
+    this.timers = {}
+    this.context = context || this
+  }
 
 /**
  * Return a function which will just iterate over all assigned callbacks and
@@ -1298,25 +1288,25 @@ function Tick(context) {
  * @returns {Function}
  * @api private
  */
-Tick.prototype.tock = function ticktock(name, clear) {
-  var tock = this;
+  Tick.prototype.tock = function ticktock (name, clear) {
+    var tock = this
 
-  return function tickedtock() {
-    if (!(name in tock.timers)) return;
+    return function tickedtock () {
+      if (!(name in tock.timers)) return
 
-    var timer = tock.timers[name]
-      , fns = timer.fns.slice()
-      , l = fns.length
-      , i = 0;
+      var timer = tock.timers[name],
+        fns = timer.fns.slice(),
+        l = fns.length,
+        i = 0
 
-    if (clear) tock.clear(name);
-    else tock.start = +new Date();
+      if (clear) tock.clear(name)
+      else tock.start = +new Date()
 
-    for (; i < l; i++) {
-      fns[i].call(tock.context);
+      for (; i < l; i++) {
+        fns[i].call(tock.context)
+      }
     }
-  };
-};
+  }
 
 /**
  * Add a new timeout.
@@ -1327,25 +1317,25 @@ Tick.prototype.tock = function ticktock(name, clear) {
  * @returns {Tick}
  * @api public
  */
-Tick.prototype.setTimeout = function timeout(name, fn, time) {
-  var tick = this
-    , tock;
+  Tick.prototype.setTimeout = function timeout (name, fn, time) {
+    var tick = this,
+      tock
 
-  if (tick.timers[name]) {
-    tick.timers[name].fns.push(fn);
-    return tick;
-  }
+    if (tick.timers[name]) {
+      tick.timers[name].fns.push(fn)
+      return tick
+    }
 
-  tock = ms(time);
-  tick.timers[name] = new Timer(
+    tock = ms(time)
+    tick.timers[name] = new Timer(
     setTimeout(tick.tock(name, true), ms(time)),
     unsetTimeout,
     tock,
     fn
-  );
+  )
 
-  return tick;
-};
+    return tick
+  }
 
 /**
  * Add a new interval.
@@ -1356,25 +1346,25 @@ Tick.prototype.setTimeout = function timeout(name, fn, time) {
  * @returns {Tick}
  * @api public
  */
-Tick.prototype.setInterval = function interval(name, fn, time) {
-  var tick = this
-    , tock;
+  Tick.prototype.setInterval = function interval (name, fn, time) {
+    var tick = this,
+      tock
 
-  if (tick.timers[name]) {
-    tick.timers[name].fns.push(fn);
-    return tick;
-  }
+    if (tick.timers[name]) {
+      tick.timers[name].fns.push(fn)
+      return tick
+    }
 
-  tock = ms(time);
-  tick.timers[name] = new Timer(
+    tock = ms(time)
+    tick.timers[name] = new Timer(
     setInterval(tick.tock(name), ms(time)),
     unsetInterval,
     tock,
     fn
-  );
+  )
 
-  return tick;
-};
+    return tick
+  }
 
 /**
  * Add a new setImmediate.
@@ -1384,25 +1374,25 @@ Tick.prototype.setInterval = function interval(name, fn, time) {
  * @returns {Tick}
  * @api public
  */
-Tick.prototype.setImmediate = function immediate(name, fn) {
-  var tick = this;
+  Tick.prototype.setImmediate = function immediate (name, fn) {
+    var tick = this
 
-  if ('function' !== typeof setImmediate) return tick.setTimeout(name, fn, 0);
+    if (typeof setImmediate !== 'function') return tick.setTimeout(name, fn, 0)
 
-  if (tick.timers[name]) {
-    tick.timers[name].fns.push(fn);
-    return tick;
-  }
+    if (tick.timers[name]) {
+      tick.timers[name].fns.push(fn)
+      return tick
+    }
 
-  tick.timers[name] = new Timer(
+    tick.timers[name] = new Timer(
     setImmediate(tick.tock(name, true)),
     unsetImmediate,
     0,
     fn
-  );
+  )
 
-  return tick;
-};
+    return tick
+  }
 
 /**
  * Check if we have a timer set.
@@ -1411,9 +1401,9 @@ Tick.prototype.setImmediate = function immediate(name, fn) {
  * @returns {Boolean}
  * @api public
  */
-Tick.prototype.active = function active(name) {
-  return name in this.timers;
-};
+  Tick.prototype.active = function active (name) {
+    return name in this.timers
+  }
 
 /**
  * Properly clean up all timeout references. If no arguments are supplied we
@@ -1423,33 +1413,33 @@ Tick.prototype.active = function active(name) {
  * @returns {Tick}
  * @api public
  */
-Tick.prototype.clear = function clear() {
-  var args = arguments.length ? arguments : []
-    , tick = this
-    , timer, i, l;
+  Tick.prototype.clear = function clear () {
+    var args = arguments.length ? arguments : [],
+      tick = this,
+      timer, i, l
 
-  if (args.length === 1 && 'string' === typeof args[0]) {
-    args = args[0].split(/[, ]+/);
-  }
-
-  if (!args.length) {
-    for (timer in tick.timers) {
-      if (has.call(tick.timers, timer)) args.push(timer);
+    if (args.length === 1 && typeof args[0] === 'string') {
+      args = args[0].split(/[, ]+/)
     }
+
+    if (!args.length) {
+      for (timer in tick.timers) {
+        if (has.call(tick.timers, timer)) args.push(timer)
+      }
+    }
+
+    for (i = 0, l = args.length; i < l; i++) {
+      timer = tick.timers[args[i]]
+
+      if (!timer) continue
+      timer.clear(timer.timer)
+
+      timer.fns = timer.timer = timer.clear = null
+      delete tick.timers[args[i]]
+    }
+
+    return tick
   }
-
-  for (i = 0, l = args.length; i < l; i++) {
-    timer = tick.timers[args[i]];
-
-    if (!timer) continue;
-    timer.clear(timer.timer);
-
-    timer.fns = timer.timer = timer.clear = null;
-    delete tick.timers[args[i]];
-  }
-
-  return tick;
-};
 
 /**
  * Adjust a timeout or interval to a new duration.
@@ -1457,22 +1447,22 @@ Tick.prototype.clear = function clear() {
  * @returns {Tick}
  * @api public
  */
-Tick.prototype.adjust = function adjust(name, time) {
-  var interval
-    , tick = this
-    , tock = ms(time)
-    , timer = tick.timers[name];
+  Tick.prototype.adjust = function adjust (name, time) {
+    var interval,
+      tick = this,
+      tock = ms(time),
+      timer = tick.timers[name]
 
-  if (!timer) return tick;
+    if (!timer) return tick
 
-  interval = timer.clear === unsetInterval;
-  timer.clear(timer.timer);
-  timer.start = +(new Date());
-  timer.duration = tock;
-  timer.timer = (interval ? setInterval : setTimeout)(tick.tock(name, !interval), tock);
+    interval = timer.clear === unsetInterval
+    timer.clear(timer.timer)
+    timer.start = +(new Date())
+    timer.duration = tock
+    timer.timer = (interval ? setInterval : setTimeout)(tick.tock(name, !interval), tock)
 
-  return tick;
-};
+    return tick
+  }
 
 /**
  * We will no longer use this module, prepare your self for global cleanups.
@@ -1480,28 +1470,27 @@ Tick.prototype.adjust = function adjust(name, time) {
  * @returns {Boolean}
  * @api public
  */
-Tick.prototype.end = Tick.prototype.destroy = function end() {
-  if (!this.context) return false;
+  Tick.prototype.end = Tick.prototype.destroy = function end () {
+    if (!this.context) return false
 
-  this.clear();
-  this.context = this.timers = null;
+    this.clear()
+    this.context = this.timers = null
 
-  return true;
-};
+    return true
+  }
 
 //
 // Expose the timer factory.
 //
-Tick.Timer = Timer;
-module.exports = Tick;
+  Tick.Timer = Timer
+  module.exports = Tick
+}, {'millisecond': 5}], 12: [function (_dereq_, module, exports) {
+  'use strict'
 
-},{"millisecond":5}],12:[function(_dereq_,module,exports){
-'use strict';
-
-var required = _dereq_('requires-port')
-  , lolcation = _dereq_('./lolcation')
-  , qs = _dereq_('querystringify')
-  , protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i;
+  var required = _dereq_('requires-port'),
+    lolcation = _dereq_('./lolcation'),
+    qs = _dereq_('querystringify'),
+    protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i
 
 /**
  * These are the parse rules for the URL parser, it informs the parser
@@ -1515,7 +1504,7 @@ var required = _dereq_('requires-port')
  * 3. Inherit from location if non existing in the parser.
  * 4. `toLowerCase` the resulting value.
  */
-var rules = [
+  var rules = [
   ['#', 'hash'],                        // Extract from the back.
   ['?', 'query'],                       // Extract from the back.
   ['/', 'pathname'],                    // Extract from the back.
@@ -1523,7 +1512,7 @@ var rules = [
   [NaN, 'host', undefined, 1, 1],       // Set left over value.
   [/:(\d+)$/, 'port', undefined, 1],    // RegExp the back.
   [NaN, 'hostname', undefined, 1, 1]    // Set left over.
-];
+  ]
 
 /**
  * @typedef ProtocolExtract
@@ -1540,15 +1529,15 @@ var rules = [
  * @return {ProtocolExtract} Extracted information.
  * @api private
  */
-function extractProtocol(address) {
-  var match = protocolre.exec(address);
+  function extractProtocol (address) {
+    var match = protocolre.exec(address)
 
-  return {
-    protocol: match[1] ? match[1].toLowerCase() : '',
-    slashes: !!match[2],
-    rest: match[3]
-  };
-}
+    return {
+      protocol: match[1] ? match[1].toLowerCase() : '',
+      slashes: !!match[2],
+      rest: match[3]
+    }
+  }
 
 /**
  * Resolve a relative URL pathname against a base URL pathname.
@@ -1558,31 +1547,31 @@ function extractProtocol(address) {
  * @return {String} Resolved pathname.
  * @api private
  */
-function resolve(relative, base) {
-  var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/'))
-    , i = path.length
-    , last = path[i - 1]
-    , unshift = false
-    , up = 0;
+  function resolve (relative, base) {
+    var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/')),
+      i = path.length,
+      last = path[i - 1],
+      unshift = false,
+      up = 0
 
-  while (i--) {
-    if (path[i] === '.') {
-      path.splice(i, 1);
-    } else if (path[i] === '..') {
-      path.splice(i, 1);
-      up++;
-    } else if (up) {
-      if (i === 0) unshift = true;
-      path.splice(i, 1);
-      up--;
+    while (i--) {
+      if (path[i] === '.') {
+        path.splice(i, 1)
+      } else if (path[i] === '..') {
+        path.splice(i, 1)
+        up++
+      } else if (up) {
+        if (i === 0) unshift = true
+        path.splice(i, 1)
+        up--
+      }
     }
+
+    if (unshift) path.unshift('')
+    if (last === '.' || last === '..') path.push('')
+
+    return path.join('/')
   }
-
-  if (unshift) path.unshift('');
-  if (last === '.' || last === '..') path.push('');
-
-  return path.join('/');
-}
 
 /**
  * The actual URL instance. Instead of returning an object we've opted-in to
@@ -1595,16 +1584,16 @@ function resolve(relative, base) {
  * @param {Boolean|Function} parser Parser for the query string.
  * @api public
  */
-function URL(address, location, parser) {
-  if (!(this instanceof URL)) {
-    return new URL(address, location, parser);
-  }
+  function URL (address, location, parser) {
+    if (!(this instanceof URL)) {
+      return new URL(address, location, parser)
+    }
 
-  var relative, extracted, parse, instruction, index, key
-    , instructions = rules.slice()
-    , type = typeof location
-    , url = this
-    , i = 0;
+    var relative, extracted, parse, instruction, index, key,
+      instructions = rules.slice(),
+      type = typeof location,
+      url = this,
+      i = 0
 
   //
   // The following if statements allows this module two have compatibility with
@@ -1617,111 +1606,111 @@ function URL(address, location, parser) {
   //    arguments. The supplied object will be used as default values / fall-back
   //    for relative paths.
   //
-  if ('object' !== type && 'string' !== type) {
-    parser = location;
-    location = null;
-  }
+    if (type !== 'object' && type !== 'string') {
+      parser = location
+      location = null
+    }
 
-  if (parser && 'function' !== typeof parser) parser = qs.parse;
+    if (parser && typeof parser !== 'function') parser = qs.parse
 
-  location = lolcation(location);
+    location = lolcation(location)
 
   //
   // Extract protocol information before running the instructions.
   //
-  extracted = extractProtocol(address || '');
-  relative = !extracted.protocol && !extracted.slashes;
-  url.slashes = extracted.slashes || relative && location.slashes;
-  url.protocol = extracted.protocol || location.protocol || '';
-  address = extracted.rest;
+    extracted = extractProtocol(address || '')
+    relative = !extracted.protocol && !extracted.slashes
+    url.slashes = extracted.slashes || relative && location.slashes
+    url.protocol = extracted.protocol || location.protocol || ''
+    address = extracted.rest
 
   //
   // When the authority component is absent the URL starts with a path
   // component.
   //
-  if (!extracted.slashes) instructions[2] = [/(.*)/, 'pathname'];
+    if (!extracted.slashes) instructions[2] = [/(.*)/, 'pathname']
 
-  for (; i < instructions.length; i++) {
-    instruction = instructions[i];
-    parse = instruction[0];
-    key = instruction[1];
+    for (; i < instructions.length; i++) {
+      instruction = instructions[i]
+      parse = instruction[0]
+      key = instruction[1]
 
-    if (parse !== parse) {
-      url[key] = address;
-    } else if ('string' === typeof parse) {
-      if (~(index = address.indexOf(parse))) {
-        if ('number' === typeof instruction[2]) {
-          url[key] = address.slice(0, index);
-          address = address.slice(index + instruction[2]);
-        } else {
-          url[key] = address.slice(index);
-          address = address.slice(0, index);
+      if (parse !== parse) {
+        url[key] = address
+      } else if (typeof parse === 'string') {
+        if (~(index = address.indexOf(parse))) {
+          if (typeof instruction[2] === 'number') {
+            url[key] = address.slice(0, index)
+            address = address.slice(index + instruction[2])
+          } else {
+            url[key] = address.slice(index)
+            address = address.slice(0, index)
+          }
         }
+      } else if (index = parse.exec(address)) {
+        url[key] = index[1]
+        address = address.slice(0, index.index)
       }
-    } else if (index = parse.exec(address)) {
-      url[key] = index[1];
-      address = address.slice(0, index.index);
-    }
 
-    url[key] = url[key] || (
+      url[key] = url[key] || (
       relative && instruction[3] ? location[key] || '' : ''
-    );
+    )
 
     //
     // Hostname, host and protocol should be lowercased so they can be used to
     // create a proper `origin`.
     //
-    if (instruction[4]) url[key] = url[key].toLowerCase();
-  }
+      if (instruction[4]) url[key] = url[key].toLowerCase()
+    }
 
   //
   // Also parse the supplied query string in to an object. If we're supplied
   // with a custom parser as function use that instead of the default build-in
   // parser.
   //
-  if (parser) url.query = parser(url.query);
+    if (parser) url.query = parser(url.query)
 
   //
   // If the URL is relative, resolve the pathname against the base URL.
   //
-  if (
+    if (
       relative
     && location.slashes
     && url.pathname.charAt(0) !== '/'
     && (url.pathname !== '' || location.pathname !== '')
   ) {
-    url.pathname = resolve(url.pathname, location.pathname);
-  }
+      url.pathname = resolve(url.pathname, location.pathname)
+    }
 
   //
   // We should not add port numbers if they are already the default port number
   // for a given protocol. As the host also contains the port number we're going
   // override it with the hostname which contains no port number.
   //
-  if (!required(url.port, url.protocol)) {
-    url.host = url.hostname;
-    url.port = '';
-  }
+    if (!required(url.port, url.protocol)) {
+      url.host = url.hostname
+      url.port = ''
+    }
 
   //
   // Parse down the `auth` for the username and password.
   //
-  url.username = url.password = '';
-  if (url.auth) {
-    instruction = url.auth.split(':');
-    url.username = instruction[0] || '';
-    url.password = instruction[1] || '';
-  }
+    url.username = url.password = ''
+    if (url.auth) {
+      instruction = url.auth.split(':')
+      url.username = instruction[0] || ''
+      url.password = instruction[1] || ''
+    }
 
-  url.origin = url.protocol && url.host && url.protocol !== 'file:'
-    ? url.protocol +'//'+ url.host
-    : 'null';
+    url.origin = url.protocol && url.host && url.protocol !== 'file:'
+    ? url.protocol + '//' + url.host
+    : 'null'
 
   //
   // The href is just the compiled result.
   //
-  url.href = url.toString();
-}
+    url.href = url.toString()
+  }
 
 /**
  * This is convenience method for changing properties in the URL instance to
@@ -1736,78 +1725,78 @@ function URL(address, location, parser) {
  * @returns {URL}
  * @api public
  */
-URL.prototype.set = function set(part, value, fn) {
-  var url = this;
+  URL.prototype.set = function set (part, value, fn) {
+    var url = this
 
-  switch (part) {
-    case 'query':
-      if ('string' === typeof value && value.length) {
-        value = (fn || qs.parse)(value);
-      }
+    switch (part) {
+      case 'query':
+        if (typeof value === 'string' && value.length) {
+          value = (fn || qs.parse)(value)
+        }
 
-      url[part] = value;
-      break;
+        url[part] = value
+        break
 
-    case 'port':
-      url[part] = value;
+      case 'port':
+        url[part] = value
 
-      if (!required(value, url.protocol)) {
-        url.host = url.hostname;
-        url[part] = '';
-      } else if (value) {
-        url.host = url.hostname +':'+ value;
-      }
+        if (!required(value, url.protocol)) {
+          url.host = url.hostname
+          url[part] = ''
+        } else if (value) {
+          url.host = url.hostname + ':' + value
+        }
 
-      break;
+        break
 
-    case 'hostname':
-      url[part] = value;
+      case 'hostname':
+        url[part] = value
 
-      if (url.port) value += ':'+ url.port;
-      url.host = value;
-      break;
+        if (url.port) value += ':' + url.port
+        url.host = value
+        break
 
-    case 'host':
-      url[part] = value;
+      case 'host':
+        url[part] = value
 
-      if (/:\d+$/.test(value)) {
-        value = value.split(':');
-        url.port = value.pop();
-        url.hostname = value.join(':');
-      } else {
-        url.hostname = value;
-        url.port = '';
-      }
+        if (/:\d+$/.test(value)) {
+          value = value.split(':')
+          url.port = value.pop()
+          url.hostname = value.join(':')
+        } else {
+          url.hostname = value
+          url.port = ''
+        }
 
-      break;
+        break
 
-    case 'protocol':
-      url.protocol = value.toLowerCase();
-      url.slashes = !fn;
-      break;
+      case 'protocol':
+        url.protocol = value.toLowerCase()
+        url.slashes = !fn
+        break
 
-    case 'pathname':
-      url.pathname = value.charAt(0) === '/' ? value : '/' + value;
-      break;
+      case 'pathname':
+        url.pathname = value.charAt(0) === '/' ? value : '/' + value
+        break
 
-    default:
-      url[part] = value;
+      default:
+        url[part] = value
+    }
+
+    for (var i = 0; i < rules.length; i++) {
+      var ins = rules[i]
+
+      if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase()
+    }
+
+    url.origin = url.protocol && url.host && url.protocol !== 'file:'
+    ? url.protocol + '//' + url.host
+    : 'null'
+
+    url.href = url.toString()
+
+    return url
   }
-
-  for (var i = 0; i < rules.length; i++) {
-    var ins = rules[i];
-
-    if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase();
-  }
-
-  url.origin = url.protocol && url.host && url.protocol !== 'file:'
-    ? url.protocol +'//'+ url.host
-    : 'null';
-
-  url.href = url.toString();
-
-  return url;
-};
 
 /**
  * Transform the properties back in to a valid and full URL string.
@@ -1816,48 +1805,47 @@ URL.prototype.set = function set(part, value, fn) {
  * @returns {String}
  * @api public
  */
-URL.prototype.toString = function toString(stringify) {
-  if (!stringify || 'function' !== typeof stringify) stringify = qs.stringify;
+  URL.prototype.toString = function toString (stringify) {
+    if (!stringify || typeof stringify !== 'function') stringify = qs.stringify
 
-  var query
-    , url = this
-    , protocol = url.protocol;
+    var query,
+      url = this,
+      protocol = url.protocol
 
-  if (protocol && protocol.charAt(protocol.length - 1) !== ':') protocol += ':';
+    if (protocol && protocol.charAt(protocol.length - 1) !== ':') protocol += ':'
 
-  var result = protocol + (url.slashes ? '//' : '');
+    var result = protocol + (url.slashes ? '//' : '')
 
-  if (url.username) {
-    result += url.username;
-    if (url.password) result += ':'+ url.password;
-    result += '@';
+    if (url.username) {
+      result += url.username
+      if (url.password) result += ':' + url.password
+      result += '@'
+    }
+
+    result += url.host + url.pathname
+
+    query = typeof url.query === 'object' ? stringify(url.query) : url.query
+    if (query) result += query.charAt(0) !== '?' ? '?' + query : query
+
+    if (url.hash) result += url.hash
+
+    return result
   }
-
-  result += url.host + url.pathname;
-
-  query = 'object' === typeof url.query ? stringify(url.query) : url.query;
-  if (query) result += '?' !== query.charAt(0) ? '?'+ query : query;
-
-  if (url.hash) result += url.hash;
-
-  return result;
-};
 
 //
 // Expose the URL parser and some additional properties that might be useful for
 // others or testing.
 //
-URL.extractProtocol = extractProtocol;
-URL.location = lolcation;
-URL.qs = qs;
+  URL.extractProtocol = extractProtocol
+  URL.location = lolcation
+  URL.qs = qs
 
-module.exports = URL;
+  module.exports = URL
+}, {'./lolcation': 13, 'querystringify': 7, 'requires-port': 10}], 13: [function (_dereq_, module, exports) {
+  (function (global) {
+    'use strict'
 
-},{"./lolcation":13,"querystringify":7,"requires-port":10}],13:[function(_dereq_,module,exports){
-(function (global){
-'use strict';
-
-var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
+    var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//
 
 /**
  * These properties should not be copied or inherited from. This is only needed
@@ -1867,8 +1855,8 @@ var slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
  * @type {Object}
  * @private
  */
-var ignore = { hash: 1, query: 1 }
-  , URL;
+    var ignore = { hash: 1, query: 1 },
+      URL
 
 /**
  * The location object differs when your code is loaded through a normal page,
@@ -1882,43 +1870,42 @@ var ignore = { hash: 1, query: 1 }
  * @returns {Object} lolcation object.
  * @api public
  */
-module.exports = function lolcation(loc) {
-  loc = loc || global.location || {};
-  URL = URL || _dereq_('./');
+    module.exports = function lolcation (loc) {
+      loc = loc || global.location || {}
+      URL = URL || _dereq_('./')
 
-  var finaldestination = {}
-    , type = typeof loc
-    , key;
+      var finaldestination = {},
+        type = typeof loc,
+        key
 
-  if ('blob:' === loc.protocol) {
-    finaldestination = new URL(unescape(loc.pathname), {});
-  } else if ('string' === type) {
-    finaldestination = new URL(loc, {});
-    for (key in ignore) delete finaldestination[key];
-  } else if ('object' === type) {
-    for (key in loc) {
-      if (key in ignore) continue;
-      finaldestination[key] = loc[key];
+      if (loc.protocol === 'blob:') {
+        finaldestination = new URL(unescape(loc.pathname), {})
+      } else if (type === 'string') {
+        finaldestination = new URL(loc, {})
+        for (key in ignore) delete finaldestination[key]
+      } else if (type === 'object') {
+        for (key in loc) {
+          if (key in ignore) continue
+          finaldestination[key] = loc[key]
+        }
+
+        if (finaldestination.slashes === undefined) {
+          finaldestination.slashes = slashes.test(loc.href)
+        }
+      }
+
+      return finaldestination
     }
+  }).call(this, typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : {})
+}, {'./': 12}], 14: [function (_dereq_, module, exports) {
+  'use strict'
 
-    if (finaldestination.slashes === undefined) {
-      finaldestination.slashes = slashes.test(loc.href);
-    }
-  }
-
-  return finaldestination;
-};
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./":12}],14:[function(_dereq_,module,exports){
-'use strict';
-
-var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split('')
-  , length = 64
-  , map = {}
-  , seed = 0
-  , i = 0
-  , prev;
+  var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_'.split(''),
+    length = 64,
+    map = {},
+    seed = 0,
+    i = 0,
+    prev
 
 /**
  * Return a string representing the specified number.
@@ -1927,16 +1914,16 @@ var alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_
  * @returns {String} The string representation of the number.
  * @api public
  */
-function encode(num) {
-  var encoded = '';
+  function encode (num) {
+    var encoded = ''
 
-  do {
-    encoded = alphabet[num % length] + encoded;
-    num = Math.floor(num / length);
-  } while (num > 0);
+    do {
+      encoded = alphabet[num % length] + encoded
+      num = Math.floor(num / length)
+    } while (num > 0)
 
-  return encoded;
-}
+    return encoded
+  }
 
 /**
  * Return the integer value specified by the given string.
@@ -1945,15 +1932,15 @@ function encode(num) {
  * @returns {Number} The integer value represented by the string.
  * @api public
  */
-function decode(str) {
-  var decoded = 0;
+  function decode (str) {
+    var decoded = 0
 
-  for (i = 0; i < str.length; i++) {
-    decoded = decoded * length + map[str.charAt(i)];
+    for (i = 0; i < str.length; i++) {
+      decoded = decoded * length + map[str.charAt(i)]
+    }
+
+    return decoded
   }
-
-  return decoded;
-}
 
 /**
  * Yeast: A tiny growing id generator.
@@ -1961,38 +1948,37 @@ function decode(str) {
  * @returns {String} A unique id.
  * @api public
  */
-function yeast() {
-  var now = encode(+new Date());
+  function yeast () {
+    var now = encode(+new Date())
 
-  if (now !== prev) return seed = 0, prev = now;
-  return now +'.'+ encode(seed++);
-}
+    if (now !== prev) return seed = 0, prev = now
+    return now + '.' + encode(seed++)
+  }
 
 //
 // Map each character to its index.
 //
-for (; i < length; i++) map[alphabet[i]] = i;
+  for (; i < length; i++) map[alphabet[i]] = i
 
 //
 // Expose the `yeast`, `encode` and `decode` functions.
 //
-yeast.encode = encode;
-yeast.decode = decode;
-module.exports = yeast;
+  yeast.encode = encode
+  yeast.decode = decode
+  module.exports = yeast
+}, {}], 15: [function (_dereq_, module, exports) {
+/* globals require, define */
+  'use strict'
 
-},{}],15:[function(_dereq_,module,exports){
-/*globals require, define */
-'use strict';
-
-var EventEmitter = _dereq_('eventemitter3')
-  , TickTock = _dereq_('tick-tock')
-  , Recovery = _dereq_('recovery')
-  , qs = _dereq_('querystringify')
-  , inherits = _dereq_('inherits')
-  , destroy = _dereq_('demolish')
-  , yeast = _dereq_('yeast')
-  , u2028 = /\u2028/g
-  , u2029 = /\u2029/g;
+  var EventEmitter = _dereq_('eventemitter3'),
+    TickTock = _dereq_('tick-tock'),
+    Recovery = _dereq_('recovery'),
+    qs = _dereq_('querystringify'),
+    inherits = _dereq_('inherits'),
+    destroy = _dereq_('demolish'),
+    yeast = _dereq_('yeast'),
+    u2028 = /\u2028/g,
+    u2029 = /\u2029/g
 
 /**
  * Context assertion, ensure that some of our public Primus methods are called
@@ -2002,34 +1988,34 @@ var EventEmitter = _dereq_('eventemitter3')
  * @param {String} method The method name.
  * @api private
  */
-function context(self, method) {
-  if (self instanceof Primus) return;
+  function context (self, method) {
+    if (self instanceof Primus) return
 
-  var failure = new Error('Primus#'+ method + '\'s context should called with a Primus instance');
+    var failure = new Error('Primus#' + method + '\'s context should called with a Primus instance')
 
-  if ('function' !== typeof self.listeners || !self.listeners('error').length) {
-    throw failure;
+    if (typeof self.listeners !== 'function' || !self.listeners('error').length) {
+      throw failure
+    }
+
+    self.emit('error', failure)
   }
-
-  self.emit('error', failure);
-}
 
 //
 // Sets the default connection URL, it uses the default origin of the browser
 // when supported but degrades for older browsers. In Node.js, we cannot guess
 // where the user wants to connect to, so we just default to localhost.
 //
-var defaultUrl;
+  var defaultUrl
 
-try {
-  if (location.origin) {
-    defaultUrl = location.origin;
-  } else {
-    defaultUrl = location.protocol +'//'+ location.host;
+  try {
+    if (location.origin) {
+      defaultUrl = location.origin
+    } else {
+      defaultUrl = location.protocol + '//' + location.host
+    }
+  } catch (e) {
+    defaultUrl = 'http://127.0.0.1'
   }
-} catch (e) {
-  defaultUrl = 'http://127.0.0.1';
-}
 
 /**
  * Primus is a real-time library agnostic framework for establishing real-time
@@ -2052,67 +2038,67 @@ try {
  * @param {Object} options The configuration.
  * @api public
  */
-function Primus(url, options) {
-  if (!(this instanceof Primus)) return new Primus(url, options);
+  function Primus (url, options) {
+    if (!(this instanceof Primus)) return new Primus(url, options)
 
-  Primus.Stream.call(this);
+    Primus.Stream.call(this)
 
-  if ('function' !== typeof this.client) {
-    var message = 'The client library has not been compiled correctly, ' +
-      'see https://github.com/primus/primus#client-library for more details';
-    return this.critical(new Error(message));
-  }
+    if (typeof this.client !== 'function') {
+      var message = 'The client library has not been compiled correctly, ' +
+      'see https://github.com/primus/primus#client-library for more details'
+      return this.critical(new Error(message))
+    }
 
-  if ('object' === typeof url) {
-    options = url;
-    url = options.url || options.uri || defaultUrl;
-  } else {
-    options = options || {};
-  }
+    if (typeof url === 'object') {
+      options = url
+      url = options.url || options.uri || defaultUrl
+    } else {
+      options = options || {}
+    }
 
-  var primus = this;
+    var primus = this
 
   // The maximum number of messages that can be placed in queue.
-  options.queueSize = 'queueSize' in options ? options.queueSize : Infinity;
+    options.queueSize = 'queueSize' in options ? options.queueSize : Infinity
 
   // Connection timeout duration.
-  options.timeout = 'timeout' in options ? options.timeout : 10e3;
+    options.timeout = 'timeout' in options ? options.timeout : 10e3
 
   // Stores the back off configuration.
-  options.reconnect = 'reconnect' in options ? options.reconnect : {};
+    options.reconnect = 'reconnect' in options ? options.reconnect : {}
 
   // Heartbeat ping interval.
-  options.ping = 'ping' in options ? options.ping : 25000;
+    options.ping = 'ping' in options ? options.ping : 25000
 
   // Heartbeat pong response timeout.
-  options.pong = 'pong' in options ? options.pong : 10e3;
+    options.pong = 'pong' in options ? options.pong : 10e3
 
   // Reconnect strategies.
-  options.strategy = 'strategy' in options ? options.strategy : [];
+    options.strategy = 'strategy' in options ? options.strategy : []
 
   // Custom transport options.
-  options.transport = 'transport' in options ? options.transport : {};
+    options.transport = 'transport' in options ? options.transport : {}
 
-  primus.buffer = [];                           // Stores premature send data.
-  primus.writable = true;                       // Silly stream compatibility.
-  primus.readable = true;                       // Silly stream compatibility.
-  primus.url = primus.parse(url || defaultUrl); // Parse the URL to a readable format.
-  primus.readyState = Primus.CLOSED;            // The readyState of the connection.
-  primus.options = options;                     // Reference to the supplied options.
-  primus.timers = new TickTock(this);           // Contains all our timers.
-  primus.socket = null;                         // Reference to the internal connection.
-  primus.latency = 0;                           // Latency between messages.
-  primus.disconnect = false;                    // Did we receive a disconnect packet?
-  primus.transport = options.transport;         // Transport options.
-  primus.transformers = {                       // Message transformers.
-    outgoing: [],
-    incoming: []
-  };
+    primus.buffer = []                           // Stores premature send data.
+    primus.writable = true                       // Silly stream compatibility.
+    primus.readable = true                       // Silly stream compatibility.
+    primus.url = primus.parse(url || defaultUrl) // Parse the URL to a readable format.
+    primus.readyState = Primus.CLOSED            // The readyState of the connection.
+    primus.options = options                     // Reference to the supplied options.
+    primus.timers = new TickTock(this)           // Contains all our timers.
+    primus.socket = null                         // Reference to the internal connection.
+    primus.latency = 0                           // Latency between messages.
+    primus.disconnect = false                    // Did we receive a disconnect packet?
+    primus.transport = options.transport         // Transport options.
+    primus.transformers = {                       // Message transformers.
+      outgoing: [],
+      incoming: []
+    }
 
   //
   // Create our reconnection instance.
   //
-  primus.recovery = new Recovery(options.reconnect);
+    primus.recovery = new Recovery(options.reconnect)
 
   //
   // Parse the reconnection strategy. It can have the following strategies:
@@ -2121,56 +2107,56 @@ function Primus(url, options) {
   // - disconnect: Reconnect when we have an unexpected disconnect.
   // - online: Reconnect when we're back online.
   //
-  if ('string' === typeof options.strategy) {
-    options.strategy = options.strategy.split(/\s?\,\s?/g);
-  }
+    if (typeof options.strategy === 'string') {
+      options.strategy = options.strategy.split(/\s?\,\s?/g)
+    }
 
-  if (false === options.strategy) {
+    if (options.strategy === false) {
     //
     // Strategies are disabled, but we still need an empty array to join it in
     // to nothing.
     //
-    options.strategy = [];
-  } else if (!options.strategy.length) {
-    options.strategy.push('disconnect', 'online');
+      options.strategy = []
+    } else if (!options.strategy.length) {
+      options.strategy.push('disconnect', 'online')
 
     //
     // Timeout based reconnection should only be enabled conditionally. When
     // authorization is enabled it could trigger.
     //
-    if (!this.authorization) options.strategy.push('timeout');
-  }
+      if (!this.authorization) options.strategy.push('timeout')
+    }
 
-  options.strategy = options.strategy.join(',').toLowerCase();
+    options.strategy = options.strategy.join(',').toLowerCase()
 
   //
   // Force the use of WebSockets, even when we've detected some potential
   // broken WebSocket implementation.
   //
-  if ('websockets' in options) {
-    primus.AVOID_WEBSOCKETS = !options.websockets;
-  }
+    if ('websockets' in options) {
+      primus.AVOID_WEBSOCKETS = !options.websockets
+    }
 
   //
   // Force or disable the use of NETWORK events as leading client side
   // disconnection detection.
   //
-  if ('network' in options) {
-    primus.NETWORK_EVENTS = options.network;
-  }
+    if ('network' in options) {
+      primus.NETWORK_EVENTS = options.network
+    }
 
   //
   // Check if the user wants to manually initialise a connection. If they don't,
   // we want to do it after a really small timeout so we give the users enough
   // time to listen for `error` events etc.
   //
-  if (!options.manual) primus.timers.setTimeout('open', function open() {
-    primus.timers.clear('open');
-    primus.open();
-  }, 0);
+    if (!options.manual) { primus.timers.setTimeout('open', function open () {
+      primus.timers.clear('open')
+      primus.open()
+    }, 0) }
 
-  primus.initialise(options);
-}
+    primus.initialise(options)
+  }
 
 /**
  * Simple require wrapper to make browserify, node and require.js play nice.
@@ -2179,25 +2165,25 @@ function Primus(url, options) {
  * @returns {Object|Undefined} The module that we required.
  * @api private
  */
-Primus.requires = Primus.require = function requires(name) {
-  if ('function' !== typeof _dereq_) return undefined;
+  Primus.requires = Primus.require = function requires (name) {
+    if (typeof _dereq_ !== 'function') return undefined
 
-  return !('function' === typeof define && define.amd)
+    return !(typeof define === 'function' && define.amd)
     ? _dereq_(name)
-    : undefined;
-};
+    : undefined
+  }
 
 //
 // It's possible that we're running in Node.js or in a Node.js compatible
 // environment. In this cases we try to inherit from the Stream base class.
 //
-try {
-  Primus.Stream = Primus.requires('stream');
-} catch (e) { }
+  try {
+    Primus.Stream = Primus.requires('stream')
+  } catch (e) { }
 
-if (!Primus.Stream) Primus.Stream = EventEmitter;
+  if (!Primus.Stream) Primus.Stream = EventEmitter
 
-inherits(Primus, Primus.Stream);
+  inherits(Primus, Primus.Stream)
 
 /**
  * Primus readyStates, used internally to set the correct ready state.
@@ -2205,9 +2191,9 @@ inherits(Primus, Primus.Stream);
  * @type {Number}
  * @private
  */
-Primus.OPENING = 1;   // We're opening the connection.
-Primus.CLOSED  = 2;   // No active connection.
-Primus.OPEN    = 3;   // The connection is open.
+  Primus.OPENING = 1   // We're opening the connection.
+  Primus.CLOSED = 2   // No active connection.
+  Primus.OPEN = 3   // The connection is open.
 
 /**
  * Are we working with a potentially broken WebSockets implementation? This
@@ -2217,7 +2203,7 @@ Primus.OPEN    = 3;   // The connection is open.
  * @type {Boolean}
  * @private
  */
-Primus.prototype.AVOID_WEBSOCKETS = false;
+  Primus.prototype.AVOID_WEBSOCKETS = false
 
 /**
  * Some browsers support registering emitting `online` and `offline` events when
@@ -2228,19 +2214,19 @@ Primus.prototype.AVOID_WEBSOCKETS = false;
  * @type {Boolean}
  * @private
  */
-Primus.prototype.NETWORK_EVENTS = false;
-Primus.prototype.online = true;
+  Primus.prototype.NETWORK_EVENTS = false
+  Primus.prototype.online = true
 
-try {
-  if (
+  try {
+    if (
        Primus.prototype.NETWORK_EVENTS = 'onLine' in navigator
     && (window.addEventListener || document.body.attachEvent)
   ) {
-    if (!navigator.onLine) {
-      Primus.prototype.online = false;
+      if (!navigator.onLine) {
+        Primus.prototype.online = false
+      }
     }
-  }
-} catch (e) { }
+  } catch (e) { }
 
 /**
  * The Ark contains all our plugins definitions. It's namespaced by
@@ -2249,7 +2235,7 @@ try {
  * @type {Object}
  * @private
  */
-Primus.prototype.ark = {};
+  Primus.prototype.ark = {}
 
 /**
  * Simple emit wrapper that returns a function that emits an event once it's
@@ -2258,7 +2244,7 @@ Primus.prototype.ark = {};
  * @returns {Function} A function that will emit the event when called.
  * @api public
  */
-Primus.prototype.emits = _dereq_('emits');
+  Primus.prototype.emits = _dereq_('emits')
 
 /**
  * Return the given plugin.
@@ -2267,19 +2253,19 @@ Primus.prototype.emits = _dereq_('emits');
  * @returns {Object|undefined} The plugin or undefined.
  * @api public
  */
-Primus.prototype.plugin = function plugin(name) {
-  context(this, 'plugin');
+  Primus.prototype.plugin = function plugin (name) {
+    context(this, 'plugin')
 
-  if (name) return this.ark[name];
+    if (name) return this.ark[name]
 
-  var plugins = {};
+    var plugins = {}
 
-  for (name in this.ark) {
-    plugins[name] = this.ark[name];
+    for (name in this.ark) {
+      plugins[name] = this.ark[name]
+    }
+
+    return plugins
   }
-
-  return plugins;
-};
 
 /**
  * Checks if the given event is an emitted event by Primus.
@@ -2288,10 +2274,10 @@ Primus.prototype.plugin = function plugin(name) {
  * @returns {Boolean} Indication of the event is reserved for internal use.
  * @api public
  */
-Primus.prototype.reserved = function reserved(evt) {
-  return (/^(incoming|outgoing)::/).test(evt)
-  || evt in this.reserved.events;
-};
+  Primus.prototype.reserved = function reserved (evt) {
+    return (/^(incoming|outgoing)::/).test(evt)
+  || evt in this.reserved.events
+  }
 
 /**
  * The actual events that are used by the client.
@@ -2299,22 +2285,22 @@ Primus.prototype.reserved = function reserved(evt) {
  * @type {Object}
  * @public
  */
-Primus.prototype.reserved.events = {
-  'reconnect scheduled': 1,
-  'reconnect timeout': 1,
-  'readyStateChange': 1,
-  'reconnect failed': 1,
-  'reconnected': 1,
-  'reconnect': 1,
-  'offline': 1,
-  'timeout': 1,
-  'online': 1,
-  'error': 1,
-  'close': 1,
-  'open': 1,
-  'data': 1,
-  'end': 1
-};
+  Primus.prototype.reserved.events = {
+    'reconnect scheduled': 1,
+    'reconnect timeout': 1,
+    'readyStateChange': 1,
+    'reconnect failed': 1,
+    'reconnected': 1,
+    'reconnect': 1,
+    'offline': 1,
+    'timeout': 1,
+    'online': 1,
+    'error': 1,
+    'close': 1,
+    'open': 1,
+    'data': 1,
+    'end': 1
+  }
 
 /**
  * Initialise the Primus and setup all parsers and internal listeners.
@@ -2323,150 +2309,150 @@ Primus.prototype.reserved.events = {
  * @returns {Primus}
  * @api private
  */
-Primus.prototype.initialise = function initialise(options) {
-  var primus = this
-    , start;
+  Primus.prototype.initialise = function initialise (options) {
+    var primus = this,
+      start
 
-  primus.recovery
+    primus.recovery
   .on('reconnected', primus.emits('reconnected'))
-  .on('reconnect failed', primus.emits('reconnect failed', function failed(next) {
-    primus.emit('end');
-    next();
+  .on('reconnect failed', primus.emits('reconnect failed', function failed (next) {
+    primus.emit('end')
+    next()
   }))
   .on('reconnect timeout', primus.emits('reconnect timeout'))
   .on('reconnect scheduled', primus.emits('reconnect scheduled'))
-  .on('reconnect', primus.emits('reconnect', function reconnect(next) {
-    primus.emit('outgoing::reconnect');
-    next();
-  }));
+  .on('reconnect', primus.emits('reconnect', function reconnect (next) {
+    primus.emit('outgoing::reconnect')
+    next()
+  }))
 
-  primus.on('outgoing::open', function opening() {
-    var readyState = primus.readyState;
+    primus.on('outgoing::open', function opening () {
+      var readyState = primus.readyState
 
-    primus.readyState = Primus.OPENING;
-    if (readyState !== primus.readyState) {
-      primus.emit('readyStateChange', 'opening');
-    }
+      primus.readyState = Primus.OPENING
+      if (readyState !== primus.readyState) {
+        primus.emit('readyStateChange', 'opening')
+      }
 
-    start = +new Date();
-  });
+      start = +new Date()
+    })
 
-  primus.on('incoming::open', function opened() {
-    var readyState = primus.readyState;
+    primus.on('incoming::open', function opened () {
+      var readyState = primus.readyState
 
-    if (primus.recovery.reconnecting()) {
-      primus.recovery.reconnected();
-    }
+      if (primus.recovery.reconnecting()) {
+        primus.recovery.reconnected()
+      }
 
     //
     // The connection has been opened so we should set our state to
     // (writ|read)able so our stream compatibility works as intended.
     //
-    primus.writable = true;
-    primus.readable = true;
+      primus.writable = true
+      primus.readable = true
 
     //
     // Make sure we are flagged as `online` as we've successfully opened the
     // connection.
     //
-    if (!primus.online) {
-      primus.online = true;
-      primus.emit('online');
-    }
-
-    primus.readyState = Primus.OPEN;
-    if (readyState !== primus.readyState) {
-      primus.emit('readyStateChange', 'open');
-    }
-
-    primus.latency = +new Date() - start;
-    primus.timers.clear('ping', 'pong');
-    primus.heartbeat();
-
-    if (primus.buffer.length) {
-      var data = primus.buffer.slice()
-        , length = data.length
-        , i = 0;
-
-      primus.buffer.length = 0;
-
-      for (; i < length; i++) {
-        primus._write(data[i]);
+      if (!primus.online) {
+        primus.online = true
+        primus.emit('online')
       }
-    }
 
-    primus.emit('open');
-  });
+      primus.readyState = Primus.OPEN
+      if (readyState !== primus.readyState) {
+        primus.emit('readyStateChange', 'open')
+      }
 
-  primus.on('incoming::pong', function pong(time) {
-    primus.online = true;
-    primus.timers.clear('pong');
-    primus.heartbeat();
+      primus.latency = +new Date() - start
+      primus.timers.clear('ping', 'pong')
+      primus.heartbeat()
 
-    primus.latency = (+new Date()) - time;
-  });
+      if (primus.buffer.length) {
+        var data = primus.buffer.slice(),
+          length = data.length,
+          i = 0
 
-  primus.on('incoming::error', function error(e) {
-    var connect = primus.timers.active('connect')
-      , err = e;
+        primus.buffer.length = 0
+
+        for (; i < length; i++) {
+          primus._write(data[i])
+        }
+      }
+
+      primus.emit('open')
+    })
+
+    primus.on('incoming::pong', function pong (time) {
+      primus.online = true
+      primus.timers.clear('pong')
+      primus.heartbeat()
+
+      primus.latency = (+new Date()) - time
+    })
+
+    primus.on('incoming::error', function error (e) {
+      var connect = primus.timers.active('connect'),
+        err = e
 
     //
     // When the error is not an Error instance we try to normalize it.
     //
-    if ('string' === typeof e) {
-      err = new Error(e);
-    } else if (!(e instanceof Error) && 'object' === typeof e) {
+      if (typeof e === 'string') {
+        err = new Error(e)
+      } else if (!(e instanceof Error) && typeof e === 'object') {
       //
       // BrowserChannel and SockJS returns an object which contains some
       // details of the error. In order to have a proper error we "copy" the
       // details in an Error instance.
       //
-      err = new Error(e.message || e.reason);
-      for (var key in e) {
-        if (Object.prototype.hasOwnProperty.call(e, key))
-          err[key] = e[key];
+        err = new Error(e.message || e.reason)
+        for (var key in e) {
+          if (Object.prototype.hasOwnProperty.call(e, key))
+          { err[key] = e[key] }
+        }
       }
-    }
     //
     // We're still doing a reconnect attempt, it could be that we failed to
     // connect because the server was down. Failing connect attempts should
     // always emit an `error` event instead of a `open` event.
     //
     //
-    if (primus.recovery.reconnecting()) return primus.recovery.reconnected(err);
-    if (primus.listeners('error').length) primus.emit('error', err);
+      if (primus.recovery.reconnecting()) return primus.recovery.reconnected(err)
+      if (primus.listeners('error').length) primus.emit('error', err)
 
     //
     // We received an error while connecting, this most likely the result of an
     // unauthorized access to the server.
     //
-    if (connect) {
-      if (~primus.options.strategy.indexOf('timeout')) {
-        primus.recovery.reconnect();
-      } else {
-        primus.end();
+      if (connect) {
+        if (~primus.options.strategy.indexOf('timeout')) {
+          primus.recovery.reconnect()
+        } else {
+          primus.end()
+        }
       }
-    }
-  });
+    })
 
-  primus.on('incoming::data', function message(raw) {
-    primus.decoder(raw, function decoding(err, data) {
+    primus.on('incoming::data', function message (raw) {
+      primus.decoder(raw, function decoding (err, data) {
       //
       // Do a "safe" emit('error') when we fail to parse a message. We don't
       // want to throw here as listening to errors should be optional.
       //
-      if (err) return primus.listeners('error').length && primus.emit('error', err);
+        if (err) return primus.listeners('error').length && primus.emit('error', err)
 
       //
       // Handle all "primus::" prefixed protocol messages.
       //
-      if (primus.protocol(data)) return;
-      primus.transforms(primus, primus, 'incoming', data, raw);
-    });
-  });
+        if (primus.protocol(data)) return
+        primus.transforms(primus, primus, 'incoming', data, raw)
+      })
+    })
 
-  primus.on('incoming::end', function end() {
-    var readyState = primus.readyState;
+    primus.on('incoming::end', function end () {
+      var readyState = primus.readyState
 
     //
     // This `end` started with the receiving of a primus::server::close packet
@@ -2474,119 +2460,119 @@ Primus.prototype.initialise = function initialise(options) {
     // connection and it was not a result of a network disruption. So we should
     // kill the connection without doing a reconnect.
     //
-    if (primus.disconnect) {
-      primus.disconnect = false;
+      if (primus.disconnect) {
+        primus.disconnect = false
 
-      return primus.end();
-    }
+        return primus.end()
+      }
 
     //
     // Always set the readyState to closed, and if we're still connecting, close
     // the connection so we're sure that everything after this if statement block
     // is only executed because our readyState is set to `open`.
     //
-    primus.readyState = Primus.CLOSED;
-    if (readyState !== primus.readyState) {
-      primus.emit('readyStateChange', 'end');
-    }
+      primus.readyState = Primus.CLOSED
+      if (readyState !== primus.readyState) {
+        primus.emit('readyStateChange', 'end')
+      }
 
-    if (primus.timers.active('connect')) primus.end();
-    if (readyState !== Primus.OPEN) {
-      return primus.recovery.reconnecting()
+      if (primus.timers.active('connect')) primus.end()
+      if (readyState !== Primus.OPEN) {
+        return primus.recovery.reconnecting()
         ? primus.recovery.reconnect()
-        : false;
-    }
+        : false
+      }
 
-    this.writable = false;
-    this.readable = false;
+      this.writable = false
+      this.readable = false
 
     //
     // Clear all timers in case we're not going to reconnect.
     //
-    this.timers.clear();
+      this.timers.clear()
 
     //
     // Fire the `close` event as an indication of connection disruption.
     // This is also fired by `primus#end` so it is emitted in all cases.
     //
-    primus.emit('close');
+      primus.emit('close')
 
     //
     // The disconnect was unintentional, probably because the server has
     // shutdown, so if the reconnection is enabled start a reconnect procedure.
     //
-    if (~primus.options.strategy.indexOf('disconnect')) {
-      return primus.recovery.reconnect();
-    }
+      if (~primus.options.strategy.indexOf('disconnect')) {
+        return primus.recovery.reconnect()
+      }
 
-    primus.emit('outgoing::end');
-    primus.emit('end');
-  });
+      primus.emit('outgoing::end')
+      primus.emit('end')
+    })
 
   //
   // Setup the real-time client.
   //
-  primus.client();
+    primus.client()
 
   //
   // Process the potential plugins.
   //
-  for (var plugin in primus.ark) {
-    primus.ark[plugin].call(primus, primus, options);
-  }
+    for (var plugin in primus.ark) {
+      primus.ark[plugin].call(primus, primus, options)
+    }
 
   //
   // NOTE: The following code is only required if we're supporting network
   // events as it requires access to browser globals.
   //
-  if (!primus.NETWORK_EVENTS) return primus;
+    if (!primus.NETWORK_EVENTS) return primus
 
   /**
    * Handler for offline notifications.
    *
    * @api private
    */
-  primus.offlineHandler = function offline() {
-    if (!primus.online) return; // Already or still offline, bailout.
+    primus.offlineHandler = function offline () {
+      if (!primus.online) return // Already or still offline, bailout.
 
-    primus.online = false;
-    primus.emit('offline');
-    primus.end();
+      primus.online = false
+      primus.emit('offline')
+      primus.end()
 
     //
     // It is certainly possible that we're in a reconnection loop and that the
     // user goes offline. In this case we want to kill the existing attempt so
     // when the user goes online, it will attempt to reconnect freshly again.
     //
-    primus.recovery.reset();
-  };
+      primus.recovery.reset()
+    }
 
   /**
    * Handler for online notifications.
    *
    * @api private
    */
-  primus.onlineHandler = function online() {
-    if (primus.online) return; // Already or still online, bailout.
+    primus.onlineHandler = function online () {
+      if (primus.online) return // Already or still online, bailout.
 
-    primus.online = true;
-    primus.emit('online');
+      primus.online = true
+      primus.emit('online')
 
-    if (~primus.options.strategy.indexOf('online')) {
-      primus.recovery.reconnect();
+      if (~primus.options.strategy.indexOf('online')) {
+        primus.recovery.reconnect()
+      }
     }
-  };
 
-  if (window.addEventListener) {
-    window.addEventListener('offline', primus.offlineHandler, false);
-    window.addEventListener('online', primus.onlineHandler, false);
-  } else if (document.body.attachEvent){
-    document.body.attachEvent('onoffline', primus.offlineHandler);
-    document.body.attachEvent('ononline', primus.onlineHandler);
+    if (window.addEventListener) {
+      window.addEventListener('offline', primus.offlineHandler, false)
+      window.addEventListener('online', primus.onlineHandler, false)
+    } else if (document.body.attachEvent) {
+      document.body.attachEvent('onoffline', primus.offlineHandler)
+      document.body.attachEvent('ononline', primus.onlineHandler)
+    }
+
+    return primus
   }
-
-  return primus;
-};
 
 /**
  * Really dead simple protocol parser. We simply assume that every message that
@@ -2597,44 +2583,44 @@ Primus.prototype.initialise = function initialise(options) {
  * @returns {Boolean} Is a protocol message.
  * @api private
  */
-Primus.prototype.protocol = function protocol(msg) {
-  if (
-       'string' !== typeof msg
+  Primus.prototype.protocol = function protocol (msg) {
+    if (
+       typeof msg !== 'string'
     || msg.indexOf('primus::') !== 0
-  ) return false;
+  ) return false
 
-  var last = msg.indexOf(':', 8)
-    , value = msg.slice(last + 2);
+    var last = msg.indexOf(':', 8),
+      value = msg.slice(last + 2)
 
-  switch (msg.slice(8,  last)) {
-    case 'pong':
-      this.emit('incoming::pong', +value);
-    break;
+    switch (msg.slice(8, last)) {
+      case 'pong':
+        this.emit('incoming::pong', +value)
+        break
 
-    case 'server':
+      case 'server':
       //
       // The server is closing the connection, forcefully disconnect so we don't
       // reconnect again.
       //
-      if ('close' === value) {
-        this.disconnect = true;
-      }
-    break;
+        if (value === 'close') {
+          this.disconnect = true
+        }
+        break
 
-    case 'id':
-      this.emit('incoming::id', value);
-    break;
+      case 'id':
+        this.emit('incoming::id', value)
+        break
 
     //
     // Unknown protocol, somebody is probably sending `primus::` prefixed
     // messages.
     //
-    default:
-      return false;
-  }
+      default:
+        return false
+    }
 
-  return true;
-};
+    return true
+  }
 
 /**
  * Execute the set of message transformers from Primus on the incoming or
@@ -2650,9 +2636,9 @@ Primus.prototype.protocol = function protocol(msg) {
  * @returns {Primus}
  * @api public
  */
-Primus.prototype.transforms = function transforms(primus, connection, type, data, raw) {
-  var packet = { data: data }
-    , fns = primus.transformers[type];
+  Primus.prototype.transforms = function transforms (primus, connection, type, data, raw) {
+    var packet = { data: data },
+      fns = primus.transformers[type];
 
   //
   // Iterate in series over the message transformers so we can allow optional
@@ -2660,31 +2646,31 @@ Primus.prototype.transforms = function transforms(primus, connection, type, data
   // retrieve additional data from the server, do extra decoding or even
   // message validation.
   //
-  (function transform(index, done) {
-    var transformer = fns[index++];
+    (function transform (index, done) {
+      var transformer = fns[index++]
 
-    if (!transformer) return done();
+      if (!transformer) return done()
 
-    if (1 === transformer.length) {
-      if (false === transformer.call(connection, packet)) {
+      if (transformer.length === 1) {
+        if (transformer.call(connection, packet) === false) {
         //
         // When false is returned by an incoming transformer it means that's
         // being handled by the transformer and we should not emit the `data`
         // event.
         //
-        return;
+          return
+        }
+
+        return transform(index, done)
       }
 
-      return transform(index, done);
-    }
+      transformer.call(connection, packet, function finished (err, arg) {
+        if (err) return connection.emit('error', err)
+        if (arg === false) return
 
-    transformer.call(connection, packet, function finished(err, arg) {
-      if (err) return connection.emit('error', err);
-      if (false === arg) return;
-
-      transform(index, done);
-    });
-  }(0, function done() {
+        transform(index, done)
+      })
+    }(0, function done () {
     //
     // We always emit 2 arguments for the data event, the first argument is the
     // parsed data and the second argument is the raw string that we received.
@@ -2692,13 +2678,13 @@ Primus.prototype.transforms = function transforms(primus, connection, type, data
     // and then save the raw string in your database without the stringify
     // overhead.
     //
-    if ('incoming' === type) return connection.emit('data', packet.data, raw);
+      if (type === 'incoming') return connection.emit('data', packet.data, raw)
 
-    connection._write(packet.data);
-  }));
+      connection._write(packet.data)
+    }))
 
-  return this;
-};
+    return this
+  }
 
 /**
  * Retrieve the current id from the server.
@@ -2707,12 +2693,12 @@ Primus.prototype.transforms = function transforms(primus, connection, type, data
  * @returns {Primus}
  * @api public
  */
-Primus.prototype.id = function id(fn) {
-  if (this.socket && this.socket.id) return fn(this.socket.id);
+  Primus.prototype.id = function id (fn) {
+    if (this.socket && this.socket.id) return fn(this.socket.id)
 
-  this._write('primus::id::');
-  return this.once('incoming::id', fn);
-};
+    this._write('primus::id::')
+    return this.once('incoming::id', fn)
+  }
 
 /**
  * Establish a connection with the server. When this function is called we
@@ -2722,8 +2708,8 @@ Primus.prototype.id = function id(fn) {
  * @returns {Primus}
  * @api public
  */
-Primus.prototype.open = function open() {
-  context(this, 'open');
+  Primus.prototype.open = function open () {
+    context(this, 'open')
 
   //
   // Only start a `connection timeout` procedure if we're not reconnecting as
@@ -2731,11 +2717,11 @@ Primus.prototype.open = function open() {
   // before the connection is opened to capture failing connections and kill the
   // timeout.
   //
-  if (!this.recovery.reconnecting() && this.options.timeout) this.timeout();
+    if (!this.recovery.reconnecting() && this.options.timeout) this.timeout()
 
-  this.emit('outgoing::open');
-  return this;
-};
+    this.emit('outgoing::open')
+    return this
+  }
 
 /**
  * Send a new message.
@@ -2744,12 +2730,12 @@ Primus.prototype.open = function open() {
  * @returns {Boolean} Always returns true as we don't support back pressure.
  * @api public
  */
-Primus.prototype.write = function write(data) {
-  context(this, 'write');
-  this.transforms(this, this, 'outgoing', data);
+  Primus.prototype.write = function write (data) {
+    context(this, 'write')
+    this.transforms(this, this, 'outgoing', data)
 
-  return true;
-};
+    return true
+  }
 
 /**
  * The actual message writer.
@@ -2758,8 +2744,8 @@ Primus.prototype.write = function write(data) {
  * @returns {Boolean} Successful write to the underlaying transport.
  * @api private
  */
-Primus.prototype._write = function write(data) {
-  var primus = this;
+  Primus.prototype._write = function write (data) {
+    var primus = this
 
   //
   // The connection is closed, normally this would already be done in the
@@ -2767,24 +2753,24 @@ Primus.prototype._write = function write(data) {
   // add the same check here to prevent potential crashes by writing to a dead
   // socket.
   //
-  if (Primus.OPEN !== primus.readyState) {
+    if (Primus.OPEN !== primus.readyState) {
     //
     // If the buffer is at capacity, remove the first item.
     //
-    if (this.buffer.length === this.options.queueSize) {
-      this.buffer.splice(0, 1);
+      if (this.buffer.length === this.options.queueSize) {
+        this.buffer.splice(0, 1)
+      }
+
+      this.buffer.push(data)
+      return false
     }
 
-    this.buffer.push(data);
-    return false;
-  }
-
-  primus.encoder(data, function encoded(err, packet) {
+    primus.encoder(data, function encoded (err, packet) {
     //
     // Do a "safe" emit('error') when we fail to parse a message. We don't
     // want to throw here as listening to errors should be optional.
     //
-    if (err) return primus.listeners('error').length && primus.emit('error', err);
+      if (err) return primus.listeners('error').length && primus.emit('error', err)
 
     //
     // Hack 1: \u2028 and \u2029 are allowed inside a JSON string, but JavaScript
@@ -2793,16 +2779,16 @@ Primus.prototype._write = function write(data) {
     // work around this issue by escaping these characters. This can cause
     // errors with JSONP requests or if the string is just evaluated.
     //
-    if ('string' === typeof packet) {
-      if (~packet.indexOf('\u2028')) packet = packet.replace(u2028, '\\u2028');
-      if (~packet.indexOf('\u2029')) packet = packet.replace(u2029, '\\u2029');
-    }
+      if (typeof packet === 'string') {
+        if (~packet.indexOf('\u2028')) packet = packet.replace(u2028, '\\u2028')
+        if (~packet.indexOf('\u2029')) packet = packet.replace(u2029, '\\u2029')
+      }
 
-    primus.emit('outgoing::data', packet);
-  });
+      primus.emit('outgoing::data', packet)
+    })
 
-  return true;
-};
+    return true
+  }
 
 /**
  * Send a new heartbeat over the connection to ensure that we're still
@@ -2812,46 +2798,46 @@ Primus.prototype._write = function write(data) {
  * @returns {Primus}
  * @api private
  */
-Primus.prototype.heartbeat = function heartbeat() {
-  var primus = this;
+  Primus.prototype.heartbeat = function heartbeat () {
+    var primus = this
 
-  if (!primus.options.ping) return primus;
+    if (!primus.options.ping) return primus
 
   /**
    * Exterminate the connection as we've timed out.
    *
    * @api private
    */
-  function pong() {
-    primus.timers.clear('pong');
+    function pong () {
+      primus.timers.clear('pong')
 
     //
     // The network events already captured the offline event.
     //
-    if (!primus.online) return;
+      if (!primus.online) return
 
-    primus.online = false;
-    primus.emit('offline');
-    primus.emit('incoming::end');
-  }
+      primus.online = false
+      primus.emit('offline')
+      primus.emit('incoming::end')
+    }
 
   /**
    * We should send a ping message to the server.
    *
    * @api private
    */
-  function ping() {
-    var value = +new Date();
+    function ping () {
+      var value = +new Date()
 
-    primus.timers.clear('ping');
-    primus._write('primus::ping::'+ value);
-    primus.emit('outgoing::ping', value);
-    primus.timers.setTimeout('pong', pong, primus.options.pong);
+      primus.timers.clear('ping')
+      primus._write('primus::ping::' + value)
+      primus.emit('outgoing::ping', value)
+      primus.timers.setTimeout('pong', pong, primus.options.pong)
+    }
+
+    primus.timers.setTimeout('ping', ping, primus.options.ping)
+    return this
   }
-
-  primus.timers.setTimeout('ping', ping, primus.options.ping);
-  return this;
-};
 
 /**
  * Start a connection timeout.
@@ -2859,8 +2845,8 @@ Primus.prototype.heartbeat = function heartbeat() {
  * @returns {Primus}
  * @api private
  */
-Primus.prototype.timeout = function timeout() {
-  var primus = this;
+  Primus.prototype.timeout = function timeout () {
+    var primus = this
 
   /**
    * Remove all references to the timeout listener as we've received an event
@@ -2868,36 +2854,36 @@ Primus.prototype.timeout = function timeout() {
    *
    * @api private
    */
-  function remove() {
-    primus.removeListener('error', remove)
+    function remove () {
+      primus.removeListener('error', remove)
           .removeListener('open', remove)
           .removeListener('end', remove)
-          .timers.clear('connect');
-  }
-
-  primus.timers.setTimeout('connect', function expired() {
-    remove(); // Clean up old references.
-
-    if (primus.readyState === Primus.OPEN || primus.recovery.reconnecting()) {
-      return;
+          .timers.clear('connect')
     }
 
-    primus.emit('timeout');
+    primus.timers.setTimeout('connect', function expired () {
+      remove() // Clean up old references.
+
+      if (primus.readyState === Primus.OPEN || primus.recovery.reconnecting()) {
+        return
+      }
+
+      primus.emit('timeout')
 
     //
     // We failed to connect to the server.
     //
-    if (~primus.options.strategy.indexOf('timeout')) {
-      primus.recovery.reconnect();
-    } else {
-      primus.end();
-    }
-  }, primus.options.timeout);
+      if (~primus.options.strategy.indexOf('timeout')) {
+        primus.recovery.reconnect()
+      } else {
+        primus.end()
+      }
+    }, primus.options.timeout)
 
-  return primus.on('error', remove)
+    return primus.on('error', remove)
     .on('open', remove)
-    .on('end', remove);
-};
+    .on('end', remove)
+  }
 
 /**
  * Close the connection completely.
@@ -2906,10 +2892,10 @@ Primus.prototype.timeout = function timeout() {
  * @returns {Primus}
  * @api public
  */
-Primus.prototype.end = function end(data) {
-  context(this, 'end');
+  Primus.prototype.end = function end (data) {
+    context(this, 'end')
 
-  if (
+    if (
       this.readyState === Primus.CLOSED
     && !this.timers.active('connect')
     && !this.timers.active('open')
@@ -2917,33 +2903,33 @@ Primus.prototype.end = function end(data) {
     //
     // If we are reconnecting stop the reconnection procedure.
     //
-    if (this.recovery.reconnecting()) {
-      this.recovery.reset();
-      this.emit('end');
+      if (this.recovery.reconnecting()) {
+        this.recovery.reset()
+        this.emit('end')
+      }
+
+      return this
     }
 
-    return this;
+    if (data !== undefined) this.write(data)
+
+    this.writable = false
+    this.readable = false
+
+    var readyState = this.readyState
+    this.readyState = Primus.CLOSED
+
+    if (readyState !== this.readyState) {
+      this.emit('readyStateChange', 'end')
+    }
+
+    this.timers.clear()
+    this.emit('outgoing::end')
+    this.emit('close')
+    this.emit('end')
+
+    return this
   }
-
-  if (data !== undefined) this.write(data);
-
-  this.writable = false;
-  this.readable = false;
-
-  var readyState = this.readyState;
-  this.readyState = Primus.CLOSED;
-
-  if (readyState !== this.readyState) {
-    this.emit('readyStateChange', 'end');
-  }
-
-  this.timers.clear();
-  this.emit('outgoing::end');
-  this.emit('close');
-  this.emit('end');
-
-  return this;
-};
 
 /**
  * Completely demolish the Primus instance and forcefully nuke all references.
@@ -2951,20 +2937,20 @@ Primus.prototype.end = function end(data) {
  * @returns {Boolean}
  * @api public
  */
-Primus.prototype.destroy = destroy('url timers options recovery socket transport transformers', {
-  before: 'end',
-  after: ['removeAllListeners', function detach() {
-    if (!this.NETWORK_EVENTS) return;
+  Primus.prototype.destroy = destroy('url timers options recovery socket transport transformers', {
+    before: 'end',
+    after: ['removeAllListeners', function detach () {
+      if (!this.NETWORK_EVENTS) return
 
-    if (window.addEventListener) {
-      window.removeEventListener('offline', this.offlineHandler);
-      window.removeEventListener('online', this.onlineHandler);
-    } else if (document.body.attachEvent){
-      document.body.detachEvent('onoffline', this.offlineHandler);
-      document.body.detachEvent('ononline', this.onlineHandler);
-    }
-  }]
-});
+      if (window.addEventListener) {
+        window.removeEventListener('offline', this.offlineHandler)
+        window.removeEventListener('online', this.onlineHandler)
+      } else if (document.body.attachEvent) {
+        document.body.detachEvent('onoffline', this.offlineHandler)
+        document.body.detachEvent('ononline', this.onlineHandler)
+      }
+    }]
+  })
 
 /**
  * Create a shallow clone of a given object.
@@ -2973,9 +2959,9 @@ Primus.prototype.destroy = destroy('url timers options recovery socket transport
  * @returns {Object} Copy.
  * @api private
  */
-Primus.prototype.clone = function clone(obj) {
-  return this.merge({}, obj);
-};
+  Primus.prototype.clone = function clone (obj) {
+    return this.merge({}, obj)
+  }
 
 /**
  * Merge different objects in to one target object.
@@ -2984,18 +2970,18 @@ Primus.prototype.clone = function clone(obj) {
  * @returns {Object} Original target with all merged objects.
  * @api private
  */
-Primus.prototype.merge = function merge(target) {
-  for (var i = 1, key, obj; i < arguments.length; i++) {
-    obj = arguments[i];
+  Primus.prototype.merge = function merge (target) {
+    for (var i = 1, key, obj; i < arguments.length; i++) {
+      obj = arguments[i]
 
-    for (key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key))
-        target[key] = obj[key];
+      for (key in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, key))
+        { target[key] = obj[key] }
+      }
     }
-  }
 
-  return target;
-};
+    return target
+  }
 
 /**
  * Parse the connection string.
@@ -3005,7 +2991,7 @@ Primus.prototype.merge = function merge(target) {
  * @returns {Object} Parsed connection.
  * @api private
  */
-Primus.prototype.parse = _dereq_('url-parse');
+  Primus.prototype.parse = _dereq_('url-parse')
 
 /**
  * Parse a query string.
@@ -3014,7 +3000,7 @@ Primus.prototype.parse = _dereq_('url-parse');
  * @returns {Object} Parsed query string.
  * @api private
  */
-Primus.prototype.querystring = qs.parse;
+  Primus.prototype.querystring = qs.parse
 /**
  * Transform a query string object back into string equiv.
  *
@@ -3022,7 +3008,7 @@ Primus.prototype.querystring = qs.parse;
  * @returns {String}
  * @api private
  */
-Primus.prototype.querystringify = qs.stringify;
+  Primus.prototype.querystringify = qs.stringify
 
 /**
  * Generates a connection URI.
@@ -3031,73 +3017,73 @@ Primus.prototype.querystringify = qs.stringify;
  * @returns {String|options} The URL.
  * @api private
  */
-Primus.prototype.uri = function uri(options) {
-  var url = this.url
-    , server = []
-    , qsa = false;
+  Primus.prototype.uri = function uri (options) {
+    var url = this.url,
+      server = [],
+      qsa = false
 
   //
   // Query strings are only allowed when we've received clearance for it.
   //
-  if (options.query) qsa = true;
+    if (options.query) qsa = true
 
-  options = options || {};
-  options.protocol = 'protocol' in options
+    options = options || {}
+    options.protocol = 'protocol' in options
     ? options.protocol
-    : 'http:';
-  options.query = url.query && qsa
+    : 'http:'
+    options.query = url.query && qsa
     ? url.query.slice(1)
-    : false;
-  options.secure = 'secure' in options
+    : false
+    options.secure = 'secure' in options
     ? options.secure
-    : url.protocol === 'https:' || url.protocol === 'wss:';
-  options.auth = 'auth' in options
+    : url.protocol === 'https:' || url.protocol === 'wss:'
+    options.auth = 'auth' in options
     ? options.auth
-    : url.auth;
-  options.pathname = 'pathname' in options
+    : url.auth
+    options.pathname = 'pathname' in options
     ? options.pathname
-    : this.pathname;
-  options.port = 'port' in options
+    : this.pathname
+    options.port = 'port' in options
     ? +options.port
-    : +url.port || (options.secure ? 443 : 80);
+    : +url.port || (options.secure ? 443 : 80)
 
   //
   // Allow transformation of the options before we construct a full URL from it.
   //
-  this.emit('outgoing::url', options);
+    this.emit('outgoing::url', options)
 
   //
   // We need to make sure that we create a unique connection URL every time to
   // prevent back forward cache from becoming an issue. We're doing this by
   // forcing an cache busting query string in to the URL.
   //
-  var querystring = this.querystring(options.query || '');
-  querystring._primuscb = yeast();
-  options.query = this.querystringify(querystring);
+    var querystring = this.querystring(options.query || '')
+    querystring._primuscb = yeast()
+    options.query = this.querystringify(querystring)
 
   //
   // Automatically suffix the protocol so we can supply `ws:` and `http:` and
   // it gets transformed correctly.
   //
-  server.push(options.secure ? options.protocol.replace(':', 's:') : options.protocol, '');
+    server.push(options.secure ? options.protocol.replace(':', 's:') : options.protocol, '')
 
-  server.push(options.auth ? options.auth +'@'+ url.host : url.host);
+    server.push(options.auth ? options.auth + '@' + url.host : url.host)
 
   //
   // Pathnames are optional as some Transformers would just use the pathname
   // directly.
   //
-  if (options.pathname) server.push(options.pathname.slice(1));
+    if (options.pathname) server.push(options.pathname.slice(1))
 
   //
   // Optionally add a search query.
   //
-  if (qsa) server[server.length - 1] += '?'+ options.query;
-  else delete options.query;
+    if (qsa) server[server.length - 1] += '?' + options.query
+    else delete options.query
 
-  if (options.object) return options;
-  return server.join('/');
-};
+    if (options.object) return options
+    return server.join('/')
+  }
 
 /**
  * Register a new message transformer. This allows you to easily manipulate incoming
@@ -3109,16 +3095,16 @@ Primus.prototype.uri = function uri(options) {
  * @returns {Primus}
  * @api public
  */
-Primus.prototype.transform = function transform(type, fn) {
-  context(this, 'transform');
+  Primus.prototype.transform = function transform (type, fn) {
+    context(this, 'transform')
 
-  if (!(type in this.transformers)) {
-    return this.critical(new Error('Invalid transformer type'));
+    if (!(type in this.transformers)) {
+      return this.critical(new Error('Invalid transformer type'))
+    }
+
+    this.transformers[type].push(fn)
+    return this
   }
-
-  this.transformers[type].push(fn);
-  return this;
-};
 
 /**
  * A critical error has occurred, if we have an `error` listener, emit it there.
@@ -3128,14 +3114,14 @@ Primus.prototype.transform = function transform(type, fn) {
  * @returns {Primus}
  * @api private
  */
-Primus.prototype.critical = function critical(err) {
-  if (this.listeners('error').length) {
-    this.emit('error', err);
-    return this;
-  }
+  Primus.prototype.critical = function critical (err) {
+    if (this.listeners('error').length) {
+      this.emit('error', err)
+      return this
+    }
 
-  throw err;
-};
+    throw err
+  }
 
 /**
  * Syntax sugar, adopt a Socket.IO like API.
@@ -3145,46 +3131,46 @@ Primus.prototype.critical = function critical(err) {
  * @returns {Primus}
  * @api public
  */
-Primus.connect = function connect(url, options) {
-  return new Primus(url, options);
-};
+  Primus.connect = function connect (url, options) {
+    return new Primus(url, options)
+  }
 
 //
 // Expose the EventEmitter so it can be re-used by wrapping libraries we're also
 // exposing the Stream interface.
 //
-Primus.EventEmitter = EventEmitter;
+  Primus.EventEmitter = EventEmitter
 
 //
 // These libraries are automatically inserted at the server-side using the
 // Primus#library method.
 //
-Primus.prototype.client = function client() {
-  var primus = this
-    , socket;
+  Primus.prototype.client = function client () {
+    var primus = this,
+      socket
 
   //
   // Select an available WebSocket factory.
   //
-  var Factory = (function factory() {
-    if ('undefined' !== typeof WebSocket) return WebSocket;
-    if ('undefined' !== typeof MozWebSocket) return MozWebSocket;
+    var Factory = (function factory () {
+      if (typeof WebSocket !== 'undefined') return WebSocket
+      if (typeof MozWebSocket !== 'undefined') return MozWebSocket
 
-    try { return Primus.requires('ws'); }
+      try { return Primus.requires('ws') }
     catch (e) {}
 
-    return undefined;
-  })();
+      return undefined
+    })()
 
-  if (!Factory) return primus.critical(new Error(
+    if (!Factory) { return primus.critical(new Error(
     'Missing required `ws` module. Please run `npm install --save ws`'
-  ));
+  )) }
 
   //
   // Connect to the given URL.
   //
-  primus.on('outgoing::open', function opening() {
-    primus.emit('outgoing::end');
+    primus.on('outgoing::open', function opening () {
+      primus.emit('outgoing::end')
 
     //
     // FireFox will throw an error when we try to establish a connection from
@@ -3192,94 +3178,94 @@ Primus.prototype.client = function client() {
     // behaviour between different browsers. This should ideally be solved in
     // Primus when we connect.
     //
-    try {
-      var prot = primus.url.protocol === 'ws+unix:' ? 'ws+unix:' : 'ws:'
-        , qsa = prot === 'ws:';
+      try {
+        var prot = primus.url.protocol === 'ws+unix:' ? 'ws+unix:' : 'ws:',
+          qsa = prot === 'ws:'
 
       //
       // Only allow primus.transport object in Node.js, it will throw in
       // browsers with a TypeError if we supply to much arguments.
       //
-      if (Factory.length === 3) {
-        primus.socket = socket = new Factory(
+        if (Factory.length === 3) {
+          primus.socket = socket = new Factory(
           primus.uri({ protocol: prot, query: qsa }),   // URL
           [],                                           // Sub protocols
           primus.transport                              // options.
-        );
-      } else {
-        primus.socket = socket = new Factory(primus.uri({
-          protocol: prot,
-          query: qsa
-        }));
+        )
+        } else {
+          primus.socket = socket = new Factory(primus.uri({
+            protocol: prot,
+            query: qsa
+          }))
 
-        socket.binaryType = 'arraybuffer';
-      }
-    } catch (e) { return primus.emit('error', e); }
+          socket.binaryType = 'arraybuffer'
+        }
+      } catch (e) { return primus.emit('error', e) }
 
     //
     // Setup the Event handlers.
     //
-    socket.onopen = primus.emits('incoming::open');
-    socket.onerror = primus.emits('incoming::error');
-    socket.onclose = primus.emits('incoming::end');
-    socket.onmessage = primus.emits('incoming::data', function parse(next, evt) {
-      next(undefined, evt.data);
-    });
-  });
+      socket.onopen = primus.emits('incoming::open')
+      socket.onerror = primus.emits('incoming::error')
+      socket.onclose = primus.emits('incoming::end')
+      socket.onmessage = primus.emits('incoming::data', function parse (next, evt) {
+        next(undefined, evt.data)
+      })
+    })
 
   //
   // We need to write a new message to the socket.
   //
-  primus.on('outgoing::data', function write(message) {
-    if (!socket || socket.readyState !== Factory.OPEN) return;
+    primus.on('outgoing::data', function write (message) {
+      if (!socket || socket.readyState !== Factory.OPEN) return
 
-    try { socket.send(message); }
-    catch (e) { primus.emit('incoming::error', e); }
-  });
+      try { socket.send(message) }
+    catch (e) { primus.emit('incoming::error', e) }
+    })
 
   //
   // Attempt to reconnect the socket.
   //
-  primus.on('outgoing::reconnect', function reconnect() {
-    primus.emit('outgoing::open');
-  });
+    primus.on('outgoing::reconnect', function reconnect () {
+      primus.emit('outgoing::open')
+    })
 
   //
   // We need to close the socket.
   //
-  primus.on('outgoing::end', function close() {
-    if (!socket) return;
+    primus.on('outgoing::end', function close () {
+      if (!socket) return
 
-    socket.onerror = socket.onopen = socket.onclose = socket.onmessage = function () {};
-    socket.close();
-    socket = null;
-  });
-};
-Primus.prototype.authorization = false;
-Primus.prototype.pathname = "/primus";
-Primus.prototype.encoder = function encoder(data, fn) {
-  var err;
+      socket.onerror = socket.onopen = socket.onclose = socket.onmessage = function () {}
+      socket.close()
+      socket = null
+    })
+  }
+  Primus.prototype.authorization = false
+  Primus.prototype.pathname = '/primus'
+  Primus.prototype.encoder = function encoder (data, fn) {
+    var err
 
-  try { data = JSON.stringify(data); }
-  catch (e) { err = e; }
+    try { data = JSON.stringify(data) }
+  catch (e) { err = e }
 
-  fn(err, data);
-};
-Primus.prototype.decoder = function decoder(data, fn) {
-  var err;
+    fn(err, data)
+  }
+  Primus.prototype.decoder = function decoder (data, fn) {
+    var err
 
-  if ('string' !== typeof data) return fn(err, data);
+    if (typeof data !== 'string') return fn(err, data)
 
-  try { data = JSON.parse(data); }
-  catch (e) { err = e; }
+    try { data = JSON.parse(data) }
+  catch (e) { err = e }
 
-  fn(err, data);
-};
-Primus.prototype.version = "6.0.5";
+    fn(err, data)
+  }
+  Primus.prototype.version = '6.0.5'
 
-if (
-     'undefined' !== typeof document
-  && 'undefined' !== typeof navigator
+  if (
+     typeof document !== 'undefined'
+  && typeof navigator !== 'undefined'
 ) {
   //
   // Hack 2: If you press ESC in FireFox it will close all active connections.
@@ -3290,13 +3276,13 @@ if (
   // It needs to be added as `keydown` event, if it's added keyup it will not be
   // able to prevent the connection from being closed.
   //
-  if (document.addEventListener) {
-    document.addEventListener('keydown', function keydown(e) {
-      if (e.keyCode !== 27 || !e.preventDefault) return;
+    if (document.addEventListener) {
+      document.addEventListener('keydown', function keydown (e) {
+        if (e.keyCode !== 27 || !e.preventDefault) return
 
-      e.preventDefault();
-    }, false);
-  }
+        e.preventDefault()
+      }, false)
+    }
 
   //
   // Hack 3: This is a Mac/Apple bug only, when you're behind a reverse proxy or
@@ -3306,300 +3292,295 @@ if (
   // need to do some nasty browser sniffing. This only affects Safari versions
   // lower then 5.1.4
   //
-  var ua = (navigator.userAgent || '').toLowerCase()
-    , parsed = ua.match(/.+(?:rv|it|ra|ie)[\/: ](\d+)\.(\d+)(?:\.(\d+))?/) || []
-    , version = +[parsed[1], parsed[2]].join('.');
+    var ua = (navigator.userAgent || '').toLowerCase(),
+      parsed = ua.match(/.+(?:rv|it|ra|ie)[\/: ](\d+)\.(\d+)(?:\.(\d+))?/) || [],
+      version = +[parsed[1], parsed[2]].join('.')
 
-  if (
+    if (
        !~ua.indexOf('chrome')
     && ~ua.indexOf('safari')
     && version < 534.54
   ) {
-    Primus.prototype.AVOID_WEBSOCKETS = true;
+      Primus.prototype.AVOID_WEBSOCKETS = true
+    }
   }
-}
 
 //
 // Expose the library.
 //
-module.exports = Primus;
-
-},{"demolish":1,"emits":2,"eventemitter3":3,"inherits":4,"querystringify":7,"recovery":8,"tick-tock":11,"url-parse":12,"yeast":14}]},{},[15])(15);
-  return Primus;
+  module.exports = Primus
+}, {'demolish': 1, 'emits': 2, 'eventemitter3': 3, 'inherits': 4, 'querystringify': 7, 'recovery': 8, 'tick-tock': 11, 'url-parse': 12, 'yeast': 14}]}, {}, [15])(15)
+  return Primus
 },
-[
+  [
 
-]);
+  ])
 
+;
+(function (exports) {
+  var ActionheroClient = function (options, client) {
+    var self = this
 
-;;;
-(function(exports){ 
-var ActionheroClient = function(options, client){
+    self.callbacks = {}
+    self.id = null
+    self.events = {}
+    self.rooms = []
+    self.state = 'disconnected'
 
-  var self = this;
+    self.options = self.defaults()
+    for (var i in options) {
+      self.options[i] = options[i]
+    }
 
-  self.callbacks = {};
-  self.id = null;
-  self.events = {};
-  self.rooms = [];
-  self.state = 'disconnected';
-
-  self.options = self.defaults();
-  for(var i in options){
-    self.options[i] = options[i];
+    if (client) {
+      self.externalClient = true
+      self.client = client
+    }
   }
 
-  if(client){
-    self.externalClient = true;
-    self.client = client;
+  if (typeof Primus === 'undefined') {
+    var util = require('util')
+    var EventEmitter = require('events').EventEmitter
+    util.inherits(ActionheroClient, EventEmitter)
+  } else {
+    ActionheroClient.prototype = new Primus.EventEmitter()
   }
-};
 
-if(typeof Primus === 'undefined'){
-  var util = require('util');
-  var EventEmitter = require('events').EventEmitter;
-  util.inherits(ActionheroClient, EventEmitter);
-}else{
-  ActionheroClient.prototype = new Primus.EventEmitter();
-}
+  ActionheroClient.prototype.defaults = function () {
+    return { apiPath: '/api', url: window.location.origin }
+  }
 
-ActionheroClient.prototype.defaults = function(){
-  return { apiPath: '/api', url: window.location.origin }
-}
-
-////////////////
+// //////////////
 // CONNECTION //
-////////////////
+// //////////////
 
-ActionheroClient.prototype.connect = function(callback){
-  var self = this;
-  self.messageCount = 0;
+  ActionheroClient.prototype.connect = function (callback) {
+    var self = this
+    self.messageCount = 0
 
+    if (self.client && self.externalClient !== true) {
+      self.client.end()
+      self.client.removeAllListeners()
+      delete self.client
+      self.client = Primus.connect(self.options.url, self.options)
+    } else if (self.client && self.externalClient === true) {
+      self.client.end()
+      self.client.open()
+    } else {
+      self.client = Primus.connect(self.options.url, self.options)
+    }
 
-  if(self.client && self.externalClient !== true){
-    self.client.end();
-    self.client.removeAllListeners();
-    delete self.client;
-    self.client = Primus.connect(self.options.url, self.options);
-  } else if(self.client && self.externalClient === true){
-    self.client.end();
-    self.client.open();
-  }else{
-    self.client = Primus.connect(self.options.url, self.options);
-  }
-
-  self.client.on('open', function(){
-    self.configure(function(details){
-      if(self.state === 'connected'){
+    self.client.on('open', function () {
+      self.configure(function (details) {
+        if (self.state === 'connected') {
         //
-      }else{
-        self.state = 'connected';
-        if(typeof callback === 'function'){ callback(null, details); }
-      }
-      self.emit('connected');
-    });
-  })
-
-  self.client.on('error', function(error){
-    self.emit('error', error);
-  });
-
-  self.client.on('reconnect', function(){
-    self.messageCount = 0;
-    self.emit('reconnect');
-  });
-
-  self.client.on('reconnecting', function(){
-    self.emit('reconnecting');
-    self.state = 'reconnecting';
-    self.emit('disconnected');
-  });
-
-  self.client.on('timeout', function(){
-    self.state = 'timeout';
-    self.emit('timeout');
-  });
-
-  self.client.on('close', function(){
-    self.messageCount = 0;
-    if(self.state !== 'disconnected'){
-      self.state = 'disconnected';
-      self.emit('disconnected');
-    }
-  });
-
-  self.client.on('end', function(){
-    self.messageCount = 0;
-    if(self.state !== 'disconnected'){
-      self.state = 'disconnected';
-      self.emit('disconnected');
-    }
-  });
-
-  self.client.on('data', function(data){
-    self.handleMessage(data);
-  });
-}
-
-ActionheroClient.prototype.configure = function(callback){
-  var self = this;
-
-  self.rooms.forEach(function(room){
-    self.send({event: 'roomAdd', room: room});
-  });
-
-  self.detailsView(function(details){
-    self.id          = details.data.id;
-    self.fingerprint = details.data.fingerprint;
-    self.rooms       = details.data.rooms;
-    callback(details);
-  });
-}
-
-///////////////
-// MESSAGING //
-///////////////
-
-ActionheroClient.prototype.send = function(args, callback){
-  // primus will buffer messages when not connected
-  var self = this;
-  self.messageCount++;
-  if(typeof callback === 'function'){
-    self.callbacks[self.messageCount] = callback;
-  }
-  self.client.write(args);
-}
-
-ActionheroClient.prototype.handleMessage = function(message){
-  var self = this;
-  self.emit('message', message);
-  if(message.context === 'response'){
-    if(typeof self.callbacks[message.messageCount] === 'function'){
-      self.callbacks[message.messageCount](message);
-    }
-    delete self.callbacks[message.messageCount];
-  } else if(message.context === 'user'){
-    self.emit('say', message);
-  } else if(message.context === 'alert'){
-    self.emit('alert', message);
-  } else if(message.welcome && message.context === 'api'){
-    self.welcomeMessage = message.welcome;
-    self.emit('welcome', message);
-  } else if(message.context === 'api'){
-    self.emit('api', message);
-  }
-}
-
-/////////////
-// ACTIONS //
-/////////////
-
-ActionheroClient.prototype.action = function(action, params, callback){
-  if(!callback && typeof params === 'function'){
-    callback = params;
-    params = null;
-  }
-  if(!params){ params = {}; }
-  params.action = action;
-
-  if(this.state !== 'connected'){
-    this.actionWeb(params, callback);
-  }else{
-    this.actionWebSocket(params, callback);
-  }
-}
-
-ActionheroClient.prototype.actionWeb = function(params, callback) {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    var response;
-    if(xmlhttp.readyState === 4) {
-      if(xmlhttp.status === 200) {
-        response = JSON.parse(xmlhttp.responseText);
-      }else{
-        try{
-          response = JSON.parse(xmlhttp.responseText);
-        }catch(e){
-          response = { error: {statusText: xmlhttp.statusText, responseText: xmlhttp.responseText} };
+        } else {
+          self.state = 'connected'
+          if (typeof callback === 'function') { callback(null, details) }
         }
+        self.emit('connected')
+      })
+    })
+
+    self.client.on('error', function (error) {
+      self.emit('error', error)
+    })
+
+    self.client.on('reconnect', function () {
+      self.messageCount = 0
+      self.emit('reconnect')
+    })
+
+    self.client.on('reconnecting', function () {
+      self.emit('reconnecting')
+      self.state = 'reconnecting'
+      self.emit('disconnected')
+    })
+
+    self.client.on('timeout', function () {
+      self.state = 'timeout'
+      self.emit('timeout')
+    })
+
+    self.client.on('close', function () {
+      self.messageCount = 0
+      if (self.state !== 'disconnected') {
+        self.state = 'disconnected'
+        self.emit('disconnected')
       }
-      callback(response);
+    })
+
+    self.client.on('end', function () {
+      self.messageCount = 0
+      if (self.state !== 'disconnected') {
+        self.state = 'disconnected'
+        self.emit('disconnected')
+      }
+    })
+
+    self.client.on('data', function (data) {
+      self.handleMessage(data)
+    })
+  }
+
+  ActionheroClient.prototype.configure = function (callback) {
+    var self = this
+
+    self.rooms.forEach(function (room) {
+      self.send({event: 'roomAdd', room: room})
+    })
+
+    self.detailsView(function (details) {
+      self.id = details.data.id
+      self.fingerprint = details.data.fingerprint
+      self.rooms = details.data.rooms
+      callback(details)
+    })
+  }
+
+// /////////////
+// MESSAGING //
+// /////////////
+
+  ActionheroClient.prototype.send = function (args, callback) {
+  // primus will buffer messages when not connected
+    var self = this
+    self.messageCount++
+    if (typeof callback === 'function') {
+      self.callbacks[self.messageCount] = callback
     }
-  };
+    self.client.write(args)
+  }
 
-  var method = (params.httpMethod || 'POST').toUpperCase();
-  var url = this.options.url + this.options.apiPath + '?action=' + params.action;
-
-  if (method === 'GET') {
-    for (var param in params) {
-      if (~['action', 'httpMethod'].indexOf(param)) continue;
-      url += '&' + param + '=' + params[param];
+  ActionheroClient.prototype.handleMessage = function (message) {
+    var self = this
+    self.emit('message', message)
+    if (message.context === 'response') {
+      if (typeof self.callbacks[message.messageCount] === 'function') {
+        self.callbacks[message.messageCount](message)
+      }
+      delete self.callbacks[message.messageCount]
+    } else if (message.context === 'user') {
+      self.emit('say', message)
+    } else if (message.context === 'alert') {
+      self.emit('alert', message)
+    } else if (message.welcome && message.context === 'api') {
+      self.welcomeMessage = message.welcome
+      self.emit('welcome', message)
+    } else if (message.context === 'api') {
+      self.emit('api', message)
     }
   }
 
-  xmlhttp.open(method, url, true);
-  xmlhttp.setRequestHeader('Content-Type', 'application/json');
-  xmlhttp.send(JSON.stringify(params));
-}
+// ///////////
+// ACTIONS //
+// ///////////
 
+  ActionheroClient.prototype.action = function (action, params, callback) {
+    if (!callback && typeof params === 'function') {
+      callback = params
+      params = null
+    }
+    if (!params) { params = {} }
+    params.action = action
 
-ActionheroClient.prototype.actionWebSocket = function(params, callback){
-  this.send({event: 'action',params: params}, callback);
-}
+    if (this.state !== 'connected') {
+      this.actionWeb(params, callback)
+    } else {
+      this.actionWebSocket(params, callback)
+    }
+  }
 
-//////////////
+  ActionheroClient.prototype.actionWeb = function (params, callback) {
+    var xmlhttp = new XMLHttpRequest()
+    xmlhttp.onreadystatechange = function () {
+      var response
+      if (xmlhttp.readyState === 4) {
+        if (xmlhttp.status === 200) {
+          response = JSON.parse(xmlhttp.responseText)
+        } else {
+          try {
+            response = JSON.parse(xmlhttp.responseText)
+          } catch (e) {
+            response = { error: {statusText: xmlhttp.statusText, responseText: xmlhttp.responseText} }
+          }
+        }
+        callback(response)
+      }
+    }
+
+    var method = (params.httpMethod || 'POST').toUpperCase()
+    var url = this.options.url + this.options.apiPath + '?action=' + params.action
+
+    if (method === 'GET') {
+      for (var param in params) {
+        if (~['action', 'httpMethod'].indexOf(param)) continue
+        url += '&' + param + '=' + params[param]
+      }
+    }
+
+    xmlhttp.open(method, url, true)
+    xmlhttp.setRequestHeader('Content-Type', 'application/json')
+    xmlhttp.send(JSON.stringify(params))
+  }
+
+  ActionheroClient.prototype.actionWebSocket = function (params, callback) {
+    this.send({event: 'action', params: params}, callback)
+  }
+
+// ////////////
 // COMMANDS //
-//////////////
+// ////////////
 
-ActionheroClient.prototype.say = function(room, message, callback){
-  this.send({event: 'say', room: room, message: message}, callback);
-}
+  ActionheroClient.prototype.say = function (room, message, callback) {
+    this.send({event: 'say', room: room, message: message}, callback)
+  }
 
-ActionheroClient.prototype.file = function(file, callback){
-  this.send({event: 'file', file: file}, callback);
-}
+  ActionheroClient.prototype.file = function (file, callback) {
+    this.send({event: 'file', file: file}, callback)
+  }
 
-ActionheroClient.prototype.detailsView = function(callback){
-  this.send({event: 'detailsView'}, callback);
-}
+  ActionheroClient.prototype.detailsView = function (callback) {
+    this.send({event: 'detailsView'}, callback)
+  }
 
-ActionheroClient.prototype.roomView = function(room, callback){
-  this.send({event: 'roomView', room: room}, callback);
-}
+  ActionheroClient.prototype.roomView = function (room, callback) {
+    this.send({event: 'roomView', room: room}, callback)
+  }
 
-ActionheroClient.prototype.roomAdd = function(room, callback){
-  var self = this;
-  self.send({event: 'roomAdd', room: room}, function(data){
-    self.configure(function(){
-      if(typeof callback === 'function'){ callback(data); }
-    });
-  });
-}
+  ActionheroClient.prototype.roomAdd = function (room, callback) {
+    var self = this
+    self.send({event: 'roomAdd', room: room}, function (data) {
+      self.configure(function () {
+        if (typeof callback === 'function') { callback(data) }
+      })
+    })
+  }
 
-ActionheroClient.prototype.roomLeave = function(room, callback){
-  var self = this;
-  var index = self.rooms.indexOf(room);
-  if(index > -1){ self.rooms.splice(index, 1); }
-  this.send({event: 'roomLeave', room: room}, function(data){
-    self.configure(function(){
-      if(typeof callback === 'function'){ callback(data); }
-    });
-  });
-}
+  ActionheroClient.prototype.roomLeave = function (room, callback) {
+    var self = this
+    var index = self.rooms.indexOf(room)
+    if (index > -1) { self.rooms.splice(index, 1) }
+    this.send({event: 'roomLeave', room: room}, function (data) {
+      self.configure(function () {
+        if (typeof callback === 'function') { callback(data) }
+      })
+    })
+  }
 
-ActionheroClient.prototype.documentation = function(callback){
-  this.send({event: 'documentation'}, callback);
-}
+  ActionheroClient.prototype.documentation = function (callback) {
+    this.send({event: 'documentation'}, callback)
+  }
 
-ActionheroClient.prototype.disconnect = function(){
-  this.state = 'disconnected';
-  this.client.end();
-  this.emit('disconnected');
-}
+  ActionheroClient.prototype.disconnect = function () {
+    this.state = 'disconnected'
+    this.client.end()
+    this.emit('disconnected')
+  }
 
 // depricated lowercase name
-var actionheroClient = ActionheroClient;
+  var actionheroClient = ActionheroClient
 
-exports.ActionheroClient = ActionheroClient; 
-exports.actionheroClient = actionheroClient; 
-})(typeof exports === 'undefined' ? window : exports);
+  exports.ActionheroClient = ActionheroClient
+  exports.actionheroClient = actionheroClient
+})(typeof exports === 'undefined' ? window : exports)
