@@ -5,3 +5,5 @@ The Public MessageBot Website.
 ## Make it Go
 1. `npm install`
 2. `npm start`
+
+That's it!
