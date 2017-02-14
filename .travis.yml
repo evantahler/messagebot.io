@@ -2,19 +2,3 @@ sudo: false
 language: node_js
 node_js:
   - "6"
-
-env:
-  - secure: "kFYAkMe7l4gLSUDMc2LPuaevLHFDVjOEGoxWHCh13i6Tk5DWW2ldWFArFzrXAawcvpoPj6uYXUW2ReD3aVf+n5MHGMOHJbmD3HlQw4CRJOuyLY5S1Sf5yFQb5/5UnGQ0GvGHWONMucOie/P225OOFaaoZAnNwedRZGy11aPjOft7lYd7cJd78vHt6JRcTyPFnsnRoBzfugJ9RUWCk80ev6YxSBML6OIZKjsGaAyA/erCoyd8yUJryo1w+wGDgVKwE2P1rT1+RN0erP3xoEJSDPRdj/P2INw3LoTEI879zoGA5LIsrDYFn3HwhqOeBG2NLUssb4sMwF06c7QayBv0fS/HbkLi5y3obmhqr9VlE7FvBrMFC6qwPLwf45k/FkgBPVXYeyL4n7mBbIWpAAOKRQ5/MsMLo9eQGo6NECxnua7akN9+jUSUYsuTSZaH2iFaYrR0O6luVzDtB+JJo36YZ5ogVainqPMTL0/yDbhgVc8z9oWRZltL6FaJ1LS7+B7gY30ODgc/yh5zky+HMmjc1A5fuTrZlkNSLqCGStlcl/exHWGNb/JGmSqukwGM61EqKrH1uPU2tNmg57caIlwaWfZE/6qLN/KlCg5Hli5WJ+oL8DsuqhvGThZnXtDjY+Cc/nRbb327t2thuk66iHW6inM6DjV6S1bEsELToIjji1U="
-
-after_success:
-  - |
-      FLYNN_APP=""
-      if [ "$TRAVIS_BRANCH" = "master" ]; then FLYNN_APP="www-messagebot-io"; fi
-
-      if [ "$FLYNN_APP" = "" ]; then echo "skipping branch $TRAVIS_BRANCH" && exit 0; fi
-
-      git pull
-      git remote add flynn https://user:$FLYNN_KEY@git.messagebot.io/$FLYNN_APP.git
-      git push flynn master
-
-script: npm run test
