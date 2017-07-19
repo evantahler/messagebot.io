@@ -33,7 +33,7 @@ export default class extends React.Component {
           <link rel='stylesheet' type='text/css' href='/static/css/animations.css' />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|Roboto:100,300,400,500,700,900' rel='stylesheet' />
 
-          <title>ActionHero</title>
+          <title>MessageBot</title>
 
           <script src='/static/js/googleAnalytics.js' />
         </Head>
