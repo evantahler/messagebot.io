@@ -1,5 +1,7 @@
 # www.messagebot.io
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/messagebot/messagebot-www.svg)](https://greenkeeper.io/)
+
 [![CircleCI](https://circleci.com/gh/messagebot/messagebot-www.svg?style=svg)](https://circleci.com/gh/messagebot/messagebot-www)
 
 ## Install
