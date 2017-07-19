@@ -1,36 +1,57 @@
 {
-  "author": "evan@messagebot.io",
-  "name": "www.messagebot.io",
+  "author": "Evan Tahler <hello@actionherojs.com>",
+  "name": "messagebot-www",
   "description": "www.messagebot.io",
   "version": "0.0.1",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/messagebot/messagebot-www"
+  },
   "engines": {
-    "node": ">=6.0.0"
+    "node": "8.x.x"
   },
   "dependencies": {
-    "actionhero": "^16.0.0",
-    "ws": "latest",
-    "fakeredis": "latest",
-    "ioredis": "latest"
+    "glob": "^7.1.2",
+    "next": "^2.4.0",
+    "react": "^15.4.2",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.4.2",
+    "react-fontawesome": "^1.5.0",
+    "react-ga": "^2.1.2",
+    "react-instantsearch": "^4.0.2",
+    "react-overlays": "^0.7.0",
+    "react-syntax-highlighter": "^5.6.0",
+    "react-waypoint": "^7.0.3"
   },
   "devDependencies": {
-    "mocha": "latest",
-    "should": "latest",
-    "standard": "^8.5.0"
-  },
-  "standard": {
-    "ignore": [ "public/javascript/actionheroClient.js" ],
-    "globals": [
-      "describe",
-      "before",
-      "beforeEach",
-      "after",
-      "afterEach",
-      "it"
-    ]
+    "babel-jest": "^20.0.3",
+    "babel-preset-es2015": "^6.24.0",
+    "jest-cli": "^20.0.3",
+    "standard": "^10.0.0"
   },
   "scripts": {
-    "start": "actionhero start",
-    "actionhero": "actionhero",
-    "test": "standard && NODE_ENV=test mocha"
+    "dev": "node server.js",
+    "build": "next build",
+    "postinstall": "npm run build && npm run sitemap",
+    "sitemap": "node ./bin/sitemap.js",
+    "start": "NODE_ENV=production node server.js",
+    "test": "jest",
+    "pretest": "standard"
+  },
+  "standard": {
+    "ignore": [
+      "static/*",
+      "vendor/*"
+    ],
+    "globals": [
+      "fetch",
+      "FormData",
+      "confirm",
+      "prompt",
+      "describe",
+      "expect",
+      "it"
+    ]
   }
 }
