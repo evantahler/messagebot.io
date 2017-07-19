@@ -3,10 +3,19 @@ import { Grid } from 'react-bootstrap'
 import Head from 'next/head'
 import Router from 'next/router'
 
+import Header from './../header.js'
+import Footer from './../footer.js'
+
 export default class extends React.Component {
   componentDidMount () {
     Router.onRouteChangeComplete = (url) => {
       ga('send', 'pageview', location.pathname) // eslint-disable-line
+    }
+  }
+
+  globalStyle () {
+    return {
+      fontFamily: 'Open Sans'
     }
   }
 
@@ -31,15 +40,18 @@ export default class extends React.Component {
           <meta name='viewport' content='width=device-width' />
           <link rel='stylesheet' type='text/css' href='/static/css/bootstrap.min.css' />
           <link rel='stylesheet' type='text/css' href='/static/css/animations.css' />
-          <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800|Roboto:100,300,400,500,700,900' rel='stylesheet' />
+          <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800' rel='stylesheet' />
 
           <title>MessageBot</title>
 
           <script src='/static/js/googleAnalytics.js' />
         </Head>
 
-        <Grid fluid>
+        <Grid style={this.globalStyle()}>
+          <br />
+          <Header />
           { this.props.children }
+          <Footer />
         </Grid>
 
       </div>
