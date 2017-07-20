@@ -1,15 +1,21 @@
 import React from 'react'
 import { Jumbotron, Row, Col, Button } from 'react-bootstrap'
 import Page from './../components/layouts/page.js'
+import Client from './../components/utils/client.js'
 
 export default class extends React.Component {
+  constructor () {
+    super()
+    this.state = { client: new Client() }
+  }
+
   joinMailingList () {
     window.location.href = 'http://eepurl.com/bTrGYP'
   }
 
   render () {
     return (
-      <Page loggedIn={false}>
+      <Page loggedIn={false} client={this.state.client}>
         <Jumbotron>
           <Row>
             <Col md={4}>

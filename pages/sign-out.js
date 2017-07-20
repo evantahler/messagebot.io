@@ -3,7 +3,6 @@ import { Row, Col } from 'react-bootstrap'
 import Router from 'next/router'
 import Page from './../components/layouts/page.js'
 import Client from './../components/utils/client.js'
-import DangerAlert from './../components/alerts/danger.js'
 
 export default class extends React.Component {
   constructor () {
@@ -26,12 +25,8 @@ export default class extends React.Component {
 
   render () {
     return (
-      <Page>
+      <Page loggedIn client={this.state.client} error={this.state.error}>
         <Row>
-          <Col md={12}>
-            <DangerAlert message={this.state.error} />
-          </Col>
-
           <Col md={12}>
             <em>Signing Out...</em>
           </Col>

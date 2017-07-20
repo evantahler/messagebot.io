@@ -2,11 +2,17 @@ import React from 'react'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
 import Page from './../components/layouts/page.js'
+import Client from './../components/utils/client.js'
 
 export default class extends React.Component {
+  constructor () {
+    super()
+    this.state = { client: new Client() }
+  }
+
   render () {
     return (
-      <Page loggedIn={false}>
+      <Page loggedIn={false} client={this.state.client} >
         <Row>
           <Col md={12}>
             <h1>About MessageBot</h1>

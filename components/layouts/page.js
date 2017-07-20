@@ -1,10 +1,13 @@
 import React from 'react'
-import { Grid } from 'react-bootstrap'
+import { Grid, Row, Col } from 'react-bootstrap'
 import Head from 'next/head'
 import Router from 'next/router'
 
 import Header from './../header.js'
 import Footer from './../footer.js'
+
+import DangerAlert from './../alerts/danger.js'
+import SuccessAlert from './../alerts/success.js'
 
 export default class extends React.Component {
   componentDidMount () {
@@ -49,7 +52,15 @@ export default class extends React.Component {
 
         <Grid style={this.globalStyle()}>
           <br />
-          <Header loggedIn={this.props.loggedIn} />
+          <Header loggedIn={this.props.loggedIn} client={this.props.client} />
+
+          <Row>
+            <Col md={12}>
+              <DangerAlert message={this.props.error} />
+              <SuccessAlert message={this.props.successMessage} />
+            </Col>
+          </Row>
+
           { this.props.children }
           <Footer />
         </Grid>
