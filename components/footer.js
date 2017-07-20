@@ -2,18 +2,21 @@ import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 
 export default class extends React.Component {
-  year () {
-    return (new Date()).getFullYear()
+  constructor () {
+    super()
+    this.state = { date: new Date() }
   }
 
   render () {
     return (
-      <Row>
-        <Col md={12}>
-          <hr />
-          <p>© MessageBot & Delicious Hat, {this.year()}</p>
-        </Col>
-      </Row>
+      <footer>
+        <Row>
+          <Col md={12}>
+            <hr />
+            <p>© MessageBot & Delicious Hat, {this.state.date.getFullYear()}</p>
+          </Col>
+        </Row>
+      </footer>
     )
   }
 }

@@ -6,7 +6,7 @@ import Page from './../components/layouts/page.js'
 export default class extends React.Component {
   render () {
     return (
-      <Page>
+      <Page loggedIn={false}>
         <Row>
           <Col md={12}>
             <h1>About MessageBot</h1>

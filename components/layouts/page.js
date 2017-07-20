@@ -49,7 +49,7 @@ export default class extends React.Component {
 
         <Grid style={this.globalStyle()}>
           <br />
-          <Header />
+          <Header loggedIn={this.props.loggedIn} />
           { this.props.children }
           <Footer />
         </Grid>

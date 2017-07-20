@@ -9,7 +9,7 @@ export default class extends React.Component {
 
   render () {
     return (
-      <Page>
+      <Page loggedIn={false}>
         <Jumbotron>
           <Row>
             <Col md={4}>
