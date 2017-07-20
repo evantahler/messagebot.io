@@ -61,7 +61,12 @@ export default class extends React.Component {
             </Col>
           </Row>
 
-          { this.props.children }
+          {
+            this.props.children
+            ? this.props.children
+            : <em>Loading...</em>
+          }
+
           <Footer />
         </Grid>
 
