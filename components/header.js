@@ -43,7 +43,11 @@ export default class extends React.Component {
         <Navbar>
           <Navbar.Header>
             <Navbar.Brand>
-              <Link href='/'><a><div style={{margin: 15}}>MessageBot</div></a></Link>
+              {
+                this.props.loggedIn
+                ? <Link href='/dashboard'><a><div style={{margin: 15}}>MessageBot</div></a></Link>
+                : <Link href='/'><a><div style={{margin: 15}}>MessageBot</div></a></Link>
+              }
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>

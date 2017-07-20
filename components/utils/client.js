@@ -104,10 +104,10 @@ export default class Client {
       return response.json()
     }
 
-    fetch(this.apiEndpoint() + path, options).then(parseJSON).then(function (response) {
+    fetch(this.apiEndpoint() + path, options).then(parseJSON).then((response) => {
       if (response.error) { return errorCallback(response.error) }
       return successCallback(response)
-    }).catch(function (error) {
+    }).catch((error) => {
       if (error) { return errorCallback(error.toString(), error) }
     })
   }
