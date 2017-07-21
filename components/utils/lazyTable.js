@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Glyphicon, FormGroup, FormControl } from 'react-bootstrap'
-import { Link } from 'react-router'
+import Link from 'next/link'
 import WordHelper from './wordHelper.js'
 
 export default class extends React.Component {
@@ -86,7 +86,7 @@ export default class extends React.Component {
       return (
         <td key={'key-' + key}>
           <Glyphicon glyph='cog' />
-          <Link to={`/${this.props.recordType}/${object[key]}`}> {object[key]} </Link>
+          <Link href={`/${this.props.recordType}/${object[key]}`}><a> {object[key]} </a></Link>
         </td>
       )
     }
@@ -95,7 +95,7 @@ export default class extends React.Component {
       return (
         <td key={'key-' + key}>
           <Glyphicon glyph='cog' />
-          <Link to={`/${this.props.recordType}/${object[key]}`}> {object[key]} </Link>
+          <Link href={`/${this.props.recordType}/${object[key]}`}><a> {object[key]} </a></Link>
         </td>
       )
     }
@@ -103,7 +103,7 @@ export default class extends React.Component {
     if (key === 'personGuid') {
       return (
         <td key={'key-' + key}>
-          <Link to={`/person/${object[key]}`}>{object[key]}</Link>
+          <Link href={`/person/${object[key]}`}><a> {object[key]} </a></Link>
         </td>
       )
     }
@@ -193,7 +193,7 @@ export default class extends React.Component {
   }
 }
 
-const EditColumn = React.createClass({
+class EditColumn extends React.Component {
   render () {
     if (typeof this.props.edit === 'function') {
       return <td><Glyphicon glyph='pencil' id={this.props.keyId} onClick={this.props.edit} /> </td>
@@ -201,9 +201,9 @@ const EditColumn = React.createClass({
       return null
     }
   }
-})
+}
 
-const CloneColumn = React.createClass({
+class CloneColumn extends React.Component {
   render () {
     if (typeof this.props.clone === 'function') {
       return <td><Glyphicon glyph='duplicate' id={this.props.keyId} onClick={this.props.clone} /> </td>
@@ -211,9 +211,9 @@ const CloneColumn = React.createClass({
       return null
     }
   }
-})
+}
 
-const DeleteColumn = React.createClass({
+class DeleteColumn extends React.Component {
   render () {
     if (typeof this.props.destroy === 'function') {
       return <td><Glyphicon glyph='remove' id={this.props.keyId} onClick={this.props.destroy} /> </td>
@@ -221,4 +221,4 @@ const DeleteColumn = React.createClass({
       return null
     }
   }
-})
+}

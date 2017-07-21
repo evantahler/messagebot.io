@@ -3,7 +3,6 @@ import { FormGroup, ControlLabel, FormControl, Button, Modal } from 'react-boots
 import WordHelper from './wordHelper.js'
 
 export default class extends React.Component {
-
   /*
   - `this.props.object` is an object
   - `this.props.show` is a boolean (should hte modal show/hide?)
@@ -20,9 +19,11 @@ export default class extends React.Component {
   /*
   When Uploading files, a special `_files` object property will be crated for use in the parent container
   */
-
-  getInitialState () {
-    return {object: {}}
+  constructor () {
+    super()
+    this.state = {
+      object: {}
+    }
   }
 
   keys () {

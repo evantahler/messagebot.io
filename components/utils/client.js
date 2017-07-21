@@ -21,15 +21,6 @@ export default class Client {
     }
   }
 
-  notify (message, level) {
-    let reporter = 'log'
-    if (level === 'error' || level === 'warning') {
-      reporter = 'error'
-      this.error = message
-    }
-    console[reporter](level, message)
-  }
-
   actionPromise (data, path, verb) {
     let self = this
 
@@ -49,14 +40,13 @@ export default class Client {
       successCallback = (response) => {
         let successMessage = 'OK!'
         if (response.message) { successMessage = response.message }
-        this.notify(successMessage, 'success')
+        if (window) { window.alert(successMessage) }
       }
     }
 
     if (typeof errorCallback !== 'function') {
       errorCallback = (errorMessage, error) => {
-        this.notify(errorMessage, 'warning')
-        return Promise.reject(error)
+        console.error(error)
       }
     }
 
