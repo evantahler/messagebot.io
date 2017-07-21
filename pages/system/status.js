@@ -9,7 +9,8 @@ export default class extends React.Component {
     super()
     this.state = {
       client: new Client(),
-      status: false
+      status: false,
+      error: null
     }
   }
 
@@ -26,7 +27,7 @@ export default class extends React.Component {
       data.redis.client.memoryPercent = Math.round(data.redis.client.used_memoryMB / data.redis.client.total_system_memoryMB * 100) / 100
 
       this.setState({status: data})
-    })
+    }, (error) => this.setState({error}))
   }
 
   render () {
@@ -34,12 +35,12 @@ export default class extends React.Component {
 
     if (status === false) {
       return (
-        <Page loggedIn client={this.state.client} />
+        <Page loggedIn client={this.state.client} error={this.state.error} />
       )
     }
 
     return (
-      <Page loggedIn client={this.state.client} >
+      <Page loggedIn client={this.state.client} error={this.state.error} >
 
         <Row>
           <Col md={12}>
