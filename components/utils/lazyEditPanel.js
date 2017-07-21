@@ -68,8 +68,17 @@ export default class extends React.Component {
   render () {
     return (
       <Panel header={this.props.title}>
-        <p><Label>Created At: {Moment(this.props.object.createdAt).calendar()}</Label></p>
-        <p><Label>Updated At: {Moment(this.props.object.createdAt).calendar()}</Label></p>
+        {
+          this.props.object.createdAt
+          ? <p><Label>Created At: {Moment(this.props.object.createdAt).calendar()}</Label></p>
+          : null
+        }
+
+        {
+          this.props.object.updatedAt
+          ? <p><Label>Updated At: {Moment(this.props.object.updatedAt).calendar()}</Label></p>
+          : null
+        }
 
         <form onSubmit={this.props.onSubmit}>
           {
