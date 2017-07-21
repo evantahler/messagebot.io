@@ -1,5 +1,6 @@
 import React from 'react'
-import { FormGroup, ControlLabel, FormControl, Button, Panel, Glyphicon } from 'react-bootstrap'
+import { FormGroup, ControlLabel, FormControl, Button, Panel, Glyphicon, Label } from 'react-bootstrap'
+import Moment from 'moment'
 import WordHelper from './wordHelper.js'
 
 export default class extends React.Component {
@@ -67,6 +68,9 @@ export default class extends React.Component {
   render () {
     return (
       <Panel header={this.props.title}>
+        <p><Label>Created At: {Moment(this.props.object.createdAt).calendar()}</Label></p>
+        <p><Label>Updated At: {Moment(this.props.object.createdAt).calendar()}</Label></p>
+
         <form onSubmit={this.props.onSubmit}>
           {
             this.keys().map((key) => {
@@ -99,7 +103,6 @@ export default class extends React.Component {
               }
             })
           }
-
           <Button type='submit' bsStyle='success'><Glyphicon glyph='flash' />Submit</Button>
         </form>
       </Panel>

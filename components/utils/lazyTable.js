@@ -1,6 +1,7 @@
 import React from 'react'
 import { Table, Glyphicon, FormGroup, FormControl } from 'react-bootstrap'
 import Link from 'next/link'
+import Moment from 'moment'
 import WordHelper from './wordHelper.js'
 
 export default class extends React.Component {
@@ -106,6 +107,10 @@ export default class extends React.Component {
           <Link href={`/person/${object[key]}`}><a> {object[key]} </a></Link>
         </td>
       )
+    }
+
+    if (key === 'createdAt' || key === 'updatedAt') {
+      return <td key={'key-' + key}>{ Moment(object[key]).calendar() }</td>
     }
 
     if (object[key] === null || object[key] === undefined) {
