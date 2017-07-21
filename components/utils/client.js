@@ -6,6 +6,16 @@ const hosts = {
 }
 
 export default class Client {
+  constructor () {
+    if (process && process.title === 'node') {
+      // no caching API requests
+    } else {
+      window.MESSAGEBOT = window.MESSAGEBOT || {}
+      if (!window.MESSAGEBOT.CLIENT) { window.MESSAGEBOT.CLIENT = {storage: {}} }
+      this.storage = window.MESSAGEBOT.CLIENT.storage
+    }
+  }
+
   apiEndpoint () {
     if (process && process.title === 'node') {
       if (process.env.NODE_ENV === 'production') { return hosts.production }
@@ -18,6 +28,24 @@ export default class Client {
       } else {
         return hosts.development
       }
+    }
+  }
+
+  set (k, v) {
+    if (this.storage) {
+      this.storage[k] = v
+    }
+  }
+
+  get (k) {
+    if (this.storage) {
+      return this.storage[k]
+    }
+  }
+
+  del (k) {
+    if (this.storage) {
+      delete this.storage[k]
     }
   }
 

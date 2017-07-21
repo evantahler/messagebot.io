@@ -14,10 +14,15 @@ export default class extends React.Component {
     const client = this.props.client
 
     if ((!process || process.browser) && this.state.navigation.length === 0) {
-      // TODO: Cache this
-      client.action({}, '/api/system/navigation', 'GET', (data) => {
-        this.setState({navigation: data.navigation})
-      })
+      let cachedNavigation = client.get('navigation')
+      if (cachedNavigation) {
+        this.setState({navigation: cachedNavigation})
+      } else {
+        client.action({}, '/api/system/navigation', 'GET', (data) => {
+          this.setState({navigation: data.navigation})
+          client.set('navigation', data.navigation)
+        })
+      }
     }
   }
 
