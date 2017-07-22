@@ -160,7 +160,7 @@ export default class extends React.Component {
               </Row>
             </Well>
           </div>
-          : <em>Loading...</em>
+          : null
         }
       </Page>
     )
