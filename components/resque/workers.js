@@ -1,44 +1,27 @@
 import React from 'react'
-import { Link } from 'react-router'
 import { Row, Col } from 'react-bootstrap'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      timer: null,
-      refreshInterval: parseInt(this.props.refreshInterval, 10),
+export default class extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      client: props.client,
       workers: {},
       workerQueues: [],
       counts: {}
     }
-  },
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.params.page && nextProps.params.page !== this.state.page) {
-      this.setState({page: nextProps.params.page}, () => {
-        this.loadFailed()
-      })
-    }
-  },
+  }
 
   componentDidMount () {
     this.loadWorkers()
-  },
+  }
 
-  componentWillUnmount () {
-    clearTimeout(this.state.timer)
-  },
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.latestTick) { this.loadWorkers() }
+  }
 
   loadWorkers () {
-    clearTimeout(this.state.timer)
-    if (this.state.refreshInterval > 0) {
-      let timer = setTimeout(() => {
-        this.loadDelayedJobs()
-      }, (this.state.refreshInterval * 1000))
-      this.setState({timer: timer})
-    }
-
-    const client = this.props.client
+    const client = this.state.client
 
     client.action({}, '/api/resque/resqueDetails', 'GET', (data) => {
       this.setState({
@@ -65,11 +48,11 @@ export default React.createClass({
 
         this.loadWorkerQueues()
       })
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   loadWorkerQueues () {
-    const client = this.props.client
+    const client = this.state.client
 
     client.action({}, '/api/resque/loadWorkerQueues', 'GET', (data) => {
       let workerQueues = []
@@ -90,18 +73,18 @@ export default React.createClass({
       })
 
       this.setState({workerQueues: workerQueues})
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   forceCleanWorker (workerName) {
-    const client = this.props.client
+    const client = this.state.client
 
     if (confirm('Are you sure?')) {
       client.action({workerName: workerName}, '/api/resque/forceCleanWorker', 'POST', (data) => {
         this.loadWorkers()
-      })
+      }, (error) => { this.props.updateError(error) })
     }
-  },
+  }
 
   render () {
     return (
@@ -133,16 +116,14 @@ export default React.createClass({
                             {
                               w.queues.map((q) => {
                                 return (
-                                  <li key={`${w}-${q}`}>
-                                    <Link to={`/resque/queue/${q}`}>{ q }</Link>
-                                  </li>
+                                  <li key={`${w}-${q}`}>{ q }</li>
                                 )
                               })
                             }
                           </ul>
                         </td>
                         <td><span className={w.worker.delta > 0 ? 'text-success' : ''}>{ w.worker.statusString }</span></td>
-                        <td><button onClick={this.forceCleanWorker.bind(null, w.workerName)} className='btn btn-xs btn-danger'>Remove Worker</button></td>
+                        <td><button onClick={this.forceCleanWorker.bind(this, w.workerName)} className='btn btn-xs btn-danger'>Remove Worker</button></td>
                       </tr>
                     )
                   })
@@ -157,4 +138,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

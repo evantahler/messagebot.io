@@ -1,61 +1,39 @@
 import React from 'react'
-import { Link } from 'react-router'
+import Link from 'next/link'
 import { Row, Col, Modal } from 'react-bootstrap'
-import PaginationHelper from '../../../components/utils/paginationHelper.js'
+import PaginationHelper from './../utils/paginationHelper.js'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      timer: null,
-      refreshInterval: parseInt(this.props.refreshInterval, 10),
+export default class extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      client: props.client,
       failed: [],
-      counts: {},
+      counts: {failed: 0},
       focusedException: {},
-      perPage: 50,
+      perPage: 10,
       showModal: false,
-      page: parseInt(this.props.params.page || 0, 10)
+      page: 0
     }
-  },
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.refreshInterval !== this.state.refreshInterval) {
-      this.setState({refreshInterval: parseInt(nextProps.refreshInterval, 10)}, () => {
-        this.loadFailed()
-      })
-    }
-
-    if (nextProps.params.page && nextProps.params.page !== this.state.page) {
-      this.setState({page: nextProps.params.page}, () => {
-        this.loadFailed()
-      })
-    }
-  },
+  }
 
   componentDidMount () {
     this.loadFailed()
-  },
+  }
 
-  componentWillUnmount () {
-    clearTimeout(this.state.timer)
-  },
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.latestTick) { this.loadFailed() }
+  }
 
   loadFailedCount () {
-    const client = this.props.client
+    const client = this.state.client
     client.action({}, '/api/resque/resqueFailedCount', 'GET', (data) => {
       this.setState({counts: {failed: data.failedCount}})
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   loadFailed () {
-    clearTimeout(this.state.timer)
-    if (this.state.refreshInterval > 0) {
-      let timer = setTimeout(() => {
-        this.loadDelayedJobs()
-      }, (this.state.refreshInterval * 1000))
-      this.setState({timer: timer})
-    }
-
-    const client = this.props.client
+    const client = this.state.client
     client.action({
       start: (this.state.page * this.state.perPage),
       stop: ((this.state.page * this.state.perPage) + (this.state.perPage - 1))
@@ -63,44 +41,44 @@ export default React.createClass({
       this.setState({failed: data.failed}, () => {
         this.loadFailedCount()
       })
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   removeFailedJob (index) {
-    const client = this.props.client
+    const client = this.state.client
     client.action({
       id: index
     }, '/api/resque/removeFailed', 'POST', (data) => {
       this.loadFailed()
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   retryFailedJob (index) {
-    const client = this.props.client
+    const client = this.state.client
     client.action({
       id: index
     }, '/api/resque/retryAndRemoveFailed', 'POST', (data) => {
       this.loadFailed()
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   removeAllFailedJobs () {
-    const client = this.props.client
+    const client = this.state.client
     if (window.confirm('Are you sure?')) {
       client.action({}, '/api/resque/removeAllFailed', 'POST', (data) => {
         this.loadFailed()
-      })
+      }, (error) => { this.props.updateError(error) })
     }
-  },
+  }
 
   retryAllFailedJobs () {
-    const client = this.props.client
+    const client = this.state.client
     if (window.confirm('Are you sure?')) {
       client.action({}, '/api/resque/retryAndRemoveAllFailed', 'POST', (data) => {
         this.loadFailed()
-      })
+      }, (error) => { this.props.updateError(error) })
     }
-  },
+  }
 
   renderFailureStack (index) {
     let focusedException = this.state.failed[index]
@@ -113,11 +91,15 @@ export default React.createClass({
       focusedException: focusedException,
       showModal: true
     })
-  },
+  }
 
   onHide () {
     this.setState({showModal: false})
-  },
+  }
+
+  updatePage (page) {
+    this.setState({page}, () => { this.loadFailed() })
+  }
 
   render () {
     let index = -1
@@ -125,12 +107,11 @@ export default React.createClass({
 
     return (
       <div>
-
         <h1>Failed Jobs ({ this.state.counts.failed })</h1>
 
         <p>
-          <button onClick={this.retryAllFailedJobs} className='btn btn-sm btn-warning'>Retry All</button>&nbsp;
-          <button onClick={this.removeAllFailedJobs} className='btn btn-sm btn-danger'>Remove All</button>
+          <button onClick={this.retryAllFailedJobs.bind(this)} className='btn btn-sm btn-warning'>Retry All</button>&nbsp;
+          <button onClick={this.removeAllFailedJobs.bind(this)} className='btn btn-sm btn-danger'>Remove All</button>
         </p>
 
         <Row>
@@ -160,10 +141,10 @@ export default React.createClass({
                           <td>{ (this.state.page * this.state.perPage) + (index + 1) }</td>
                           <td>{ f.failed_at }</td>
                           <td>
-                            <Link onClick={this.renderFailureStack.bind(null, index)} ><span className='glyphicon glyphicon-plus-sign' /></Link>
+                            <span onClick={this.renderFailureStack.bind(this, index)} ><span className='glyphicon glyphicon-plus-sign' /></span>
                             <strong>{ f.exception }: { f.error }</strong>
                           </td>
-                          <td><span className='text-success'><Link href={`/system/resque/queue/${f.queue}`}>{ f.queue }</Link></span></td>
+                          <td><span className='text-success'><Link href={`/system/resque/queue/${f.queue}`}><a>{ f.queue }</a></Link></span></td>
                           <td>{ f.payload.class }</td>
                           <td>{ f.worker }</td>
                           <td>
@@ -176,8 +157,8 @@ export default React.createClass({
                               }
                             </ul>
                           </td>
-                          <td><button onClick={this.retryFailedJob.bind(null, index)} className='btn btn-xs btn-warning'>Retry</button></td>
-                          <td><button onClick={this.removeFailedJob.bind(null, index)} className='btn btn-xs btn-danger'>Remove</button></td>
+                          <td><button onClick={this.retryFailedJob.bind(this, index)} className='btn btn-xs btn-warning'>Retry</button></td>
+                          <td><button onClick={this.removeFailedJob.bind(this, index)} className='btn btn-xs btn-danger'>Remove</button></td>
                         </tr>
                       )
                     })
@@ -186,10 +167,10 @@ export default React.createClass({
             </table>
 
             <PaginationHelper
-              url={this.props.url}
               currentPage={this.state.page}
               total={this.state.counts.failed}
               perPage={this.state.perPage}
+              updatePage={this.updatePage.bind(this)}
             />
 
           </Col>
@@ -210,11 +191,10 @@ export default React.createClass({
             <pre>{ this.state.focusedException.renderedStack }</pre>
           </Modal.Body>
           <Modal.Footer>
-            <button className='btn btn-xs' onClick={this.onHide}>Close</button>
+            <button className='btn btn-xs' onClick={this.onHide.bind(this)}>Close</button>
           </Modal.Footer>
         </Modal>
-
       </div>
     )
   }
-})
+}

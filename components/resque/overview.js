@@ -1,6 +1,4 @@
 import React from 'react'
-import ResquePage from './../../../components/layouts/resque/page.js'
-import Client from './../../../components/utils/client.js'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
 import ReactHighcharts from 'react-highcharts'
@@ -9,10 +7,7 @@ export default class extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      client: new Client(),
-      error: null,
-      timer: null,
-      refreshInterval: 10,
+      client: props.client,
       queues: {},
       workers: [],
       stats: {},
@@ -52,18 +47,12 @@ export default class extends React.Component {
     }
   }
 
-  updateRefeshInterval (refreshInterval) {
-    this.setState({refreshInterval}, () => {
-      this.loadDetails()
-    })
-  }
-
   componentDidMount () {
     this.loadDetails()
   }
 
-  componentWillUnmount () {
-    clearTimeout(this.state.timer)
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.latestTick) { this.loadDetails() }
   }
 
   loadFailedCount () {
@@ -72,21 +61,11 @@ export default class extends React.Component {
       let counts = this.state.counts
       counts.failed = data.failedCount
       this.setState({counts: counts})
-    })
+    }, (error) => { this.props.updateError(error) })
   }
 
   loadDetails () {
-    clearTimeout(this.state.timer)
-
-    if (this.state.refreshInterval > 0) {
-      let timer = setTimeout(() => {
-        this.loadDetails()
-      }, (this.state.refreshInterval * 1000))
-      this.setState({timer: timer})
-    }
-
     const client = this.state.client
-
     client.action({}, '/api/resque/resqueDetails', 'GET', (data) => {
       let counts = this.state.counts
       counts.queues = Object.keys(data.resqueDetails.queues).length
@@ -134,18 +113,12 @@ export default class extends React.Component {
 
         this.setState({workers: data.resqueDetails.workers})
       })
-    })
+    }, (error) => { this.props.updateError(error) })
   }
 
   render () {
     return (
-      <ResquePage
-        loggedIn
-        client={this.state.client}
-        error={this.state.error}
-        refreshInterval={this.state.refreshInterval}
-        updateRefeshInterval={this.updateRefeshInterval.bind(this)}
-      >
+      <div>
         <h1>Resque Overview</h1>
 
         <Row>
@@ -244,8 +217,7 @@ export default class extends React.Component {
             </table>
           </Col>
         </Row>
-
-      </ResquePage>
+      </div>
     )
   }
 }

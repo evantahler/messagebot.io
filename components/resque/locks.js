@@ -1,41 +1,25 @@
 import React from 'react'
 import { Row, Col } from 'react-bootstrap'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      timer: null,
-      refreshInterval: parseInt(this.props.refreshInterval, 10),
+export default class extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      client: props.client,
       locks: []
     }
-  },
+  }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.refreshInterval !== this.state.refreshInterval) {
-      this.setState({refreshInterval: parseInt(nextProps.refreshInterval, 10)}, () => {
-        this.loadLocks()
-      })
-    }
-  },
+    if (nextProps.latestTick) { this.loadLocks() }
+  }
 
   componentDidMount () {
     this.loadLocks()
-  },
-
-  componentWillUnmount () {
-    clearTimeout(this.state.timer)
-  },
+  }
 
   loadLocks () {
     const client = this.props.client
-
-    clearTimeout(this.state.timer)
-    if (this.state.refreshInterval > 0) {
-      let timer = setTimeout(() => {
-        this.loadDelayedJobs()
-      }, (this.state.refreshInterval * 1000))
-      this.setState({timer: timer})
-    }
 
     client.action({}, '/api/resque/locks', 'GET', (data) => {
       let locks = []
@@ -44,8 +28,8 @@ export default React.createClass({
       })
 
       this.setState({locks: locks})
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   delLock (lock) {
     const client = this.props.client
@@ -55,9 +39,9 @@ export default React.createClass({
         lock: lock
       }, '/api/resque/delLock', 'POST', (data) => {
         this.loadLocks()
-      })
+      }, (error) => { this.props.updateError(error) })
     }
-  },
+  }
 
   render () {
     let index = -1
@@ -100,4 +84,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

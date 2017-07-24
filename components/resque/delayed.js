@@ -1,53 +1,30 @@
 import React from 'react'
-import { Link } from 'react-router'
 import { Row, Col } from 'react-bootstrap'
-import PaginationHelper from '../../../components/utils/paginationHelper.js'
+import PaginationHelper from './../utils/paginationHelper.js'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      timer: null,
-      refreshInterval: parseInt(this.props.refreshInterval, 10),
+export default class extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      client: props.client,
       timestamps: [],
       delayedjobs: {},
       counts: {},
       perPage: 50,
-      page: parseInt(this.props.params.page || 0, 10)
+      page: 0
     }
-  },
-
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.refreshInterval !== this.state.refreshInterval) {
-      this.setState({refreshInterval: parseInt(nextProps.refreshInterval, 10)}, () => {
-        this.loadDelayedJobs()
-      })
-    }
-
-    if (nextProps.params.page && nextProps.params.page !== this.state.page) {
-      this.setState({page: nextProps.params.page}, () => {
-        this.loadDelayedJobs()
-      })
-    }
-  },
+  }
 
   componentDidMount () {
     this.loadDelayedJobs()
-  },
+  }
 
-  componentWillUnmount () {
-    clearTimeout(this.state.timer)
-  },
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.latestTick) { this.loadDelayedJobs() }
+  }
 
   loadDelayedJobs () {
-    clearTimeout(this.state.timer)
-    if (this.state.refreshInterval > 0) {
-      let timer = setTimeout(() => {
-        this.loadDelayedJobs()
-      }, (this.state.refreshInterval * 1000))
-      this.setState({timer: timer})
-    }
-
-    const client = this.props.client
+    const client = this.state.client
 
     client.action({
       start: (this.state.page * this.state.perPage),
@@ -68,8 +45,8 @@ export default React.createClass({
         delayedjobs: data.delayedjobs,
         timestamps: timestamps
       })
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
 
   delDelayed (timestamp, count) {
     const client = this.props.client
@@ -80,9 +57,9 @@ export default React.createClass({
         count: count
       }, '/api/resque/delDelayed', 'POST', (data) => {
         this.loadDelayedJobs()
-      })
+      }, (error) => { this.props.updateError(error) })
     }
-  },
+  }
 
   runDelayed (timestamp, count) {
     const client = this.props.client
@@ -92,8 +69,12 @@ export default React.createClass({
       count: count
     }, '/api/resque/runDelayed', 'POST', (data) => {
       this.loadDelayedJobs()
-    })
-  },
+    }, (error) => { this.props.updateError(error) })
+  }
+
+  updatePage (page) {
+    this.setState({page}, () => { this.loadDelayedJobs() })
+  }
 
   render () {
     let argCounter = 0
@@ -132,7 +113,7 @@ export default React.createClass({
                               return (
                                 <tr key={`${t.date.getTime()}-${job.queue}-${JSON.stringify(job.args)}`}>
                                   <td>{ job.class }</td>
-                                  <td><Link to={`/resque/queue/${job.queue}`}>{ job.queue }</Link></td>
+                                  <td>{ job.queue }</td>
                                   <td>
                                     <ul>
                                       {
@@ -159,7 +140,7 @@ export default React.createClass({
             }
 
             <PaginationHelper
-              url={this.props.url}
+              updatePage={this.updatePage.bind(this)}
               currentPage={this.state.page}
               total={this.state.counts.timestamps}
               perPage={this.state.perPage}
@@ -170,4 +151,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

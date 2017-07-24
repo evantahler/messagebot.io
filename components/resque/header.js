@@ -1,5 +1,5 @@
 import React from 'react'
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap'
+import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
 import Link from 'next/link'
 
 export default class extends React.Component {
@@ -11,7 +11,7 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.refreshInterval) {
+    if (nextProps.refreshInterval !== undefined && nextProps.refreshInterval !== null) {
       this.setState({refreshInterval: nextProps.refreshInterval})
     }
   }
@@ -25,14 +25,6 @@ export default class extends React.Component {
       <Navbar>
         <NavHeaderAndIcon loggedIn={this.props.loggedIn} />
         <Navbar.Collapse>
-          <Nav pullLeft>
-            <NavItem href='/system/resque/overview'>Overview</NavItem>
-            <NavItem href='/system/resque/failed'>Failed</NavItem>
-            <NavItem href='/system/resque/workers'>Workers</NavItem>
-            <NavItem href='/system/resque/delayed'>Delayed</NavItem>
-            <NavItem href='/system/resque/locks'>Locks</NavItem>
-          </Nav>
-
           <Nav pullRight />
 
           <Nav pullRight>
