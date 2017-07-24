@@ -7,6 +7,7 @@ export default class extends React.Component {
     super(props)
     this.state = {
       client: props.client,
+      latestTick: 0,
       timestamps: [],
       delayedjobs: {},
       counts: {},
@@ -20,7 +21,10 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.latestTick) { this.loadDelayedJobs() }
+    if (nextProps.latestTick && this.state.latestTick < nextProps.latestTick) {
+      this.setState({latestTick: nextProps.latestTick})
+      this.loadDelayedJobs()
+    }
   }
 
   loadDelayedJobs () {
@@ -124,8 +128,8 @@ export default class extends React.Component {
                                       }
                                     </ul>
                                   </td>
-                                  <td width='100'><button onClick={this.runDelayed.bind(null, t.key, index)} className='btn btn-xs btn-warning'>Run Now</button></td>
-                                  <td width='100'><button onClick={this.delDelayed.bind(null, t.key, index)} className='btn btn-xs btn-danger'>Remove</button></td>
+                                  <td width='100'><button onClick={this.runDelayed.bind(this, t.key, index)} className='btn btn-xs btn-warning'>Run Now</button></td>
+                                  <td width='100'><button onClick={this.delDelayed.bind(this, t.key, index)} className='btn btn-xs btn-danger'>Remove</button></td>
                                 </tr>
                               )
                             })

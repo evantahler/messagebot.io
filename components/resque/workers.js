@@ -6,6 +6,7 @@ export default class extends React.Component {
     super(props)
     this.state = {
       client: props.client,
+      latestTick: 0,
       workers: {},
       workerQueues: [],
       counts: {}
@@ -17,7 +18,10 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.latestTick) { this.loadWorkers() }
+    if (nextProps.latestTick && this.state.latestTick < nextProps.latestTick) {
+      this.setState({latestTick: nextProps.latestTick})
+      this.loadWorkers()
+    }
   }
 
   loadWorkers () {

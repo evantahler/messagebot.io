@@ -4,7 +4,7 @@ import Client from './../../components/utils/client.js'
 
 import ResqueHeader from './../../components/resque/header.js'
 import ResqueFooter from './../../components/resque/footer.js'
-import ResqueOverfiew from './../../components/resque/overview.js'
+import ResqueOverview from './../../components/resque/overview.js'
 import ResqueFailed from './../../components/resque/failed.js'
 import ResqueWorkers from './../../components/resque/workers.js'
 import ResqueQueue from './../../components/resque/queue.js'
@@ -57,12 +57,12 @@ export default class extends React.Component {
       <Page loggedIn client={this.state.client} error={this.state.error} >
         <ResqueHeader refreshInterval={this.state.refreshInterval} updateRefeshInterval={this.updateRefeshInterval.bind(this)} />
 
-        <ResqueOverfiew client={this.state.client} latestTick={this.state.latestTick} />
-        <ResqueFailed client={this.state.client} latestTick={this.state.latestTick} />
-        <ResqueWorkers client={this.state.client} latestTick={this.state.latestTick} />
-        <ResqueQueue client={this.state.client} latestTick={this.state.latestTick} />
-        <ResqueDelayed client={this.state.client} latestTick={this.state.latestTick} />
-        <ResqueLocks client={this.state.client} latestTick={this.state.latestTick} />
+        <ResqueOverview client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
+        <ResqueFailed client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
+        <ResqueWorkers client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
+        <ResqueQueue client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
+        <ResqueDelayed client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
+        <ResqueLocks client={this.state.client} latestTick={this.state.latestTick} updateError={this.updateError.bind(this)} />
 
         <ResqueFooter client={this.state.client} />
       </Page>

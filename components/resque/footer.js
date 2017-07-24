@@ -7,6 +7,7 @@ export default class extends React.Component {
     super(props)
     this.state = {
       client: props.client,
+      latestTick: 0,
       redis: {},
       version: ''
     }

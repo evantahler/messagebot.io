@@ -6,12 +6,16 @@ export default class extends React.Component {
     super(props)
     this.state = {
       client: props.client,
+      latestTick: 0,
       locks: []
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.latestTick) { this.loadLocks() }
+    if (nextProps.latestTick && this.state.latestTick < nextProps.latestTick) {
+      this.setState({latestTick: nextProps.latestTick})
+      this.loadLocks()
+    }
   }
 
   componentDidMount () {

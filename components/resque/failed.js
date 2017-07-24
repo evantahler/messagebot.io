@@ -8,6 +8,7 @@ export default class extends React.Component {
     super(props)
     this.state = {
       client: props.client,
+      latestTick: 0,
       failed: [],
       counts: {failed: 0},
       focusedException: {},
@@ -22,7 +23,10 @@ export default class extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.latestTick) { this.loadFailed() }
+    if (nextProps.latestTick && this.state.latestTick < nextProps.latestTick) {
+      this.setState({latestTick: nextProps.latestTick})
+      this.loadFailed()
+    }
   }
 
   loadFailedCount () {
