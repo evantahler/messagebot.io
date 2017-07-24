@@ -9,7 +9,6 @@ export default class extends React.Component {
     super()
     this.state = {
       client: new Client(),
-      status: false,
       error: null,
       settings: [],
       transports: [],
