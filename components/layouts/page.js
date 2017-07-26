@@ -43,6 +43,7 @@ export default class extends React.Component {
           <meta name='viewport' content='width=device-width' />
           <link rel='stylesheet' type='text/css' href='/static/css/bootstrap.min.css' />
           <link rel='stylesheet' type='text/css' href='/static/css/animations.css' />
+          <link rel='stylesheet' type='text/css' href='/static/css/react-datetime.css' />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800' rel='stylesheet' />
 
           <title>MessageBot</title>

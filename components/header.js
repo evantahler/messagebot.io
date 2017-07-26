@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
+import Router from 'next/router'
 import { Navbar, Nav, Glyphicon, NavDropdown, MenuItem } from 'react-bootstrap'
 
 export default class extends React.Component {
@@ -51,14 +52,23 @@ export default class extends React.Component {
 }
 
 class NavHeaderAndIcon extends React.Component {
+  onClick (route) {
+    Router.push(route)
+  }
+
   render () {
+    const style = {
+      fontSize: 10,
+      fontWeight: 'bold'
+    }
+
     return (
       <Navbar.Header>
         <Navbar.Brand>
           {
             this.props.loggedIn
-            ? <Link href='/dashboard'><a><div style={{margin: 15}}>MessageBot</div></a></Link>
-            : <Link href='/'><a><div style={{margin: 15}}>MessageBot</div></a></Link>
+            ? <div onClick={this.onClick.bind(this, '/dashboard')} style={style}>MessageBot</div>
+            : <div onClick={this.onClick.bind(this, '/')} style={style}>MessageBot</div>
           }
         </Navbar.Brand>
         <Navbar.Toggle />
@@ -68,6 +78,10 @@ class NavHeaderAndIcon extends React.Component {
 }
 
 class NavGroup extends React.Component {
+  onClick (route) {
+    Router.push(route)
+  }
+
   render () {
     let group = this.props.group
     let key = `navDropdown-${group.title}`
@@ -92,9 +106,9 @@ class NavGroup extends React.Component {
                 return <MenuItem divider key={`${key}_${counter}`} />
               }
               return (
-                <Link href={element.route} key={`${key}_${counter}`} >
-                  <MenuItem><Glyphicon glyph={element.glyphicon} /> {element.title}</MenuItem>
-                </Link>
+                <MenuItem key={`${key}_${counter}`} onClick={this.onClick.bind(this, element.route)}>
+                  <Glyphicon glyph={element.glyphicon} /> {element.title}
+                </MenuItem>
               )
             }
           )}
