@@ -1,4 +1,5 @@
 import React from 'react'
+import Router from 'next/router'
 import WordHelper from './wordHelper.js'
 import PaginationHelper from './paginationHelper.js'
 import LazyTable from './lazyTable.js'
@@ -24,10 +25,16 @@ export default class extends React.Component {
   }
 
   componentDidMount () {
-    this.loadRecent()
+    let page = Router.query.page ? parseInt(Router.query.page) : this.state.page
+    this.setState({page}, () => this.loadRecent())
   }
 
   updatePage (page) {
+    let pathname = window.location.pathname
+    pathname = pathname.replace(/\/$/, '')
+    pathname = pathname.replace(`/${this.state.page}`, '')
+    pathname += `/${page}`
+    window.history.pushState({}, null, pathname)
     this.setState({page}, () => this.loadRecent())
   }
 
@@ -75,7 +82,6 @@ export default class extends React.Component {
         <h2>{title} { WordHelper.titleize(this.props.section) } ({ this.state.total } total)</h2>
 
         <PointMap section={this.props.section} points={this.state.points} client={this.state.client} />
-        <p>Showing the {this.state.points.length} most recent entries on this page with a location.</p>
 
         <LazyTable
           recordType={WordHelper.singleize(this.props.section)}

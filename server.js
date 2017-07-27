@@ -13,15 +13,38 @@ const rootStaticFiles = [
   '/sitemap.xml'
 ]
 
+const dynamicBaseRoutes = [
+  '/people/recent',
+  '/events/recent',
+  '/messages/recent'
+]
+
 app.prepare().then(() => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true)
-    if (rootStaticFiles.indexOf(parsedUrl.pathname) > -1) {
-      const path = join(__dirname, 'static', parsedUrl.pathname)
+    const { pathname, query } = parsedUrl
+
+    // static root files
+    if (rootStaticFiles.indexOf(pathname) === 0) {
+      let path = join(__dirname, 'static', pathname)
       app.serveStatic(req, res, path)
-    } else {
-      handle(req, res, parsedUrl)
     }
+
+    // routes with dyamic IDs or Pages
+    for (let i in dynamicBaseRoutes) {
+      let dynamicBaseRoute = dynamicBaseRoutes[i]
+      if (pathname.indexOf(dynamicBaseRoute) === 0 && pathname.length > dynamicBaseRoute.length) {
+        let base = pathname.split('/')
+        query.page = base.pop()
+        base = base.join('/')
+        app.render(req, res, base, query)
+
+        return
+      }
+    }
+
+    // normal handler
+    handle(req, res, parsedUrl)
   })
   .listen(port, (err) => {
     if (err) throw err
