@@ -27,6 +27,10 @@ export default class extends React.Component {
     this.loadRecent()
   }
 
+  updatePage (page) {
+    this.setState({page}, () => this.loadRecent())
+  }
+
   loadRecent () {
     const client = this.state.client
 
@@ -82,7 +86,7 @@ export default class extends React.Component {
           currentPage={this.state.page}
           total={this.state.total}
           perPage={this.state.perPage}
-          updatePage={this.loadRecent.bind(this)}
+          updatePage={this.updatePage.bind(this)}
         />
       </div>
     )

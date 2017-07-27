@@ -1,5 +1,4 @@
 import React from 'react'
-import Link from 'next/link'
 import Router from 'next/router'
 import { Navbar, Nav, Glyphicon, NavDropdown, MenuItem } from 'react-bootstrap'
 
