@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pagination, Well } from 'react-bootstrap'
+import { Pagination } from 'react-bootstrap'
 
 export default class extends React.Component {
   // this.props.currentPage => What page are we on?
@@ -20,19 +20,17 @@ export default class extends React.Component {
 
     return (
       <div>
-        <Well>
-          <Pagination
-            prev={currentPage !== 0}
-            first={currentPage !== 0}
-            next={lastPage > currentPage}
-            last={lastPage > currentPage}
-            ellipsis
-            items={(lastPage + 1)}
-            maxButtons={5}
-            activePage={(currentPage + 1)}
-            onSelect={this.handleSelect.bind(this)}
-          />
-        </Well>
+        <Pagination
+          prev={currentPage !== 0}
+          first={currentPage !== 0}
+          next={lastPage > currentPage}
+          last={lastPage > currentPage}
+          ellipsis
+          items={(lastPage + 1)}
+          maxButtons={5}
+          activePage={(currentPage + 1)}
+          onSelect={this.handleSelect.bind(this)}
+        />
       </div>
     )
   }

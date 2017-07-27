@@ -16,7 +16,10 @@ const rootStaticFiles = [
 const dynamicBaseRoutes = [
   '/people/recent',
   '/events/recent',
-  '/messages/recent'
+  '/messages/recent',
+  '/person',
+  '/event',
+  '/message'
 ]
 
 app.prepare().then(() => {
