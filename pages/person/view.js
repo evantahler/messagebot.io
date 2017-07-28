@@ -1,10 +1,10 @@
 import React from 'react'
-import Page from './../components/layouts/page.js'
+import Page from './../../components/layouts/page.js'
 import Link from 'next/link'
 import { Row, Col } from 'react-bootstrap'
-import RecordView from './../components/utils/recordView.js'
-import LazyTable from './../components/utils/lazyTable.js'
-import Client from './../components/utils/client.js'
+import RecordView from './../../components/utils/recordView.js'
+import LazyTable from './../../components/utils/lazyTable.js'
+import Client from './../../components/utils/client.js'
 
 export default class extends React.Component {
   constructor (props) {

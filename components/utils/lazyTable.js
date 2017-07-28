@@ -87,7 +87,9 @@ export default class extends React.Component {
       return (
         <td key={'key-' + key}>
           <Glyphicon glyph='cog' />
-          <Link href={`/${this.props.recordType}/${object[key]}`}><a> {object[key]} </a></Link>
+          <Link href={{pathname: `/${this.props.recordType}/view`, query: {page: object[key]}}} as={`/${this.props.recordType}/view/${object[key]}`}>
+            <a> {object[key]} </a>
+          </Link>
         </td>
       )
     }
@@ -96,7 +98,9 @@ export default class extends React.Component {
       return (
         <td key={'key-' + key}>
           <Glyphicon glyph='cog' />
-          <Link href={`/${this.props.recordType}/${object[key]}`}><a> {object[key]} </a></Link>
+          <Link href={{pathname: `/${this.props.recordType}/view`, query: {page: object[key]}}} as={`/${this.props.recordType}/view/${object[key]}`}>
+            <a> {object[key]} </a>
+          </Link>
         </td>
       )
     }
@@ -104,7 +108,9 @@ export default class extends React.Component {
     if (key === 'personGuid') {
       return (
         <td key={'key-' + key}>
-          <Link href={`/person/${object[key]}`}><a> {object[key]} </a></Link>
+          <Link href={{pathname: `/person/view`, query: {page: object[key]}}} as={`/person/view/${object[key]}`}>
+            <a> {object[key]} </a>
+          </Link>
         </td>
       )
     }

@@ -1,7 +1,7 @@
 import React from 'react'
-import Page from './../components/layouts/page.js'
-import RecordView from './../components/utils/recordView.js'
-import Client from './../components/utils/client.js'
+import Page from './../../components/layouts/page.js'
+import RecordNew from './../../components/utils/recordNew.js'
+import Client from './../../components/utils/client.js'
 
 export default class extends React.Component {
   constructor (props) {
@@ -9,13 +9,8 @@ export default class extends React.Component {
     this.state = {
       client: new Client(),
       error: null,
-      guid: props.guid,
-      recordType: 'message'
+      recordType: 'event'
     }
-  }
-
-  static async getInitialProps ({ query }) {
-    return {guid: query.page}
   }
 
   updateError (error) {
@@ -25,10 +20,9 @@ export default class extends React.Component {
   render () {
     return (
       <Page loggedIn client={this.state.client} error={this.state.error} >
-        <RecordView
-          recordType={this.state.recordType}
-          guid={this.state.guid}
+        <RecordNew
           client={this.state.client}
+          recordType={this.state.recordType}
           updateError={this.updateError.bind(this)}
         />
       </Page>

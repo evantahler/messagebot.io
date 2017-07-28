@@ -81,15 +81,35 @@ export default class extends React.Component {
               }
 
               if (key === 'personGuid' && value) {
-                return <li key={key}><Link href={`/person/${value}`}><a><strong>{title}: </strong>{value}</a></Link></li>
+                return <li key={key}>
+                  <Link href={{pathname: `/person/view`, query: {page: value}}} as={`/person/view/${value}`}>
+                    <a><strong>{title}: </strong>{value}</a>
+                  </Link>
+                </li>
               } else if (key === 'eventGuid' && value) {
-                return <li key={key}><Link href={`/event/${value}`}><a><strong>{title}: </strong>{value}</a></Link></li>
+                return <li key={key}>
+                  <Link href={{pathname: `/event/view`, query: {page: value}}} as={`/event/view/${value}`}>
+                    <a><strong>{title}: </strong>{value}</a>
+                  </Link>
+                </li>
               } else if (key === 'messageGuid' && value) {
-                return <li key={key}><Link href={`/message/${value}`}><a><strong>{title}: </strong>{value}</a></Link></li>
+                return <li key={key}>
+                  <Link href={{pathname: `/message/view`, query: {page: value}}} as={`/message/view/${value}`}>
+                    <a><strong>{title}: </strong>{value}</a>
+                  </Link>
+                </li>
               } else if (key === 'listId' && value) {
-                return <li key={key}><Link href={`/list/${value}`}><a><strong>{title}: </strong>{value}</a></Link></li>
+                return <li key={key}>
+                  <Link href={{pathname: `/list/view`, query: {page: value}}} as={`/list/view/${value}`}>
+                    <a><strong>{title}: </strong>{value}</a>
+                  </Link>
+                </li>
               } else if (key === 'campaignId' && value) {
-                return <li key={key}><Link href={`/campaign/${value}/stats`}><a><strong>{title}: </strong>{value}</a></Link></li>
+                return <li key={key}>
+                  <Link href={{pathname: `/campaign/view`, query: {page: value}}} as={`/campaign/view/${value}`}>
+                    <a><strong>{title}: </strong>{value}</a>
+                  </Link>
+                </li>
               } else if (this.state.renderableData.indexOf(key) < 0) {
                 return <li key={key}><strong>{title}: </strong>{value}</li>
               }

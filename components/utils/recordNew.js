@@ -1,6 +1,7 @@
 import React from 'react'
 import { Row, Col, Form, FormGroup, FormControl, ControlLabel, Button } from 'react-bootstrap'
 import Datetime from 'react-datetime'
+import Router from 'next/router'
 import WordHelper from './wordHelper.js'
 import LazyTable from './lazyTable.js'
 
@@ -51,7 +52,7 @@ export default class extends React.Component {
         topLevelProperties: topLevelProperties,
         action: action
       })
-    })
+    }, (error) => this.props.updateError(error))
   }
 
   componentDidMount () {
@@ -107,23 +108,24 @@ export default class extends React.Component {
     const client = this.state.client
 
     let payload = {
-      sync: true,
-      createdAt: this.state.createdAt.getTime(),
       data: {}
     }
 
     this.state.topLevelProperties.forEach(function (collection) {
-      payload[collection.id] = collection.value
+      if (collection.value) { payload[collection.id] = collection.value }
     })
 
     this.state.optionalProperties.forEach(function (collection) {
-      payload.data[collection.id] = collection.value
+      if (collection.value) { payload.data[collection.id] = collection.value }
     })
 
     client.action(payload, '/api/' + this.props.recordType, 'POST', (data) => {
-      // TODO
-      // browserHistory.push(`/${this.props.recordType}/${data.guid}`)
-    })
+      Router.push({
+        pathname: `/${this.props.recordType}/view`,
+        query: {page: data[this.props.recordType].guid},
+        as: `/${this.props.recordType}/view/${data[this.props.recordType].guid}`
+      })
+    }, (error) => this.props.updateError(error))
   }
 
   render () {
@@ -136,16 +138,16 @@ export default class extends React.Component {
         <Col md={6}>
           <h2>Top-Level Properties</h2>
 
-          <FormGroup>
-            <ControlLabel>Created At</ControlLabel>
-            <Datetime value={this.state.createdAt} onChange={this.updateCreatedAt} />
-          </FormGroup>
-
           <LazyTable
             objects={this.state.topLevelProperties}
             idName={'Key'}
             inlineEdit={{ value: this.handlePropEditNoOP }}
           />
+
+          <FormGroup>
+            <ControlLabel>Created At</ControlLabel>
+            <Datetime value={this.state.createdAt} onChange={this.updateCreatedAt} />
+          </FormGroup>
         </Col>
 
         <Col md={6}>
@@ -155,19 +157,20 @@ export default class extends React.Component {
             objects={this.state.optionalProperties}
             idName={'Key'}
             inlineEdit={{ value: this.handlePropEditNoOP }}
-            destroy={this.removeOptionalProperty}
-            />
+            destroy={this.removeOptionalProperty.bind(this)}
+          />
 
           <hr />
+
           <h3>Add New:</h3>
 
-          <Form horizontal onSubmit={this.addDataProperty}>
+          <Form horizontal onSubmit={this.addDataProperty.bind(this)}>
             <FormGroup>
               <Col componentClass={ControlLabel} md={2}>
                 <strong>Key:</strong>
               </Col>
               <Col md={10}>
-                <FormControl value={this.state.pendingKey} type='text' placeholder='firstName' onChange={this.updatePendingKey} />
+                <FormControl value={this.state.pendingKey} type='text' placeholder='key' onChange={this.updatePendingKey.bind(this)} />
               </Col>
             </FormGroup>
 
@@ -176,7 +179,7 @@ export default class extends React.Component {
                 <strong>Value:</strong>
               </Col>
               <Col md={10}>
-                <FormControl value={this.state.pendingValue} type='text' placeholder='Evan' onChange={this.updatePendingValue} />
+                <FormControl value={this.state.pendingValue} type='text' placeholder='value' onChange={this.updatePendingValue.bind(this)} />
               </Col>
             </FormGroup>
 
@@ -191,7 +194,7 @@ export default class extends React.Component {
         <Col md={12}>
           <hr />
           <FormGroup>
-            <Button onClick={this.upload} type='submit'>Create New Record</Button>
+            <Button onClick={this.upload.bind(this)} type='submit'>Create New Record</Button>
           </FormGroup>
         </Col>
 

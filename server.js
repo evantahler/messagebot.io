@@ -17,9 +17,9 @@ const dynamicBaseRoutes = [
   '/people/recent',
   '/events/recent',
   '/messages/recent',
-  '/person',
-  '/event',
-  '/message'
+  '/person/view',
+  '/event/view',
+  '/message/view'
 ]
 
 app.prepare().then(() => {
