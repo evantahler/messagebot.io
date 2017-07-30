@@ -11,11 +11,14 @@ export default class extends React.Component {
   // `this.props.client`: ActionHero Client
   // `this.props.perPage` (defalut 25)
   // `this.props.updateError` error callback
+  // `this.props.topLevelSearchTerms` terms which should have data. appended to them for search
+  // `this.props.query` key-value format query statement
 
   constructor (props) {
     super(props)
     this.state = {
       client: this.props.client,
+      query: null,
       total: 0,
       records: [],
       points: [],
@@ -29,11 +32,21 @@ export default class extends React.Component {
     this.setState({page}, () => this.loadRecent())
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.query && nextProps.query !== this.state.query) {
+      this.setState({query: nextProps.query, page: 0}, () => {
+        this.updatePage(this.state.page)
+      })
+    }
+  }
+
   updatePage (page) {
     let pathname = window.location.pathname
     pathname = pathname.replace(/\/$/, '')
+    pathname = pathname.replace(/\/\d*$/, '')
     pathname = pathname.replace(`/${this.state.page}`, '')
     pathname += `/${page}`
+    if (this.state.query) { pathname += `?query=${this.state.query}` }
     window.history.pushState({}, null, pathname)
     this.setState({page}, () => this.loadRecent())
   }
@@ -43,6 +56,19 @@ export default class extends React.Component {
 
     let searchKeys = ['guid']
     let searchValues = ['%']
+
+    if (this.state.query && this.state.query.length > 2) {
+      searchKeys = []
+      searchValues = []
+      this.state.query.split(' ').forEach((chunk) => {
+        if (chunk.length > 2) {
+          let [k, v] = chunk.split(':')
+          if (this.props.topLevelSearchTerms.indexOf(k) < 0) { k = `data.${k}` }
+          searchKeys.push(k)
+          searchValues.push(v)
+        }
+      })
+    }
 
     client.action({
       searchKeys: searchKeys,

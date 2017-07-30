@@ -11,11 +11,14 @@ export default class extends React.Component {
   // `this.props.start` (defalut '1 month ago')
   // `this.props.end` (defalut 'now')
   // `this.props.updateError` error callback
+  // `this.props.topLevelSearchTerms` terms which should have data. appended to them for search
+  // `this.props.query` key-value format query statement
 
   constructor (props) {
     super(props)
     this.state = {
       client: this.props.client,
+      query: null,
       possibleIntervals: ['year', 'month', 'date'],
       interval: 'date',
       start: (new Date(new Date().setMonth(new Date().getMonth() - 1))),
@@ -26,6 +29,12 @@ export default class extends React.Component {
 
   componentDidMount () {
     this.loadHistogram()
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.query && nextProps.query !== this.state.query) {
+      this.setState({query: nextProps.query}, () => this.loadHistogram())
+    }
   }
 
   updateHistogramRange (event) {
@@ -50,6 +59,19 @@ export default class extends React.Component {
     const client = this.state.client
     let searchKeys = ['guid']
     let searchValues = ['%']
+
+    if (this.state.query && this.state.query.length > 2) {
+      searchKeys = []
+      searchValues = []
+      this.state.query.split(' ').forEach((chunk) => {
+        if (chunk.length > 2) {
+          let [k, v] = chunk.split(':')
+          if (this.props.topLevelSearchTerms.indexOf(k) < 0) { k = `data.${k}` }
+          searchKeys.push(k)
+          searchValues.push(v)
+        }
+      })
+    }
 
     client.action({
       searchKeys: searchKeys,

@@ -17,6 +17,9 @@ const dynamicBaseRoutes = [
   '/people/recent',
   '/events/recent',
   '/messages/recent',
+  '/people/search',
+  '/events/search',
+  '/messages/search',
   '/person/view',
   '/event/view',
   '/message/view'
