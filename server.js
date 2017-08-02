@@ -23,7 +23,8 @@ const dynamicBaseRoutes = [
   '/person/view',
   '/event/view',
   '/message/view',
-  '/lists/list'
+  '/lists/list',
+  '/list/view'
 ]
 
 app.prepare().then(() => {
@@ -47,7 +48,7 @@ app.prepare().then(() => {
         if (base.join('/') === dynamicBaseRoute) {
           base = base.join('/')
         } else {
-          query.folder = base.pop()
+          query.item = base.pop()
           base = base.join('/')
         }
 

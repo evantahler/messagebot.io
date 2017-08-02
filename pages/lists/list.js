@@ -36,7 +36,7 @@ export default class extends React.Component {
 
   componentDidMount () {
     this.setState({
-      folder: (Router.query.folder || this.state.folder),
+      folder: (Router.query.item || this.state.folder),
       page: (Router.query.page || this.state.page)
     }, () => {
       this.loadLists()
@@ -72,7 +72,7 @@ export default class extends React.Component {
         lists: lists,
         total: data.total
       })
-    })
+    }, (error) => { this.setState({error}) })
   }
 
   editList (event) {
@@ -100,7 +100,7 @@ export default class extends React.Component {
         name: input
       }, '/api/list/copy', 'POST', (data) => {
         this.loadLists()
-      })
+      }, (error) => { this.setState({error}) })
     }
   }
 
@@ -112,7 +112,7 @@ export default class extends React.Component {
         this.setState({successMessage: 'List Deleted'})
         this.loadLists()
         this.loadFolders()
-      })
+      }, (error) => { this.setState({error}) })
     }
   }
 
@@ -121,7 +121,7 @@ export default class extends React.Component {
 
     client.action({}, '/api/lists/folders', 'GET', (data) => {
       this.setState({folders: data.folders})
-    })
+    }, (error) => { this.setState({error}) })
   }
 
   changeFolder (event) {
@@ -173,7 +173,7 @@ export default class extends React.Component {
       this.closeNewStaticModal()
       this.loadLists()
       this.loadFolders()
-    })
+    }, (error) => { this.setState({error}) })
   }
 
   processEditListModal () {
@@ -187,7 +187,7 @@ export default class extends React.Component {
       this.closeEditDynamicModal()
       this.loadLists()
       this.loadFolders()
-    })
+    }, (error) => { this.setState({error}) })
   }
 
   updatePage (page) {
@@ -229,7 +229,7 @@ export default class extends React.Component {
           <Col md={9}>
             <br />
             <LazyTable
-              recordType='list/people'
+              recordType='list'
               objects={this.state.lists}
               ignoredKeys={[
                 'updatedAt',
