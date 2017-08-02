@@ -251,6 +251,24 @@ export default class extends React.Component {
           </Col>
         </Row>
 
+        <Row>
+          <Col md={12}>
+            <hr />
+            <p>
+              <strong>Notes:</strong>
+            </p>
+
+            <ul>
+              <li>
+                When creating Dynamic Lists, the queries to build them are JSON collections of search keys & values.  This personQuery would match all people with source iPhone: <code>{`{"source": ["iPhone"]}`}</code>
+              </li>
+              <li>
+                Use '%' for wildcards.  This personQuery would match all people with "E" first names: <code>{`{"firstName": ["e%"]}`}</code>
+              </li>
+            </ul>
+          </Col>
+        </Row>
+
         <LazyEditModal
           title={'Create Static List'}
           object={this.state.newList}
