@@ -22,7 +22,8 @@ const dynamicBaseRoutes = [
   '/messages/search',
   '/person/view',
   '/event/view',
-  '/message/view'
+  '/message/view',
+  '/lists/list'
 ]
 
 app.prepare().then(() => {
@@ -42,7 +43,14 @@ app.prepare().then(() => {
       if (pathname.indexOf(dynamicBaseRoute) === 0 && pathname.length > dynamicBaseRoute.length) {
         let base = pathname.split('/')
         query.page = base.pop()
-        base = base.join('/')
+
+        if (base.join('/') === dynamicBaseRoute) {
+          base = base.join('/')
+        } else {
+          query.folder = base.pop()
+          base = base.join('/')
+        }
+
         app.render(req, res, base, query)
 
         return

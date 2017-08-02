@@ -1,6 +1,5 @@
 import React from 'react'
 import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap'
-import Link from 'next/link'
 
 export default class extends React.Component {
   constructor (props) {
@@ -24,7 +23,6 @@ export default class extends React.Component {
   render () {
     return (
       <Navbar>
-        <NavHeaderAndIcon loggedIn={this.props.loggedIn} />
         <Navbar.Collapse>
           <Nav pullRight />
 
@@ -39,23 +37,6 @@ export default class extends React.Component {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-    )
-  }
-}
-
-class NavHeaderAndIcon extends React.Component {
-  render () {
-    return (
-      <Navbar.Header>
-        <Navbar.Brand>
-          <Link className='navbar-brand' href='/system/resque/overview'>
-            <a>
-              <div style={{margin: 15}}>Resque</div>
-            </a>
-          </Link>
-        </Navbar.Brand>
-        <Navbar.Toggle />
-      </Navbar.Header>
     )
   }
 }

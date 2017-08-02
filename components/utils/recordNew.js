@@ -120,11 +120,7 @@ export default class extends React.Component {
     })
 
     client.action(payload, '/api/' + this.props.recordType, 'POST', (data) => {
-      Router.push({
-        pathname: `/${this.props.recordType}/view`,
-        query: {page: data[this.props.recordType].guid},
-        as: `/${this.props.recordType}/view/${data[this.props.recordType].guid}`
-      })
+      Router.push(`/${this.props.recordType}/view`, `/${this.props.recordType}/view/${data[this.props.recordType].guid}`)
     }, (error) => this.props.updateError(error))
   }
 

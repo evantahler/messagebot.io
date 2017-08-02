@@ -48,41 +48,6 @@ const WordHelper = {
 
     return sentance
   }
-
-  // routeQueryToParams: function (query) {
-  //   const topLevelSearchTerms = [
-  //     'type',
-  //     'personGuid',
-  //     'messageGuid',
-  //     'eventGuid',
-  //     'guid',
-  //     'type',
-  //     'createdAt',
-  //     'updatedAt',
-  //     'campaignId',
-  //     'sentAt',
-  //     'openedAt',
-  //     'actedAt',
-  //     'transport'
-  //   ]
-  //
-  //   let searchKeys = []
-  //   let searchValues = []
-  //   const parts = query.split(' ')
-  //   parts.forEach(function (part) {
-  //     if (part !== '') {
-  //       let words = part.split(':')
-  //       if (topLevelSearchTerms.indexOf(words[0]) >= 0) {
-  //         searchKeys.push(words[0])
-  //       } else {
-  //         searchKeys.push('data.' + words[0])
-  //       }
-  //       searchValues.push(words[1])
-  //     }
-  //   })
-  //
-  //   return [searchKeys, searchValues]
-  // }
 }
 
 export default WordHelper
