@@ -263,6 +263,9 @@ export default class extends React.Component {
                 When creating Dynamic Lists, the queries to build them are JSON collections of search keys & values.  This personQuery would match all people with source iPhone: <code>{`{"source": ["iPhone"]}`}</code>
               </li>
               <li>
+                Use '!' as the first letter to create searches for things that do not include a set.  This personQuery would match all people with sources other than iPhones: <code>{`{"source": ["!iPhone"]}`}</code>
+              </li>
+              <li>
                 Use '%' for wildcards.  This personQuery would match all people with "E" first names: <code>{`{"firstName": ["e%"]}`}</code>
               </li>
             </ul>
