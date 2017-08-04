@@ -5,6 +5,7 @@ import Router from 'next/router'
 import { Row, Col, Button } from 'react-bootstrap'
 import LazyIframe from './../../components/utils/lazyIframe.js'
 import CodeEditor from './../../components/utils/codeEditor.js'
+import JSONTree from 'react-json-tree'
 
 export default class extends React.Component {
   constructor () {
@@ -125,7 +126,6 @@ export default class extends React.Component {
         </p>
 
         <Button onClick={this.updateTemplate.bind(this)}>Save Changes</Button>{` `}
-        <Button onClick={this.loadView.bind(this)}>Preview</Button>
 
         <hr />
 
@@ -146,17 +146,20 @@ export default class extends React.Component {
             <p>To track links, use mustache function <em>track</em> to transform URLs into tracked URLs: <code>{`{{#track}}https://link/to/stuff{{/track}}`}</code>.</p>
             <p>To include a beacon image, include <em>beacon</em> in your body, using tripple mustache <code>{`{{{beacon}}}`}</code>.</p>
             <p>To include a partial template in this one, use the <em>render</em> mustache function with the name of ID of the template you wisth to include: <code>{`{{#include}}footer{{/include}}`}</code></p>
-            <p>Use the <em>optOutLink</em> mustache function to option the link to the opt-out URL.  With no arguments it will direct to the default page, but you can supply your own: <code>{`{{{optOutLink}}}`}</code>.</p>
+            <p>Use the <em>optOutLink</em> mustache function to option the link to the opt-out URL.  With no arguments it will direct to the default page, but you can supply your own: <code>{`click <a href="{{#optOutLink}}{{/optOutLink}}">here</a> to opt-out`}</code>.</p>
 
             <hr />
 
             <h3>Variables</h3>
-            <pre>{JSON.stringify(view, 0, 2)}</pre>
+            <div>
+              <JSONTree data={view} hideRoot />
+            </div>
           </Col>
 
           <Col md={6}>
             <h3>Preview</h3>
-            <p>personGuid: <input type='text' value={this.state.personGuid || ''} onChange={this.changePersonGuid.bind(this)} /> Link: <input value={template.url} readOnly /></p>
+            <p>personGuid: <input type='text' value={this.state.personGuid || ''} onChange={this.changePersonGuid.bind(this)} /></p>
+            <Button onClick={this.loadView.bind(this)}>Preview</Button>
 
             <hr />
 
