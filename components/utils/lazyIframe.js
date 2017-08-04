@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Modal } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 
 export default class extends React.Component {
   constructor () {
@@ -23,12 +23,9 @@ export default class extends React.Component {
     return body
   }
 
-  showModal () {
-    this.setState({showModal: true})
-  }
-
-  hideModal () {
-    this.setState({showModal: false})
+  newTab () {
+    let newWindow = window.open()
+    newWindow.document.write(this.sanitizedBody())
   }
 
   render () {
@@ -55,14 +52,8 @@ export default class extends React.Component {
     return (
       <div>
         <iframe id='bodyIframe' scrolling='auto' frameBorder='0' width='100%' height='100%' />
-        <hr />
-        <Button onClick={this.showModal.bind(this)}>Show Full Screen</Button>
 
-        <Modal dialogClassName='wide-iframe' show={this.state.showModal} onHide={this.hideModal.bind(this)}>
-          <Modal.Body>
-            <iframe id='modalIframe' scrolling='auto' frameBorder='0' width='100%' height='100%' />
-          </Modal.Body>
-        </Modal>
+        <Button onClick={this.newTab.bind(this)}>View in new tab</Button>
       </div>
     )
   }

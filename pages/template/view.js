@@ -159,7 +159,7 @@ export default class extends React.Component {
           <Col md={6}>
             <h3>Preview</h3>
             <p>personGuid: <input type='text' value={this.state.personGuid || ''} onChange={this.changePersonGuid.bind(this)} /></p>
-            <Button onClick={this.loadView.bind(this)}>Preview</Button>
+            <Button onClick={this.loadView.bind(this)}>Reload Preview</Button>
 
             <hr />
 
