@@ -56,9 +56,9 @@ export default class extends React.Component {
       <div>
         <iframe id='bodyIframe' scrolling='auto' frameBorder='0' width='100%' height='100%' />
         <hr />
-        <Button onClick={this.showModal}>Show Full Screen</Button>
+        <Button onClick={this.showModal.bind(this)}>Show Full Screen</Button>
 
-        <Modal dialogClassName='wide-iframe' show={this.state.showModal} onHide={this.hideModal}>
+        <Modal dialogClassName='wide-iframe' show={this.state.showModal} onHide={this.hideModal.bind(this)}>
           <Modal.Body>
             <iframe id='modalIframe' scrolling='auto' frameBorder='0' width='100%' height='100%' />
           </Modal.Body>

@@ -25,7 +25,8 @@ const dynamicBaseRoutes = [
   '/message/view',
   '/lists/list',
   '/list/view',
-  '/templates/list'
+  '/templates/list',
+  '/template/view'
 ]
 
 app.prepare().then(() => {

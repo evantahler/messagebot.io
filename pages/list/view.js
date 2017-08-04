@@ -62,7 +62,7 @@ export default class extends React.Component {
 
     client.action({listId: this.state.listId}, '/api/list', 'GET', (data) => {
       this.setState({list: data.list})
-    })
+    }, (error) => { this.setState({error}) })
   }
 
   loadListPeople () {
