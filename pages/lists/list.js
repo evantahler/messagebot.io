@@ -36,7 +36,7 @@ export default class extends React.Component {
 
   componentDidMount () {
     this.setState({
-      folder: (Router.query.item || this.state.folder),
+      folder: unescape(Router.query.item || this.state.folder),
       page: (Router.query.page || this.state.page)
     }, () => {
       this.loadLists()
@@ -125,7 +125,7 @@ export default class extends React.Component {
   }
 
   changeFolder (event) {
-    this.setState({folder: event.target.value}, () => {
+    this.setState({folder: event.target.value, page: 0}, () => {
       this.updateRoute()
       this.loadLists()
     })
