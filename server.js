@@ -26,7 +26,10 @@ const dynamicBaseRoutes = [
   '/lists/list',
   '/list/view',
   '/templates/list',
-  '/template/view'
+  '/template/view',
+  '/campaigns/list',
+  '/campaign/view',
+  '/campaign/stats'
 ]
 
 app.prepare().then(() => {
@@ -54,9 +57,7 @@ app.prepare().then(() => {
           base = base.join('/')
         }
 
-        app.render(req, res, base, query)
-
-        return
+        return app.render(req, res, base, query)
       }
     }
 

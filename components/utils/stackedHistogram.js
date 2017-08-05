@@ -66,7 +66,7 @@ export default class extends React.Component {
       this.state.query.split(' ').forEach((chunk) => {
         if (chunk.length > 2) {
           let [k, v] = chunk.split(':')
-          if (this.props.topLevelSearchTerms.indexOf(k) < 0) { k = `data.${k}` }
+          if (this.props.topLevelSearchTerms && this.props.topLevelSearchTerms.indexOf(k) < 0) { k = `data.${k}` }
           searchKeys.push(k)
           searchValues.push(v)
         }

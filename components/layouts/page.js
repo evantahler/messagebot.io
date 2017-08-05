@@ -48,8 +48,6 @@ export default class extends React.Component {
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800' rel='stylesheet' />
 
           <title>MessageBot</title>
-
-          <script src='/static/js/googleAnalytics.js' />
         </Head>
 
         <Grid style={this.globalStyle()}>
