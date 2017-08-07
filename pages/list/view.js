@@ -2,6 +2,7 @@ import React from 'react'
 import Page from './../../components/layouts/page.js'
 import Client from './../../components/utils/client.js'
 import Router from 'next/router'
+import Moment from 'moment'
 import { Row, Col, Button } from 'react-bootstrap'
 import LazyTable from './../../components/utils/lazyTable.js'
 import LazyEditModal from './../../components/utils/lazyEditModal.js'
@@ -108,6 +109,14 @@ export default class extends React.Component {
     }, (error) => { this.setState({error}) })
   }
 
+  recount () {
+    const client = this.state.client
+
+    client.action({listId: this.state.listId}, '/api/list/people', 'POST', (data) => {
+      this.loadList()
+    }, (error) => { this.setState({error}) })
+  }
+
   removePersonBuilder () {
     const self = this
     const client = this.state.client
@@ -140,25 +149,28 @@ export default class extends React.Component {
     return (
       <Page loggedIn client={this.state.client} error={this.state.error} successMessage={this.state.successMessage}>
         <h1>People in <strong>{ this.state.list.name }</strong> ({ this.state.total } total)</h1>
+        <p>Last Couted { Moment(this.state.list.peopleCountedAt).calendar() }</p>
 
-        {
-          (() => {
-            if (this.state.list && this.state.list.type === 'static') {
-              return (
-                <Row>
-                  <Col md={12}>
-                    <Button onClick={this.openUploadGuidModal.bind(this)}>Add List People via personGuid</Button>{' '}
-                    <Button onClick={this.openUploadFileModal.bind(this)}>Add List People via file</Button>
-                    <br />
-                    <br />
-                  </Col>
-                </Row>
-              )
-            } else {
-              return null
+        <Row>
+          <Col md={12}>
+            <Button onClick={this.recount.bind(this)}>Recount List People</Button>
+            {` `}
+            {
+              this.state.list && this.state.list.type === 'static'
+              ? <Button onClick={this.openUploadGuidModal.bind(this)}>Add List People via personGuid</Button>
+              : null
             }
-          })()
-        }
+            {` `}
+            {
+              this.state.list && this.state.list.type === 'static'
+              ? <Button onClick={this.openUploadFileModal.bind(this)}>Add List People via file</Button>
+              : null
+            }
+          </Col>
+        </Row>
+
+        <br />
+        <br />
 
         <LazyTable
           recordType='person'

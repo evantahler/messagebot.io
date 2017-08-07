@@ -28,7 +28,7 @@ export default class extends React.Component {
     client.action({}, '/api/resque/locks', 'GET', (data) => {
       let locks = []
       Object.keys(data.locks).forEach(function (l) {
-        locks.push({lock: l, at: new Date(parseInt(data.locks[l], 10) * 1000, 10)})
+        locks.push({lock: l, at: new Date(parseInt(data.locks[l]) * 1000)})
       })
 
       this.setState({locks: locks})
@@ -75,7 +75,7 @@ export default class extends React.Component {
                         <td>{ (index + 1) }</td>
                         <td>{ l.lock }</td>
                         <td>{ l.at.toString() }</td>
-                        <td><button onClick={this.delLock.bind(null, l.lock)} className='btn btn-xs btn-warning'>Delete</button></td>
+                        <td><button onClick={this.delLock.bind(this, l.lock)} className='btn btn-xs btn-warning'>Delete</button></td>
                       </tr>
                     )
                   })
