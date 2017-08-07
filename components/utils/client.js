@@ -1,10 +1,5 @@
 require('isomorphic-fetch') // ensure fech is in-scope, even on the server
 
-const hosts = {
-  development: 'http://localhost:8080',
-  production: 'https://api.messagebot.io'
-}
-
 export default class Client {
   constructor () {
     if (process && process.title === 'node') {
@@ -17,18 +12,7 @@ export default class Client {
   }
 
   apiEndpoint () {
-    if (process && process.title === 'node') {
-      if (process.env.NODE_ENV === 'production') { return hosts.production }
-      return hosts.development
-    } else {
-      let parts = window.location.host.split('.')
-      if (parts[0] === 'www') {
-        parts.shift()
-        return hosts.production
-      } else {
-        return hosts.development
-      }
-    }
+    return process.env.API_URL
   }
 
   set (k, v) {

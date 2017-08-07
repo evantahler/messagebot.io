@@ -2,6 +2,9 @@
   "presets": [
     "next/babel"
   ],
+  "plugins": [
+    [ "transform-inline-environment-variables" ]
+  ],
   "env": {
     "test": {
       "presets": ["es2015", "next/babel"]

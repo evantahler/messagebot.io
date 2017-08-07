@@ -12,7 +12,7 @@ import SuccessAlert from './../alerts/success.js'
 export default class extends React.Component {
   componentDidMount () {
     Router.onRouteChangeComplete = (url) => {
-      ga('send', 'pageview', location.pathname) // eslint-disable-line
+      // TODO page tracking
     }
   }
 
