@@ -26,3 +26,9 @@ We use [standard.js](https://standardjs.com) to manage our lint rules.  We run `
 ## CSS
 - we use a default boostrap CSS file
 - all components provide thier own CSS inline
+
+## TODO
+* Resque should be more than one page
+* Dashboard
+* Theme
+* Track pageviews

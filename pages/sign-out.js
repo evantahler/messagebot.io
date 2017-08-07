@@ -17,6 +17,7 @@ export default class extends React.Component {
     const client = this.state.client
 
     client.action(this.state, '/api/session', 'DELETE', (data) => {
+      client.del('personGuid')
       Router.push({pathname: '/'})
     }, (error) => {
       this.setState({error})

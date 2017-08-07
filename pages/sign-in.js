@@ -20,6 +20,7 @@ export default class extends React.Component {
     const client = this.state.client
 
     client.action(this.state, '/api/session', 'POST', (data) => {
+      client.set('personGuid', data.user.personGuid)
       Router.push({pathname: '/dashboard'})
     }, (error) => {
       this.setState({error})
