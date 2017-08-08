@@ -56,7 +56,10 @@ export default class extends React.Component {
     client.action({campaignId: this.state.campaignId}, '/api/campaign', 'GET', (data) => {
       let campaign = data.campaign
       if (campaign.sendAt) { campaign.sendAt = new Date(Date.parse(campaign.sendAt)) }
-      this.setState({campaign}, () => { this.hydrateCampaign() })
+      this.setState({campaign}, () => {
+        this.loadList()
+        this.hydrateCampaign()
+      })
     }, (error) => this.setState({error}))
   }
 
@@ -99,7 +102,6 @@ export default class extends React.Component {
 
     client.action({}, '/api/templates', 'GET', (data) => {
       this.setState({templates: data.templates}, () => {
-        this.loadList()
         this.hydrateCampaign()
       })
     }, (error) => this.setState({error}))
@@ -110,7 +112,9 @@ export default class extends React.Component {
     const client = this.state.client
 
     client.action({listId: this.state.campaign.listId}, '/api/list', 'GET', (data) => {
-      this.setState({list: data.list})
+      this.setState({list: data.list}, () => {
+        this.hydrateCampaign()
+      })
     }, (error) => this.setState({error}))
   }
 
@@ -217,6 +221,10 @@ export default class extends React.Component {
 
   handleCampaignVarialbeChangeNoOp () { }
 
+  returnTriggerEventMatch (triggerEventMatch) {
+    this.setState({triggerEventMatch})
+  }
+
   render () {
     return (
       <Page loggedIn client={this.state.client} error={this.state.error} successMessage={this.state.successMessage}>
@@ -315,7 +323,7 @@ export default class extends React.Component {
             </Form>
 
             <RecurringCampaignOptions campaign={this.state.campaign} />
-            <TriggerCampaignOptions campaign={this.state.campaign} />
+            <TriggerCampaignOptions campaign={this.state.campaign} returnTriggerEventMatch={this.returnTriggerEventMatch.bind(this)} />
           </Col>
 
           <Col md={12}>
@@ -339,6 +347,10 @@ class RecurringCampaignOptions extends React.Component {
   constructor (props) {
     super(props)
     this.state = { campaign: props.campaign }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!this.state.campaign.type) { this.setState({campaign: nextProps.campaign}) }
   }
 
   inlinePropChange (event) {
@@ -385,6 +397,20 @@ class TriggerCampaignOptions extends React.Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    let triggerEventMatch = []
+
+    if (!this.state.campaign.type) {
+      if (nextProps.campaign && nextProps.campaign.triggerEventMatch) {
+        Object.keys(nextProps.campaign.triggerEventMatch).forEach((key) => {
+          triggerEventMatch.push({id: key, value: nextProps.campaign.triggerEventMatch[key]})
+        })
+      }
+
+      this.setState({campaign: nextProps.campaign, triggerEventMatch: triggerEventMatch})
+    }
+  }
+
   updateCampaign () {
     let campaign = this.state.campaign
     campaign.triggerEventMatch = {}
@@ -392,7 +418,9 @@ class TriggerCampaignOptions extends React.Component {
       campaign.triggerEventMatch[tem.id] = tem.value
     })
 
-    this.setState({campaign: campaign})
+    this.setState({campaign: campaign}, () => {
+      this.props.returnTriggerEventMatch(campaign.triggerEventMatch)
+    })
   }
 
   inlinePropChange (event) {
@@ -436,7 +464,8 @@ class TriggerCampaignOptions extends React.Component {
     this.setState({pendingValue: event.target.value})
   }
 
-  addAttribute () {
+  addAttribute (event) {
+    event.preventDefault()
     this.state.triggerEventMatch.push({id: this.state.pendingKey, value: this.state.pendingValue})
     this.setState({
       triggerEventMatch: this.state.triggerEventMatch,
@@ -482,7 +511,7 @@ class TriggerCampaignOptions extends React.Component {
               <strong>Key:</strong>
             </Col>
             <Col md={10}>
-              <FormControl value={this.state.pendingKey} type='text' placeholder='firstName' onChange={this.updatePendingKey.bind(this)} />
+              <FormControl value={this.state.pendingKey} type='text' placeholder='key' onChange={this.updatePendingKey.bind(this)} />
             </Col>
           </FormGroup>
 
@@ -491,7 +520,7 @@ class TriggerCampaignOptions extends React.Component {
               <strong>Value:</strong>
             </Col>
             <Col md={10}>
-              <FormControl value={this.state.pendingValue} type='text' placeholder='Evan' onChange={this.updatePendingValue.bind(this)} />
+              <FormControl value={this.state.pendingValue} type='text' placeholder='value' onChange={this.updatePendingValue.bind(this)} />
             </Col>
           </FormGroup>
 

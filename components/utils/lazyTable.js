@@ -184,6 +184,7 @@ export default class extends React.Component {
           {
             this.state.objects.map((object) => {
               let keyId = (object.id || object.guid || object.name)
+              if (!keyId) { return }
 
               return (
                 <tr key={keyId}>

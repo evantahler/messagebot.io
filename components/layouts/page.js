@@ -1,7 +1,6 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import Head from 'next/head'
-import Router from 'next/router'
 
 import Header from './../header.js'
 import Footer from './../footer.js'
@@ -11,9 +10,12 @@ import SuccessAlert from './../alerts/success.js'
 
 export default class extends React.Component {
   componentDidMount () {
-    Router.onRouteChangeComplete = (url) => {
-      // TODO page tracking
-    }
+    try {
+      window.MESSAGEBOT.init(this.props.client.get('personGuid'), (error) => {
+        if (error) { console.error(error) }
+        window.MESSAGEBOT.track({type: 'pageview'})
+      })
+    } catch (e) { }
   }
 
   globalStyle () {
@@ -46,6 +48,8 @@ export default class extends React.Component {
           <link rel='stylesheet' type='text/css' href='/static/css/react-datetime.css' />
           <link rel='stylesheet' type='text/css' href='/static/css/codemirror.css' />
           <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800' rel='stylesheet' />
+
+          <script type='text/javascript' src={`${process.env.API_URL}/api/client`} />
 
           <title>MessageBot</title>
         </Head>
