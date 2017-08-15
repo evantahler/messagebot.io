@@ -28,7 +28,7 @@ We use [standard.js](https://standardjs.com) to manage our lint rules.  We run `
 - all components provide thier own CSS inline
 
 ## TODO
-* Resque should be more than one page
 * Dashboard
 * Theme
 * Track pageviews
+* use UUIDs in all cases, no IDs (which means we can skip primary keys)

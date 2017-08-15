@@ -22,9 +22,7 @@ export default class extends React.Component {
     client.action(this.state, '/api/session', 'POST', (data) => {
       client.set('personGuid', data.user.personGuid)
       Router.push({pathname: '/dashboard'})
-    }, (error) => {
-      this.setState({error})
-    })
+    }, (error) => this.setState({error}))
   }
 
   handleChange (event) {

@@ -529,6 +529,8 @@ class TriggerCampaignOptions extends React.Component {
               <Button type='submit'>Add Attribute</Button>
             </Col>
           </FormGroup>
+
+          <p>When adding triggers, use robust regular expressions for the values.  If you want your campaign to trigger on a "purchase" event, use <code>{`type: ^purchase$`}</code></p>
         </Form>
       </div>
     )

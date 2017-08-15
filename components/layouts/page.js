@@ -1,6 +1,7 @@
 import React from 'react'
 import { Grid, Row, Col } from 'react-bootstrap'
 import Head from 'next/head'
+import Router from 'next/router'
 
 import Header from './../header.js'
 import Footer from './../footer.js'
@@ -8,14 +9,31 @@ import Footer from './../footer.js'
 import DangerAlert from './../alerts/danger.js'
 import SuccessAlert from './../alerts/success.js'
 
+const LoggedOutPages = [
+  '/',
+  '/about',
+  '/sign-in'
+]
+
 export default class extends React.Component {
   componentDidMount () {
+    this.checkLoggedIn()
+
     try {
       window.MESSAGEBOT.init(this.props.client.get('personGuid'), (error) => {
         if (error) { console.error(error) }
         window.MESSAGEBOT.track({type: 'pageview'})
       })
     } catch (e) { }
+  }
+
+  checkLoggedIn () {
+    const client = this.props.client
+    if (LoggedOutPages.indexOf(Router.pathname) >= 0) {
+      client.action({}, '/api/session', 'PUT', (response) => {
+        if (response.success) { Router.push('/dashboard') }
+      })
+    }
   }
 
   globalStyle () {
