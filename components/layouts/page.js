@@ -9,6 +9,8 @@ import Footer from './../footer.js'
 import DangerAlert from './../alerts/danger.js'
 import SuccessAlert from './../alerts/success.js'
 
+import TestRouter from './../utils/testRouter.js' //eslint-disable-line
+
 const LoggedOutPages = [
   '/',
   '/about',

@@ -107,19 +107,15 @@ export default class extends React.Component {
     const status = this.state.status
     let index = 0
 
-    if (!status) {
-      return null
-    }
-
     return (
       <Page loggedIn client={this.state.client} error={this.state.error}>
         <Row>
           <Col md={12}>
             <h1>
-              <strong>{ status.node.team.name }</strong> {'@'} { status.node.team.trackingDomain }
+              <strong>{ status ? status.node.team.name : 'MessageBot' }</strong> {'@'} { status ? status.node.team.trackingDomain : null }
             </h1>
             <p>
-              <span className='text-info'>MessageBot Version { status.node.version }</span>
+              <span className='text-info'>MessageBot Version { status ? status.node.version : 'x' }</span>
             </p>
           </Col>
 

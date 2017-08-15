@@ -9,6 +9,6 @@ describe('Dashboard', () => {
     let page = TestUtils.renderIntoDocument(<Dashboard />)
     let body = ReactDOM.findDOMNode(page).textContent
 
-    expect(body).toContain('Dashboard')
+    expect(body).toContain('MessageBot')
   })
 })
