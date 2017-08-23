@@ -76,9 +76,9 @@ export default class extends React.Component {
   }
 
   editList (event) {
-    let listId = parseInt(event.target.id, 10)
+    let listGuid = event.target.id
     this.state.lists.forEach((list) => {
-      if (list.id === listId) {
+      if (list.guid === listGuid) {
         this.setState({editList: list}, () => {
           if (list.type === 'static') {
             this.openEditStaticModal()
@@ -96,7 +96,7 @@ export default class extends React.Component {
 
     if (input) {
       client.action({
-        listId: event.target.id,
+        listGuid: event.target.id,
         name: input
       }, '/api/list/copy', 'POST', (data) => {
         this.loadLists()
@@ -108,7 +108,7 @@ export default class extends React.Component {
     const client = this.state.client
 
     if (confirm('Are you sure?')) {
-      client.action({listId: event.target.id}, '/api/list', 'DELETE', (data) => {
+      client.action({listGuid: event.target.id}, '/api/list', 'DELETE', (data) => {
         this.setState({successMessage: 'List Deleted'})
         this.loadLists()
         this.loadFolders()
@@ -171,6 +171,7 @@ export default class extends React.Component {
     client.action(newList, '/api/list', 'POST', (data) => {
       this.setState({newList: {}, successMessage: 'List Created'})
       this.closeNewStaticModal()
+      this.closeNewDynamicModal()
       this.loadLists()
       this.loadFolders()
     }, (error) => { this.setState({error}) })
@@ -180,7 +181,7 @@ export default class extends React.Component {
     const client = this.state.client
     let editList = this.state.editList
 
-    editList.listId = this.state.editList.id
+    editList.listGuid = this.state.editList.guid
     client.action(editList, '/api/list', 'PUT', (data) => {
       this.setState({editList: {}, successMessage: 'List Updated'})
       this.closeEditStaticModal()

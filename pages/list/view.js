@@ -17,7 +17,7 @@ export default class extends React.Component {
       successMessage: null,
       perPage: 25,
       total: 0,
-      listId: 0,
+      listGuid: 0,
       list: [],
       people: [],
       page: 0,
@@ -29,17 +29,17 @@ export default class extends React.Component {
 
   componentDidMount () {
     let page = Router.query.page
-    let listId = Router.query.item
-    if (!listId && page) { listId = page; page = 0 }
+    let listGuid = Router.query.item
+    if (!listGuid && page) { listGuid = page; page = 0 }
 
-    this.setState({ listId: listId, page: page }, () => {
+    this.setState({ listGuid: listGuid, page: page }, () => {
       this.loadList()
       this.loadListPeople()
     })
   }
 
   updateRoute () {
-    Router.push(`/list/view`, `/list/view/${this.state.listId}/${this.state.page}`)
+    Router.push(`/list/view`, `/list/view/${this.state.listGuid}/${this.state.page}`)
   }
 
   openUploadGuidModal () {
@@ -61,7 +61,7 @@ export default class extends React.Component {
   loadList () {
     const client = this.state.client
 
-    client.action({listId: this.state.listId}, '/api/list', 'GET', (data) => {
+    client.action({listGuid: this.state.listGuid}, '/api/list', 'GET', (data) => {
       this.setState({list: data.list})
     }, (error) => { this.setState({error}) })
   }
@@ -70,7 +70,7 @@ export default class extends React.Component {
     const client = this.state.client
 
     let params = {
-      listId: this.state.listId,
+      listGuid: this.state.listGuid,
       from: (this.state.page * this.state.perPage),
       size: this.state.perPage
     }
@@ -85,7 +85,7 @@ export default class extends React.Component {
 
     let paylaod = {
       personGuids: this.state.personGuidContainer.personGuids,
-      listId: this.state.listId
+      listGuid: this.state.listGuid
     }
 
     client.action(paylaod, '/api/list/people', 'PUT', (data) => {
@@ -100,7 +100,7 @@ export default class extends React.Component {
     const file = this.state.personGuidContainer._files[0]
 
     client.action({
-      listId: this.state.listId,
+      listGuid: this.state.listGuid,
       file: file
     }, '/api/list/people', 'PUT', (data) => {
       this.setState({personGuidContainer: {}, successMessage: `${data.personGuids.length} People Added`})
@@ -112,8 +112,9 @@ export default class extends React.Component {
   recount () {
     const client = this.state.client
 
-    client.action({listId: this.state.listId}, '/api/list/people', 'POST', (data) => {
+    client.action({listGuid: this.state.listGuid}, '/api/list/people', 'POST', (data) => {
       this.loadList()
+      this.setState({successMessage: 'List People Counted'})
     }, (error) => { this.setState({error}) })
   }
 
@@ -125,7 +126,7 @@ export default class extends React.Component {
       return function (event) {
         if (confirm('Are you sure?')) {
           client.action({
-            listId: self.state.listId,
+            listGuid: self.state.listGuid,
             personGuids: event.target.id
           }, '/api/list/people', 'DELETE', (data) => {
             self.setState({successMessage: 'Person removed from list'})

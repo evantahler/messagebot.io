@@ -58,7 +58,7 @@ export default class Client {
 
     if (typeof errorCallback !== 'function') {
       errorCallback = (errorMessage, error) => {
-        console.error(error)
+        console.error(errorMessage || error)
       }
     }
 

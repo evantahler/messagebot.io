@@ -83,7 +83,7 @@ export default class extends React.Component {
   loadCampaignStats (campaign) {
     const client = this.state.client
     client.action({
-      campaignId: campaign.id,
+      campaignGuid: campaign.guid,
       interval: 'year',
       start: new Date(0).getTime(),
       end: new Date().getTime()
@@ -92,8 +92,8 @@ export default class extends React.Component {
       if (data.totals.sentAt === 0) { safeDivisor = Infinity }
 
       let campaignFunnels = this.state.campaignFunnels
-      campaignFunnels[campaign.id] = data
-      campaignFunnels[campaign.id].rates = {
+      campaignFunnels[campaign.guid] = data
+      campaignFunnels[campaign.guid].rates = {
         sentAt: Math.round(data.totals.sentAt / safeDivisor * 10000) / 100,
         readAt: Math.round(data.totals.readAt / safeDivisor * 10000) / 100,
         actedAt: Math.round(data.totals.actedAt / safeDivisor * 10000) / 100
@@ -164,7 +164,7 @@ export default class extends React.Component {
                 {
                   this.state.campaigns.map((campaign) => {
                     return (
-                      <CampaignStatsRow key={campaign.id} campaign={campaign} campaignFunnels={this.state.campaignFunnels} />
+                      <CampaignStatsRow key={campaign.guid} campaign={campaign} campaignFunnels={this.state.campaignFunnels} />
                     )
                   })
                 }
@@ -180,11 +180,11 @@ export default class extends React.Component {
 class CampaignStatsRow extends React.Component {
   render () {
     let campaign = this.props.campaign
-    let campaignFunnel = this.props.campaignFunnels[campaign.id] || {rates: {}, totals: {}}
+    let campaignFunnel = this.props.campaignFunnels[campaign.guid] || {rates: {}, totals: {}}
 
     return (
       <tr>
-        <td><Link href={{pathname: `/campaign/stats`, query: {page: campaign.id}}} as={`/campaign/stats/${campaign.id}`}><a><Glyphicon glyph='signal' /></a></Link></td>
+        <td><Link href={{pathname: `/campaign/stats`, query: {page: campaign.guid}}} as={`/campaign/stats/${campaign.guid}`}><a><Glyphicon glyph='signal' /></a></Link></td>
         <td><strong>{ campaign.name }</strong></td>
         <td>{ Moment(campaign.sentAt).fromNow() }</td>
         <td>{ campaignFunnel.totals.sentAt }</td>

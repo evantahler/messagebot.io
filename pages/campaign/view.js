@@ -25,15 +25,15 @@ export default class extends React.Component {
       types: [],
       campaignVariables: [],
       personGuid: null,
-      campaignId: 0,
+      campaignGuid: 0,
       campaign: {name: '', description: ''}
     }
   }
 
   componentDidMount () {
-    let campaignId = Router.query.page
+    let campaignGuid = Router.query.page
 
-    this.setState({campaignId}, () => {
+    this.setState({campaignGuid}, () => {
       this.loadUser(() => {
         this.loadCampaign()
         this.loadTemplates()
@@ -53,7 +53,7 @@ export default class extends React.Component {
 
   loadCampaign () {
     const client = this.state.client
-    client.action({campaignId: this.state.campaignId}, '/api/campaign', 'GET', (data) => {
+    client.action({campaignGuid: this.state.campaignGuid}, '/api/campaign', 'GET', (data) => {
       let campaign = data.campaign
       if (campaign.sendAt) { campaign.sendAt = new Date(Date.parse(campaign.sendAt)) }
       this.setState({campaign}, () => {
@@ -67,11 +67,11 @@ export default class extends React.Component {
     let campaign = this.state.campaign
 
     this.state.lists.forEach((list) => {
-      if (list.id === campaign.listId) { this.setState({list: list}) }
+      if (list.guid === campaign.listGuid) { this.setState({list: list}) }
     })
 
     this.state.templates.forEach((template) => {
-      if (template.id === campaign.templateId) {
+      if (template.guid === campaign.templateGuid) {
         this.setState({template: template}, () => {
           this.loadView()
         })
@@ -111,7 +111,7 @@ export default class extends React.Component {
     // TODO: Pagination
     const client = this.state.client
 
-    client.action({listId: this.state.campaign.listId}, '/api/list', 'GET', (data) => {
+    client.action({listGuid: this.state.campaign.listGuid}, '/api/list', 'GET', (data) => {
       this.setState({list: data.list}, () => {
         this.hydrateCampaign()
       })
@@ -154,10 +154,10 @@ export default class extends React.Component {
     const client = this.state.client
 
     if (!this.state.personGuid) { return }
-    if (!this.state.template.id) { return }
+    if (!this.state.template.guid) { return }
 
     let params = {
-      templateId: this.state.template.id,
+      templateGuid: this.state.template.guid,
       personGuid: this.state.personGuid,
       trackBeacon: false
     }
@@ -178,7 +178,7 @@ export default class extends React.Component {
   editCampaign () {
     const client = this.state.client
     let campaign = this.state.campaign
-    campaign.campaignId = campaign.id
+    campaign.campaignGuid = campaign.guid
 
     this.state.campaignVariables.forEach(function (cv) {
       campaign.campaignVariables[cv.id] = cv.value
@@ -196,7 +196,7 @@ export default class extends React.Component {
 
   deleteCampaign () {
     const client = this.state.client
-    client.action({campaignId: this.state.campaignId}, '/api/campaign', 'DELETE', (data) => {
+    client.action({campaignGuid: this.state.campaignGuid}, '/api/campaign', 'DELETE', (data) => {
       Router.push('/campaigns/list')
     }, (error) => this.setState({error}))
   }
@@ -236,7 +236,7 @@ export default class extends React.Component {
                 return (
                   <Alert bsStyle='warning'>
                     <h4 className='text-success'>Sent At: { Moment(new Date(Date.parse(this.state.campaign.sentAt))).calendar() }</h4>
-                    <Link href={`/campaign/stats/${this.state.campaign.id}`}><a>See Conversion Stats</a></Link>
+                    <Link href={`/campaign/stats/${this.state.campaign.guid}`}><a>See Conversion Stats</a></Link>
                   </Alert>
                 )
               }
@@ -268,20 +268,20 @@ export default class extends React.Component {
               {' '}
               campaign using the
               {' '}
-              <select id='listId' value={this.state.campaign.listId} onChange={this.inlinePropChange.bind(this)} >
+              <select id='listGuid' value={this.state.campaign.listGuid} onChange={this.inlinePropChange.bind(this)} >
                 {
                   this.state.lists.map((list) => {
-                    return <option key={list.id} value={list.id}>{list.folder} / {list.name}</option>
+                    return <option key={list.guid} value={list.guid}>{list.folder} / {list.name}</option>
                   })
                 }
               </select>
               {' '}
               list and
               {' '}
-              <select id='templateId' value={this.state.campaign.templateId} onChange={this.inlinePropChange.bind(this)}>
+              <select id='templateGuid' value={this.state.campaign.templateGuid} onChange={this.inlinePropChange.bind(this)}>
                 {
                   this.state.templates.map((template) => {
-                    return <option key={template.id} value={template.id}>{template.folder} / {template.name}</option>
+                    return <option key={template.guid} value={template.guid}>{template.folder} / {template.name}</option>
                   })
                 }
               </select>

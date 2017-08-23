@@ -11,7 +11,7 @@ export default class extends React.Component {
   - `this.props.copy` is a function (or null to hide)
   - `this.props.destroy` is a function (or null to hide)
   - `this.props.recordType` is the name of the item (for guid linksm IE: 'person')
-  - `this.props.idName` (optional) what heading to use for the ID colum?
+  - `this.props.guidName` (optional) what heading to use for the ID colum?
   - `this.props.inlineEdit` is an object containing the callback events on-submit for in-line forms, ie: `{name: handleNameChange}`
   - the objects have either `id`, `guid`, or `name` which is the primary key
   - `this.props.ignoredKeys` is an array of things to ignore in the form, or you can send `this.props.onlyKeys` to have a smaller list
@@ -94,17 +94,6 @@ export default class extends React.Component {
       )
     }
 
-    if (key === 'id' && this.props.recordType) {
-      return (
-        <td key={'key-' + key}>
-          <Glyphicon glyph='cog' />
-          <Link href={{pathname: `/${this.props.recordType}/view`, query: {page: object[key]}}} as={`/${this.props.recordType}/view/${object[key]}`}>
-            <a> {object[key]} </a>
-          </Link>
-        </td>
-      )
-    }
-
     if (key === 'personGuid') {
       return (
         <td key={'key-' + key}>
@@ -159,8 +148,8 @@ export default class extends React.Component {
           <tr>
             {
                 this.keys().map((key) => {
-                  if (key === 'id' && this.props.idName) {
-                    return <th key={key}>{ this.props.idName }</th>
+                  if (key === 'guid' && this.props.guidName) {
+                    return <th key={key}>{ this.props.guidName }</th>
                   } else {
                     return <th key={key}>{ WordHelper.titleize(key) }</th>
                   }

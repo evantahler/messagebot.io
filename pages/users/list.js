@@ -34,7 +34,7 @@ export default class extends React.Component {
   processUserDelete (event) {
     const client = this.state.client
     if (confirm('Are you Sure?')) {
-      client.action({userId: event.target.id}, '/api/user', 'DELETE', (data) => {
+      client.action({userGuid: event.target.id}, '/api/user', 'DELETE', (data) => {
         this.setState({successMessage: 'User Deleted'})
         this.loadUsers()
       }, (error) => this.setState({error}))
@@ -45,7 +45,7 @@ export default class extends React.Component {
     event.preventDefault()
     const client = this.state.client
     let user = this.state.user
-    user.userId = this.state.user.id
+    user.userGuid = this.state.user.guid
     client.action(user, '/api/user', 'PUT', (data) => {
       this.setState({successMessage: 'User Updated'})
       this.hideUserEditModal()
@@ -66,7 +66,7 @@ export default class extends React.Component {
   showUserEditModal (event) {
     let user = null
     this.state.users.forEach(function (u) {
-      if (u.id === parseInt(event.target.id, 10)) { user = u }
+      if (u.guid === event.target.id) { user = u }
     })
 
     this.setState({ userEditModal: true })

@@ -36,7 +36,6 @@ export default class extends React.Component {
       }
 
       (this.props.ignoredKeys || []).concat(
-        'id',
         'guid',
         'createdAt',
         'updatedAt',

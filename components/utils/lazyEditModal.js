@@ -126,8 +126,8 @@ export default class extends React.Component {
                           <option disabled='disabled'>Select...</option>
                           {
                             this.props.options[key].map((option) => {
-                              if (option.id && option.name) {
-                                return <option key={option.id} value={option.id}>{ WordHelper.titleize(option.name) }</option>
+                              if (option.guid && option.name) {
+                                return <option key={option.guid} value={option.guid}>{ WordHelper.titleize(option.name) }</option>
                               } else {
                                 return <option key={option} value={option}>{ WordHelper.titleize(option) }</option>
                               }

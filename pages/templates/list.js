@@ -60,9 +60,9 @@ export default class extends React.Component {
   }
 
   editTemplate (event) {
-    let templateId = parseInt(event.target.id, 10)
+    let templateGuid = event.target.id
     this.state.templates.forEach((template) => {
-      if (template.id === templateId) {
+      if (template.guid === templateGuid) {
         this.setState({editTemplate: template}, () => {
           this.openEditModal()
         })
@@ -76,7 +76,7 @@ export default class extends React.Component {
 
     if (input) {
       client.action({
-        templateId: event.target.id,
+        templateGuid: event.target.id,
         name: input
       }, '/api/template/copy', 'POST', (data) => {
         this.loadTemplates()
@@ -88,7 +88,7 @@ export default class extends React.Component {
     let client = this.state.client
 
     if (confirm('Are you sure?')) {
-      client.action({templateId: event.target.id}, '/api/template', 'DELETE', (data) => {
+      client.action({templateGuid: event.target.id}, '/api/template', 'DELETE', (data) => {
         this.setState({successMessage: 'Template Deleted'})
         this.loadTemplates()
         this.loadFolders()
@@ -140,7 +140,7 @@ export default class extends React.Component {
   processEditTemplateModal () {
     const client = this.state.client
     let editTemplate = this.state.editTemplate
-    editTemplate.templateId = this.state.editTemplate.id
+    editTemplate.templateGuid = this.state.editTemplate.guid
 
     client.action(editTemplate, '/api/template', 'PUT', (data) => {
       this.setState({editTemplate: {}, successMessage: 'Template Updated'})

@@ -15,7 +15,7 @@ export default class extends React.Component {
       section: 'messages',
       query: (props.query || ''),
       pendingQuery: '',
-      topLevelSearchTerms: ['personGuid', 'campaignId', 'transport', 'body']
+      topLevelSearchTerms: ['personGuid', 'campaignGuid', 'transport', 'body']
     }
   }
 

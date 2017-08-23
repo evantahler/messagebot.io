@@ -81,11 +81,11 @@ export default class extends React.Component {
 
     campaigns.forEach((campaign) => {
       this.state.lists.forEach((list) => {
-        if (list.id === campaign.listId) { campaign.list = list.name }
+        if (list.guid === campaign.listGuid) { campaign.list = list.name }
       })
 
       this.state.templates.forEach((template) => {
-        if (template.id === campaign.templateId) { campaign.template = template.name }
+        if (template.guid === campaign.templateGuid) { campaign.template = template.name }
       })
 
       hydratedCampaigns.push(campaign)
@@ -143,10 +143,10 @@ export default class extends React.Component {
   }
 
   editCampaign (event) {
-    let campaignId = parseInt(event.target.id, 10)
+    let campaignGuid = event.target.id
 
     this.state.campaigns.forEach((campaign) => {
-      if (campaign.id === campaignId) {
+      if (campaign.guid === campaignGuid) {
         this.setState({editCampaign: campaign}, () => {
           this.openEditModal()
         })
@@ -160,7 +160,7 @@ export default class extends React.Component {
 
     if (input) {
       client.action({
-        campaignId: event.target.id,
+        campaignGuid: event.target.id,
         name: input
       }, '/api/campaign/copy', 'POST', (data) => {
         this.loadCampaigns()
@@ -172,7 +172,7 @@ export default class extends React.Component {
     let client = this.state.client
 
     if (confirm('Are you sure?')) {
-      client.action({campaignId: event.target.id}, '/api/campaign', 'DELETE', (data) => {
+      client.action({campaignGuid: event.target.id}, '/api/campaign', 'DELETE', (data) => {
         this.setState({successMessage: 'Campaign Deleted'})
         this.loadCampaigns()
         this.loadFolders()
@@ -218,14 +218,14 @@ export default class extends React.Component {
     const client = this.state.client
 
     client.action({
-      campaignId: this.state.editCampaign.id,
+      campaignGuid: this.state.editCampaign.guid,
       name: this.state.editCampaign.name,
       description: this.state.editCampaign.description,
       folder: this.state.editCampaign.folder,
       transport: this.state.editCampaign.transport,
       type: this.state.editCampaign.type,
-      listId: this.state.editCampaign.listId,
-      templateId: this.state.editCampaign.templateId
+      listGuid: this.state.editCampaign.listGuid,
+      templateGuid: this.state.editCampaign.templateGuid
     }, '/api/campaign', 'PUT', (data) => {
       this.setState({editCampaign: {}, successMessage: 'Campaign Updated'})
       this.closeEditModal()
@@ -278,8 +278,8 @@ export default class extends React.Component {
                 'updatedAt',
                 'sendingAt',
                 'sentAt',
-                'listId',
-                'templateId',
+                'listGuid',
+                'templateGuid',
                 'reSendDelay',
                 'campaignVariables',
                 'triggerDelay',
@@ -306,9 +306,9 @@ export default class extends React.Component {
           onHide={this.closeNewModal.bind(this)}
           onSubmit={this.processNewCampaignModal.bind(this)}
           options={{
-            templateId: this.state.templates,
+            templateGuid: this.state.templates,
             type: this.state.types,
-            listId: this.state.lists,
+            listGuid: this.state.lists,
             transport: this.state.transports.map((e) => { return e.name })
           }}
           extraKeys={[
@@ -317,8 +317,8 @@ export default class extends React.Component {
             'folder',
             'transport',
             'type',
-            'listId',
-            'templateId'
+            'listGuid',
+            'templateGuid'
           ]}
         />
 
@@ -329,9 +329,9 @@ export default class extends React.Component {
           onHide={this.closeEditModal.bind(this)}
           onSubmit={this.processEditCampaignModal.bind(this)}
           options={{
-            templateId: this.state.templates,
+            templateGuid: this.state.templates,
             type: this.state.types,
-            listId: this.state.lists,
+            listGuid: this.state.lists,
             transport: this.state.transports.map((e) => { return e.name })
           }}
           ignoredKeys={[

@@ -22,14 +22,14 @@ export default class extends React.Component {
       transport: {},
       funnel: {},
       personGuid: null,
-      campaignId: 0
+      campaignGuid: 0
     }
   }
 
   componentDidMount () {
-    let campaignId = Router.query.page
+    let campaignGuid = Router.query.page
 
-    this.setState({campaignId}, () => {
+    this.setState({campaignGuid}, () => {
       this.loadCampaign()
       this.loadCampaignStats()
       this.loadTemplates()
@@ -41,7 +41,7 @@ export default class extends React.Component {
   loadCampaign () {
     const client = this.state.client
 
-    client.action({campaignId: this.state.campaignId}, '/api/campaign', 'GET', (data) => {
+    client.action({campaignGuid: this.state.campaignGuid}, '/api/campaign', 'GET', (data) => {
       let campaign = data.campaign
       if (campaign.sendAt) { campaign.sendAt = new Date(Date.parse(campaign.sendAt)) }
 
@@ -59,7 +59,7 @@ export default class extends React.Component {
     const client = this.state.client
 
     client.action({
-      campaignId: this.state.campaignId,
+      campaignGuid: this.state.campaignGuid,
       interval: 'date',
       start: new Date(0).getTime(),
       end: new Date().getTime()
@@ -82,11 +82,11 @@ export default class extends React.Component {
     let campaign = this.state.campaign
 
     this.state.lists.forEach((list) => {
-      if (list.id === campaign.listId) { this.setState({list: list}) }
+      if (list.guid === campaign.listGuid) { this.setState({list: list}) }
     })
 
     this.state.templates.forEach((template) => {
-      if (template.id === campaign.templateId) {
+      if (template.guid === campaign.templateGuid) {
         this.setState({template: template})
       }
     })
@@ -125,7 +125,7 @@ export default class extends React.Component {
     // TODO: Pagination
     const client = this.state.client
 
-    client.action({listId: this.state.campaign.listId}, '/api/list', 'GET', (data) => {
+    client.action({listGuid: this.state.campaign.listGuid}, '/api/list', 'GET', (data) => {
       this.setState({list: data.list})
     }, (error) => this.setState({error}))
   }
