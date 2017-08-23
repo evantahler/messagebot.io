@@ -17,6 +17,8 @@ const CheckLoginPages = [
 
 export default class extends React.Component {
   componentDidMount () {
+    if (process.env.NODE_ENV === 'test') { return }
+
     this.checkLoggedIn()
 
     try {
