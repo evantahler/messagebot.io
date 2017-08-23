@@ -15,20 +15,42 @@ export default class extends React.Component {
       stats: {},
       campaigns: [],
       campaignFunnels: {},
-      ranges: {
-        'Today': {start: (Moment().startOf('day')), end: Moment()},
-        'This Week': {start: (Moment().startOf('week')), end: Moment()},
-        'This Month': {start: (Moment().startOf('month')), end: Moment()},
-        'This Year': {start: (Moment().startOf('year')), end: Moment()}
-      },
-      sections: ['people', 'events', 'messages']
+      ranges: this.buildRanges(),
+      sections: ['people', 'events', 'messages'],
+      timer: null,
+      sleep: 1000 * 15
+    }
+  }
+
+  buildRanges () {
+    return {
+      'Today': {start: (Moment().startOf('day')), end: Moment()},
+      'This Week': {start: (Moment().startOf('week')), end: Moment()},
+      'This Month': {start: (Moment().startOf('month')), end: Moment()},
+      'This Year': {start: (Moment().startOf('year')), end: Moment()}
     }
   }
 
   componentDidMount () {
-    this.loadStatus()
-    this.loadStats()
-    this.loadCampaigns()
+    this.load()
+    let timer = setInterval(() => {
+      this.load()
+    }, this.state.sleep)
+    this.setState({timer})
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.state.timer)
+  }
+
+  load () {
+    this.setState({
+      ranges: this.buildRanges()
+    }, () => {
+      this.loadStatus()
+      this.loadStats()
+      this.loadCampaigns()
+    })
   }
 
   loadStatus () {
@@ -60,6 +82,7 @@ export default class extends React.Component {
           let stats = this.state.stats
           if (!stats[range]) { stats[range] = {} }
           stats[range][section] = total
+
           this.setState({stats: stats})
         }, (error) => this.setState({error}))
       })
