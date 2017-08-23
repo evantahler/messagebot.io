@@ -14,7 +14,7 @@ export default class extends React.Component {
       client: new Client(),
       error: null,
       successMessage: null,
-      templateId: 0,
+      templateGuid: 0,
       personGuid: 0,
       template: {template: ''},
       view: {},
@@ -23,9 +23,9 @@ export default class extends React.Component {
   }
 
   componentDidMount () {
-    let templateId = Router.query.page
+    let templateGuid = Router.query.page
 
-    this.setState({templateId}, () => {
+    this.setState({templateGuid}, () => {
       this.loadUser(() => {
         this.loadTemplate()
         this.loadView()
@@ -42,7 +42,7 @@ export default class extends React.Component {
 
   loadTemplate () {
     const client = this.state.client
-    client.action({templateId: this.state.templateId}, '/api/template', 'GET', (data) => {
+    client.action({templateGuid: this.state.templateGuid}, '/api/template', 'GET', (data) => {
       this.setState({template: data.template})
     }, (error) => { this.setState({error}) })
   }
@@ -55,7 +55,7 @@ export default class extends React.Component {
     }
 
     let params = {
-      templateId: this.state.templateId,
+      templateGuid: this.state.templateGuid,
       personGuid: this.state.personGuid,
       trackBeacon: false
     }
@@ -86,7 +86,7 @@ export default class extends React.Component {
   updateTemplate () {
     const client = this.state.client
     let template = this.state.template
-    template.templateId = this.state.template.id
+    template.templateGuid = this.state.template.guid
 
     this.setState({template: template}, () => {
       client.action(this.state.template, '/api/template', 'PUT', (data) => {

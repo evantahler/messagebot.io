@@ -24,7 +24,7 @@ export default class extends React.Component {
         'messageGuid',
         'location',
         'body',
-        'campaignId'
+        'campaignGuid'
       ]
     }
   }
@@ -98,13 +98,13 @@ export default class extends React.Component {
                     <a><strong>{title}: </strong>{value}</a>
                   </Link>
                 </li>
-              } else if (key === 'listId' && value) {
+              } else if (key === 'listGuid' && value) {
                 return <li key={key}>
                   <Link href={{pathname: `/list/view`, query: {page: value}}} as={`/list/view/${value}`}>
                     <a><strong>{title}: </strong>{value}</a>
                   </Link>
                 </li>
-              } else if (key === 'campaignId' && value) {
+              } else if (key === 'campaignGuid' && value) {
                 return <li key={key}>
                   <Link href={{pathname: `/campaign/view`, query: {page: value}}} as={`/campaign/view/${value}`}>
                     <a><strong>{title}: </strong>{value}</a>
