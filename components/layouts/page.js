@@ -11,10 +11,8 @@ import SuccessAlert from './../alerts/success.js'
 
 import TestRouter from './../utils/testRouter.js' //eslint-disable-line
 
-const LoggedOutPages = [
-  '/',
-  '/about',
-  '/sign-in'
+const CheckLoginPages = [
+  '/'
 ]
 
 export default class extends React.Component {
@@ -26,12 +24,12 @@ export default class extends React.Component {
         if (error) { console.error(error) }
         window.MESSAGEBOT.track({type: 'pageview'})
       })
-    } catch (e) { }
+    } catch (error) { console.error(error) }
   }
 
   checkLoggedIn () {
     const client = this.props.client
-    if (LoggedOutPages.indexOf(Router.pathname) >= 0) {
+    if (CheckLoginPages.indexOf(Router.pathname) >= 0) {
       client.action({}, '/api/session', 'PUT', (response) => {
         if (response.success) { Router.push('/dashboard') }
       })
