@@ -18,7 +18,7 @@
     "glob": "^7.1.2",
     "isomorphic-fetch": "^2.2.1",
     "moment": "^2.18.1",
-    "next": "^3.0.3",
+    "next": "^6.1.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.2",
     "react-codemirror": "^1.0.0",
