@@ -24,7 +24,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "next start -P $PORT",
+    "start": "next start -p $PORT",
     "test": "jest",
     "pretest": "standard",
     "postinstall": "next build"
