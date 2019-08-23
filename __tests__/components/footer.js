@@ -1,15 +1,26 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-dom/test-utils'
+import { render } from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import Footer from './../../components/footer.js'
+import Footer from '../../components/footer'
 
-describe('Footer', () => {
-  it('renders the page', () => {
-    let page = TestUtils.renderIntoDocument(<Footer />)
-    let body = ReactDOM.findDOMNode(page).textContent
+let container
 
-    expect(body).toContain('MessageBot')
-    expect(body).toContain((new Date()).getFullYear())
+beforeEach(() => {
+  container = document.createElement('div')
+  document.body.appendChild(container)
+})
+
+afterEach(() => {
+  document.body.removeChild(container)
+  container = undefined
+})
+
+describe('Introcudtion Section', () => {
+  it('renders the section', () => {
+    act(() => { render(<Footer />, container) })
+    const footer = container.querySelector('div')
+    expect(footer.textContent).toContain('MessageBot')
+    expect(footer.textContent).toContain((new Date()).getFullYear())
   })
 })

@@ -1,22 +1,17 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
 
-export default class extends React.Component {
-  constructor () {
-    super()
-    this.state = { date: new Date() }
-  }
+export default function Footer () {
+  const date = new Date()
 
-  render () {
-    return (
-      <footer>
-        <Row>
-          <Col md={12}>
-            <hr />
-            <p>© MessageBot & Delicious Hat, {this.state.date.getFullYear()}</p>
-          </Col>
-        </Row>
-      </footer>
-    )
-  }
+  return (
+    <footer>
+      <Row>
+        <Col md={12}>
+          <hr />
+          <p>© MessageBot & Delicious Hat, {date.getFullYear()}</p>
+        </Col>
+      </Row>
+    </footer>
+  )
 }

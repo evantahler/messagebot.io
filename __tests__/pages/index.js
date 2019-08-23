@@ -1,15 +1,28 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import TestUtils from 'react-dom/test-utils'
+import { render } from 'react-dom'
+import { act } from 'react-dom/test-utils'
 
-import Home from '../../pages/index.js'
+import IndexPage from './../../pages/index'
 
-describe('Home', () => {
-  it('renders the page', () => {
-    let page = TestUtils.renderIntoDocument(<Home />)
-    let body = ReactDOM.findDOMNode(page).textContent
+let container
 
-    expect(body).toContain('MessageBot')
-    expect(body).toContain('future-proof')
+beforeEach(() => {
+  container = document.createElement('div')
+  document.body.appendChild(container)
+})
+
+afterEach(() => {
+  document.body.removeChild(container)
+  container = undefined
+})
+
+describe('Introcudtion Section', () => {
+  it('renders the section', () => {
+    act(() => { render(<IndexPage />, container) })
+    const headerOne = container.querySelector('h1')
+    expect(headerOne.textContent).toContain('Message Bot')
+
+    const headerTwo = container.querySelector('h2')
+    expect(headerTwo.textContent).toContain('Framework')
   })
 })
