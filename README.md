@@ -15,20 +15,14 @@ This is a [React Project](https://facebook.github.io/react/) utilizing [next.js]
 ## Building for Production
 
 - `npm run build`
-- `npm run serve`
+- `npm start`
 
-The master branch of this repository is automatically deployed by circle.ci on a successful test run to www.messagebot.io.  
+The master branch of this repository is automatically deployed by circle.ci on a successful test run to www.messagebot.io.
 
 ## Linting
 
-We use [standard.js](https://standardjs.com) to manage our lint rules.  We run `standard` as part of our test suite, and your contributions must pass.  Standard is *very* opinionated and inflexible such that we cannot inject our own opinions.  There are no eslint/jshint files to manage in this project.  
+We use [standard.js](https://standardjs.com) to manage our lint rules.  We run `standard` as part of our test suite, and your contributions must pass.  Standard is *very* opinionated and inflexible such that we cannot inject our own opinions.  There are no eslint/jshint files to manage in this project.
 
 ## CSS
 - we use a default boostrap CSS file
 - all components provide thier own CSS inline
-
-## TODO
-* Dashboard
-* Theme
-* Track pageviews
-* use UUIDs in all cases, no IDs (which means we can skip primary keys)

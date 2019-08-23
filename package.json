@@ -24,9 +24,10 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "NODE_ENV=production node server.js",
+    "start": "next start",
     "test": "jest",
-    "pretest": "standard"
+    "pretest": "standard",
+    "postinstall": "next build"
   },
   "standard": {
     "ignore": [
