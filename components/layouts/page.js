@@ -32,8 +32,6 @@ export default function PageLayout ({ children }) {
         <link rel='stylesheet' type='text/css' href='/static/css/animations.css' />
         <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800' rel='stylesheet' />
 
-        <script type='text/javascript' src={`${process.env.API_URL}/api/client`} />
-
         <title>MessageBot</title>
       </Head>
 
